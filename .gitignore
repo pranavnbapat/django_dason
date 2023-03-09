@@ -1,0 +1,8 @@
+.yarnrc.yml
+node_modules/
+.yarn/
+mysql_data/
+db/
+venv/
+.env
+*.sqlite3
