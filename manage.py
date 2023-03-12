@@ -6,6 +6,7 @@ import time
 
 time.sleep(8)
 
+
 def main():
     """Run administrative tasks."""
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'dason.settings')
