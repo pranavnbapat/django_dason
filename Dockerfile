@@ -23,32 +23,32 @@ RUN npm install -g gulp-cli
 #COPY mysql_scripts/1_myconfig.cnf /etc/mysql/conf.d/
 
 # Copy the custom SQL scripts into the container
-COPY mysql_scripts/2_init.sql /docker-entrypoint-initdb.d/
+#COPY mysql_scripts/2_init.sql /docker-entrypoint-initdb.d/
 
 # Run django tables SQL
-COPY mysql_scripts/3_django_dason.sql /docker-entrypoint-initdb.d/
+#COPY mysql_scripts/3_django_dason.sql /docker-entrypoint-initdb.d/
 
-ENV MYSQL_DATABASE=django_dason
-ENV MYSQL_DATABASE_COLLATION=utf8mb4_unicode_ci
-ENV MYSQL_PASSWORD=asdASD123!
-ENV MYSQL_USER=pranav
-ENV MYSQL_HOST=db
+#ENV MYSQL_DATABASE=django_dason
+#ENV MYSQL_DATABASE_COLLATION=utf8mb4_unicode_ci
+#ENV MYSQL_PASSWORD=asdASD123!
+#ENV MYSQL_USER=pranav
+#ENV MYSQL_HOST=db
 
 # Start the MySQL service
 CMD ["mysqld"]
 
-# Set the working directory to /code
-WORKDIR /code
+# Set the working directory to /var/www
+WORKDIR /var/www
 
-# Copy the requirements file into the container at /code
-COPY requirements.txt /code/
+# Copy the requirements file into the container at /var/www
+COPY requirements.txt /var/www
 
 # Install any needed packages specified in requirements.txt
 RUN pip install -r requirements.txt
 # RUN pip install --trusted-host pypi.python.org -r requirements.txt
 
-# Copy the current directory contents into the container at /code
-COPY . /code/
+# Copy the current directory contents into the container at /var/www
+COPY . /var/www
 
 # Expose port 8000 for the Django app
 EXPOSE 8080

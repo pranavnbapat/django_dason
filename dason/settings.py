@@ -131,11 +131,11 @@ DATABASES = {
     # }
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'django_dason',
-        'USER': 'pranav',
-        'PASSWORD': 'asdasdasd',
-        'HOST': 'mysql',
-        'PORT': '3306',
+        'NAME': os.getenv("MYSQL_DB"),
+        'USER': os.getenv("MYSQL_USER"),
+        'PASSWORD': os.getenv("MYSQL_PASS"),
+        'HOST': os.getenv("MYSQL_HOST"),
+        'PORT': os.getenv("MYSQL_PORT"),
         # 'OPTIONS': {
         #     'charset': 'utf8mb4',
         #     # 'unix_socket': '/var/run/mysqld/mysqld.sock'

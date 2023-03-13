@@ -5,30 +5,21 @@ services:
     build: ./apicore
     ports:
       - "8001:8001"
+
   api-mongo-test:
     build: ./api-mongo-test
     ports:
       - "8002:8002"
 
-#  docker exec django_dason-mysql-1 mysql --host mysql -u pranav -pasdasdasd
   mysql:
     image: mysql
-#    image: mariadb
     restart: always
-#    ports:
-#     - "3308:3306"
     environment:
-#      MYSQL_HOST: mysql
-#      MYSQL_DATABASE: django_dason
-#      MYSQL_DATABASE_COLLATION: utf8mb4_unicode_ci
-#      MYSQL_PASSWORD: asdASD123!
-#      MYSQL_USER: pranav
       MYSQL_ROOT_PASSWORD: asdasdasd
     volumes:
       - ./mysql_data:/var/lib/mysql
       - ./mysql_scripts:/docker-entrypoint-initdb.d
-#    command: >
-#      bash -c "docker-entrypoint.sh mysqld && python manage.py migrate"
+
   phpMyAdmin:
     image: phpmyadmin
     environment:
@@ -44,16 +35,8 @@ services:
     build: .
     command: python manage.py runserver 0.0.0.0:8080
     volumes:
-      - .:/code
+      - .:/var/www
     ports:
       - "8080:8080"
-#    networks:
-#      - mynetwork
     depends_on:
       - mysql
-#volumes:
-#  dbdata:
-
-#networks:
-#  mynetwork:
-#    driver: bridge

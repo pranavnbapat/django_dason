@@ -1,12 +1,16 @@
 FROM python:3.9.7
 
-WORKDIR /usr/src/application
+RUN apt-get update && apt-get upgrade -y
 
-COPY requirements.txt ./
+RUN pip install --upgrade pip
+
+WORKDIR /var/www/api-mongo-test
+
+#COPY requirements.txt ./var/www/api-mongo-test
+
+COPY . /var/www/api-mongo-test
 
 RUN pip install --no-cache-dir -r requirements.txt
-
-COPY . .
 
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8002"]
 

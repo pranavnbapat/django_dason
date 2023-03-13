@@ -37,7 +37,7 @@
                                 </div>
 
                                 <div class="flex-grow-1">
-                                    <h5 class="font-size-16 mb-1"><a href="#" class="text-dark">Paul <i
+                                    <h5 class="font-size-16 mb-1"><a href="#" class="text-dark">{{ user.first_name }} <i
                                                 class="mdi mdi-circle text-success align-middle font-size-10 ms-1"></i></a>
                                     </h5>
                                     <p class="text-muted mb-0">Available</p>
@@ -410,65 +410,23 @@
                                             </div>
 
                                             <div>
-                                                <div>
-                                                    <div class="px-3 contact-list">A</div>
+                                            {% regroup users by username.0|upper as user_groups %}
 
-                                                    <ul class="list-unstyled chat-list">
-                                                        <li>
-                                                            <a href="#">
-                                                                <h5 class="font-size-13 mb-0">Adam Miller</h5>
-                                                            </a>
-                                                        </li>
-
-                                                        <li>
-                                                            <a href="#">
-                                                                <h5 class="font-size-13 mb-0">Alfonso Fisher</h5>
-                                                            </a>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-
+                                            {% for group in user_groups %}
                                                 <div class="mt-4">
-                                                    <div class="px-3 contact-list">B</div>
+                                                    <div class="px-3 contact-list">{{ group.grouper }}</div>
 
                                                     <ul class="list-unstyled chat-list">
-                                                        <li>
-                                                            <a href="#">
-                                                                <h5 class="font-size-13 mb-0">Bonnie Harney</h5>
-                                                            </a>
-                                                        </li>
+                                                        {% for user in group.list %}
+                                                            <li>
+                                                                <a href="#">
+                                                                    <h5 class="font-size-13 mb-0">{{ user.first_name }} {{ user.last_name }} - {{ user.username }}</h5>
+                                                                </a>
+                                                            </li>
+                                                        {% endfor %}
                                                     </ul>
                                                 </div>
-
-                                                <div class="mt-4">
-                                                    <div class="px-3 contact-list">C</div>
-
-                                                    <ul class="list-unstyled chat-list">
-                                                        <li>
-                                                            <a href="#">
-                                                                <h5 class="font-size-13 mb-0">Charles Brown</h5>
-                                                            </a>
-                                                            <a href="#">
-                                                                <h5 class="font-size-13 mb-0">Carmella Jones</h5>
-                                                            </a>
-                                                            <a href="#">
-                                                                <h5 class="font-size-13 mb-0">Carrie Williams</h5>
-                                                            </a>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-
-                                                <div class="mt-4">
-                                                    <div class="px-3 contact-list">D</div>
-
-                                                    <ul class="list-unstyled chat-list">
-                                                        <li>
-                                                            <a href="#">
-                                                                <h5 class="font-size-13 mb-0">Dolores Minter</h5>
-                                                            </a>
-                                                        </li>
-                                                    </ul>
-                                                </div>
+                                            {% endfor %}
                                             </div>
                                         </div>
                                     </div>

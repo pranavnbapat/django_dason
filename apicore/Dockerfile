@@ -1,13 +1,17 @@
 FROM python:3.9.7
 
-WORKDIR /usr/src/application
+RUN apt-get update && apt-get upgrade -y
 
-COPY requirements.txt ./
+RUN pip install --upgrade pip
+
+WORKDIR /var/www/apicore
+
+#COPY requirements.txt ./var/www/apicore
+
+COPY . /var/www/apicore
 
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY . .
-
-EXPOSE 8000
+#EXPOSE 8000
 
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8001"]
