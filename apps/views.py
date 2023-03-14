@@ -1,11 +1,11 @@
-from django.http import request, HttpResponse
+from django.http import request
 from django.shortcuts import redirect, render
 from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 from django.views.generic import TemplateView
-import paho.mqtt.client as mqtt
+
 
 
 # Create your views here.
@@ -26,35 +26,10 @@ class ChatViewGetUsers(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         current_user_id = self.request.user.id
-        users = get_user_model()
-        users = users.objects.exclude(id=current_user_id)
+        # users =
+        users = get_user_model().objects.exclude(id=current_user_id)
         context["users"] = users
         return context
-
-
-def chat_view(request):
-    client = mqtt.Client()
-    client.connect("localhost", 1883, 60)
-    recipient = request.GET.get('recipient')
-    topic = f"messages/{recipient}"
-    client.subscribe(topic)
-
-    def on_message(client, userdata, message):
-        # handle incoming message
-        print(f"Received message: {message.payload.decode()}")
-
-    client.on_message = on_message
-    client.loop_start()
-
-    # ... rest of the view code ...
-
-
-def send_message(request):
-    message = request.POST.get('message')
-    recipient = request.POST.get('recipient')
-    topic = f"messages/{recipient}"
-    client.publish(topic, message)
-    return HttpResponse(status=200)
 
 
 # Ecommerce

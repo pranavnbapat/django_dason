@@ -1,4 +1,6 @@
 from django.urls import path
+from channels.routing import ProtocolTypeRouter, URLRouter
+from apps.routing import websocket_urlpatterns
 
 from .views import (
     apps_ecommerce_add_product_view,
@@ -77,3 +79,7 @@ urlpatterns = [
     # Horizontal
     path("horizontal", view=apps_horizontal_horizontal_view, name="horizontal"),
 ]
+
+application = ProtocolTypeRouter({
+    "websocket": URLRouter(websocket_urlpatterns),
+})

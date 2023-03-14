@@ -63,8 +63,15 @@ THIRD_PARTY_APPS = [
     "django_otp.plugins.otp_static",
     # Enable two-factor auth.
     "allauth_2fa",
+    "channels",
 ]
 INSTALLED_APPS = DEFAULT_APPS + LOCAL_APPS + THIRD_PARTY_APPS
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer"
+    },
+}
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
