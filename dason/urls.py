@@ -38,6 +38,8 @@ urlpatterns = [
     ),
     # Apps
     path("apps/", include("apps.urls")),
+    # Backend
+    path("backend/", include("backend.urls")),
     # Components
     path("components/", include("components.urls")),
     # Pages

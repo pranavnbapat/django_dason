@@ -13,6 +13,7 @@ from .views import (
     apps_ecommerce_shops_view,
     apps_calendar_calendar_view,
     apps_chat_chat_view,
+    apps_users_view,
     apps_email_inbox_view,
     apps_email_read_view,
     apps_tasks_create_view,
@@ -61,6 +62,7 @@ urlpatterns = [
     path("calendar", view=apps_calendar_calendar_view, name="calendar"),
     # chat
     path("chat", view=apps_chat_chat_view, name="chat"),
+    path("users", view=apps_users_view, name="users"),
     # Email
     path("email/inbox", view=apps_email_inbox_view, name="email.inbox"),
     path("emial/read_email", view=apps_email_read_view, name="email.read"),
