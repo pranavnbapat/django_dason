@@ -59,11 +59,11 @@ class DashboardView(LoginRequiredMixin, View):
                    'data_new_ret_users_timeseries': data_new_ret_users_timeseries,
                    'data_page_popularity': data_page_popularity}
 
-        return render(request, "dashboard.html", context)
+        return render(request, "backend/dashboard.html", context)
 
 
 class Settings(LoginRequiredMixin, View):
-    template_name = "settings.html"
+    template_name = "backend/settings.html"
 
     def __init__(self, *args):
         super(Settings, self).__init__(*args)
