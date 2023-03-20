@@ -24,13 +24,13 @@ urlpatterns = [
     # Dashboard
     path("", login_required(views.DashboardView.as_view()), name="dashboard"),
     path("settings", login_required(views.Settings.as_view()), name="settings"),
-    # Custum change password done page redirect
+    # Custom change password done page redirect
     path(
         "account/password/change/",
         login_required(views.MyPasswordChangeView.as_view()),
         name="account_change_password",
     ),
-    # Custum set password done page redirect
+    # Custom set password done page redirect
     path(
         "account/password/set/",
         login_required(views.MyPasswordSetView.as_view()),

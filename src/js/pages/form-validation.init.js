@@ -1,5 +1,5 @@
 /*
-Template Name: Dason - Admin & Dashboard Template
+Template Name: Admin Template
 Author: Themesdesign
 Website: https://themesdesign.in/
 Contact: themesdesign.in@gmail.com
