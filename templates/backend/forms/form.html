@@ -37,7 +37,7 @@
                                 <p class="card-title-desc">You can add more description here</p>
                             </div>
                             <div class="card-body">
-                                <form class="needs-validation" id="form_1" name="form_1" novalidate method="POST" action="{% url 'backend:my_form_submit' %}">
+                                <form class="needs-validation" id="form_1" name="form_1" novalidate method="POST" action="{% url 'backend:my_form' %}">
                                     {% csrf_token %}
 
                                     <div class="row">
@@ -46,7 +46,7 @@
                                                 <label class="form-label" for="fname">First name</label>
                                                 <input type="text" class="form-control" id="fname" name="fname"
                                                        placeholder="First name" maxlength="50" required
-                                                       value="{{ form_data.fname.value|default:'' }}" pattern="[a-zA-Z\s]+">
+                                                       value="{{ post_data.fname|default:'' }}" >
                                                 <div class="valid-feedback"></div>
                                                 <div class="invalid-feedback">
                                                     Please enter a valid first name
@@ -57,7 +57,7 @@
                                         <div class="col-md-6">
                                             <div class="mb-3">
                                                 <label class="form-label" for="lname">Last name</label>
-                                                <input type="text" class="form-control" id="lname" name="lname" placeholder="Last name" value="" required pattern="[a-zA-Z\s]+" maxlength="50">
+                                                <input type="text" class="form-control" id="lname" name="lname" placeholder="Last name" value="{{ post_data.lname|default:'' }}" required pattern="[a-zA-Z\s]+" maxlength="50">
                                                 <div class="valid-feedback"></div>
                                                 <div class="invalid-feedback">
                                                     Please enter a valid last name
@@ -70,7 +70,7 @@
                                         <div class="col-md-6">
                                             <div class="mb-3">
                                                 <label class="form-label" for="email">Email</label>
-                                                <input type="email" class="form-control" id="email" name="email" placeholder="Email" value="pranav.g33k@gmail.com" required maxlength="50">
+                                                <input type="email" class="form-control" id="email" name="email" placeholder="Email" value="{{ post_data.email|default:'' }}" required maxlength="50">
                                                 <div class="valid-feedback"></div>
                                                 <div class="invalid-feedback">
                                                     Please enter a valid email address
@@ -95,15 +95,15 @@
                                             <div class="mb-3">
 {#                                                <label class="form-label">Gender</label>#}
                                                 <div class="form-check form-check-inline mb-3">
-                                                    <input class="form-check-input" type="radio" name="gender" id="male" required value="male" checked>
+                                                    <input class="form-check-input" type="radio" name="gender" id="male" required value="m" {% if post_data.gender == 'm' %}checked{% endif %}>
                                                     <label class="form-check-label" for="male">Male</label>
                                                 </div>
                                                 <div class="form-check form-check-inline mb-3">
-                                                    <input class="form-check-input" type="radio" name="gender" id="female" required value="f">
+                                                    <input class="form-check-input" type="radio" name="gender" id="female" required value="f" {% if post_data.gender == 'f' %}checked{% endif %}>
                                                     <label class="form-check-label" for="female">Female</label>
                                                 </div>
                                                 <div class="form-check form-check-inline mb-3">
-                                                    <input class="form-check-input" type="radio" name="gender" id="other" required value="u">
+                                                    <input class="form-check-input" type="radio" name="gender" id="other" required value="u" {% if post_data.gender == 'u' %}checked{% endif %}>
                                                     <label class="form-check-label" for="other+--">Unspecified</label>
                                                 </div>
                                             </div>
@@ -133,7 +133,7 @@
                                         <div class="col-md-12">
                                             <div class="mb-3">
                                                 <label class="form-label" for="image">Profile image</label>
-                                                <input class="form-control" type="file" id="image" name="image" accept=".jpg,.jpeg,.png" onchange="preview()">
+                                                <input class="form-control" type="file" id="image" name="image" accept=".jpg,.jpeg,.png" >
                                                 <div class="valid-feedback"></div>
                                                 <div class="invalid-feedback">
                                                     Please choose a valid image file
@@ -149,7 +149,7 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group mb-3 form-check">
-                                                <input id="tnc" type="checkbox" class="form-check-input" name="tnc" required checked />
+                                                <input id="tnc" type="checkbox" class="form-check-input" name="tnc" required {% if post_data.tnc %}checked{% endif %} />
                                                 <label class="form-check-label" for="term-check01">I accept the terms and conditions</label>
                                                 <div class="invalid-feedback">
                                                     Please accept terms and conditions
@@ -201,41 +201,47 @@
     }, !1)
 }();
 
-function preview() {
-    var file = event.target.files[0];
+$(function() {
+    var maxSize = 3 * 1024 * 1024;
 
-    img_preview.src = URL.createObjectURL(file);
+    $('#image').on('change', function() {
+        // Validate file size
+        let file = this.files[0]
 
-    // Get file info
-    var size = (file.size / 1024).toFixed(2) + " KB";
-    var type = file.type;
-    var dimensions = "Unknown";
+        // Get file info
+        let size = (file.size / 1024).toFixed(2) + " KB";
+        let type = file.type;
+        let dimensions = "Unknown";
 
-    // Validate file type
-    if (!type.startsWith("image/")) {
-        document.querySelector('#image').value = "";
-        img_preview.src = "";
-        return;
-    }
+        let fileSize = file.size;
 
-    // Extract dimensions if available
-    if (type.startsWith("image/")) {
-        var reader = new FileReader();
-        reader.onload = function() {
-            var image = new Image();
-            image.onload = function() {
-                dimensions = this.width + " x " + this.height + " pixels";
-                document.querySelector('#file_info').innerHTML = "File info: " + size + ", " + type + ", " + dimensions;
-                {#$("#file_info").innerHTML = "File info: " + size + ", " + type + ", " + dimensions#}
+        if (fileSize > maxSize || !type.startsWith("image/")) {
+            alert('File size exceeds maximum limit of 3 MB or only JPG, JPEG, and PNG types are allowed');
+            $(this).val('');
+            img_preview.src = "";
+            $('#file_info').html("");
+            return;
+        }
+
+        img_preview.src = URL.createObjectURL(file);
+
+        // Extract dimensions if available
+        if (type.startsWith("image/")) {
+            let reader = new FileReader();
+            reader.onload = function() {
+                let image = new Image();
+                image.onload = function() {
+                    dimensions = this.width + " x " + this.height + " pixels";
+                    $('#file_info').html("File info: " + size + ", " + type + ", " + dimensions);
+                };
+                image.src = reader.result;
             };
-            image.src = reader.result;
-        };
-        reader.readAsDataURL(file);
-    } else {
-        document.querySelector('#file_info').innerHTML = "File info: " + size + ", " + type + ", " + dimensions;
-        {#$("#file_info").innerHTML = "File info: " + size + ", " + type + ", " + dimensions;#}
-    }
-}
+            reader.readAsDataURL(file);
+        } else {
+            $('#file_info').html("File info: " + size + ", " + type + ", " + dimensions);
+        }
+    });
+});
 
 $("#reset").click(function(){
     img_preview.src = "";
