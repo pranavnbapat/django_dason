@@ -14,7 +14,6 @@
                         <li>
                             <a href="{% url 'dashboard' %}">
                                 <i data-feather="home"></i>
-                                <span class="badge rounded-pill bg-soft-success text-success float-end">9+</span>
                                 <span data-key="t-dashboard">Dashboard</span>
                             </a>
                         </li>
@@ -53,7 +52,6 @@
                             <ul class="sub-menu" aria-expanded="false">
                                 <li><a href="{% url 'apps:contacts.usergrid'%}" data-key="t-user-grid">User Grid</a></li>
                                 <li><a href="{% url 'apps:contacts.userlist'%}" data-key="t-user-list">User List</a></li>
-                                <li><a href="{% url 'apps:contacts.profile'%}" data-key="t-profile">Profile</a></li>
                             </ul>
                         </li>
 
@@ -61,27 +59,11 @@
 
                         <li>
                             <a href="{% url 'backend:my_form' %}">
-{#                            <a href="{% url 'components:components.forms.basic_elements'%}">#}
                                 <i data-feather="message-square"></i>
                                 <span data-key="t-form">Form</span>
                             </a>
                         </li>
-                        <li>
-                            <a href="javascript: void(0);">
-                                <i data-feather="box"></i>
-                                <span class="badge rounded-pill bg-soft-danger text-danger float-end">7</span>
-                                <span data-key="t-forms">Forms</span>
-                            </a>
-                            <ul class="sub-menu" aria-expanded="false">
-                                <li><a href="{% url 'components:components.forms.basic_elements' %}" data-key="t-form-elements">Basic Elements</a></li>
-                                <li><a href="{% url 'components:components.forms.validation' %}" data-key="t-form-validation">Validation</a></li>
-                                <li><a href="{% url 'components:components.forms.advancedplugins' %}" data-key="t-form-advanced">Advanced Plugins</a></li>
-                                <li><a href="{% url 'components:components.forms.editors' %}" data-key="t-form-editors">Editors</a></li>
-                                <li><a href="{% url 'components:components.forms.fileupload' %}" data-key="t-form-upload">File Upload</a></li>
-                                <li><a href="{% url 'components:components.forms.wizard' %}" data-key="t-form-wizard">Wizard</a></li>
-                                <li><a href="{% url 'components:components.forms.mask' %}" data-key="t-form-mask">Mask</a></li>
-                            </ul>
-                        </li>
+
                     </ul>
                 </div>
                 <!-- Sidebar -->
