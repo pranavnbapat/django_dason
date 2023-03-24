@@ -126,17 +126,6 @@ WSGI_APPLICATION = "dason.wsgi.application"
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 DATABASES = {
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.mysql',
-    #     'NAME': os.getenv("MYSQL_DB"),
-    #     'USER': os.getenv("MYSQL_USER"),
-    #     'PASSWORD': os.getenv("MYSQL_PASS"),
-    #     'HOST': os.getenv("MYSQL_HOST"),
-    #     'PORT': os.getenv("MYSQL_PORT"),
-    #     'OPTIONS': {
-    #         'charset': 'utf8mb4'
-    #     },
-    # }
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': os.getenv("MYSQL_DB"),
@@ -144,10 +133,6 @@ DATABASES = {
         'PASSWORD': os.getenv("MYSQL_PASS"),
         'HOST': os.getenv("MYSQL_HOST"),
         'PORT': os.getenv("MYSQL_PORT"),
-        # 'OPTIONS': {
-        #     'charset': 'utf8mb4',
-        #     # 'unix_socket': '/var/run/mysqld/mysqld.sock'
-        # },
     }
 }
 
@@ -188,9 +173,10 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
+AVATAR_PATH = BASE_DIR / "assets/images/users"
 STATIC_URL = "/static/"
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
-STATIC_ROOT= os.path.join(BASE_DIR,'assets')
+STATIC_ROOT = os.path.join(BASE_DIR, 'assets')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
@@ -248,3 +234,4 @@ ACCOUNT_FORMS = {
     "change_password": "dason.forms.UserChangePasswordForm",
     "set_password": "dason.forms.UserSetPasswordForm",
 }
+

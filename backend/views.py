@@ -1,8 +1,20 @@
+import django.core.files.uploadedfile
 from django.views.generic import TemplateView
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.shortcuts import render, redirect
 from .models import MyForm
+from django.core.files.uploadedfile import UploadedFile
+from django.conf import settings
+from cryptography.fernet import Fernet
+import os
+import string
+import random
+
+
+def generate_random_filename(length: int):
+    """Generate a random alphanumeric filename with the specified length."""
+    return ''.join(random.choices(string.ascii_letters + string.digits, k=length))
 
 
 class FormView(TemplateView):
@@ -22,12 +34,63 @@ class FormView(TemplateView):
         email = request.POST.get('email')
         gender = request.POST.get('gender')
         dob = request.POST.get('dob')
+        descr = request.POST.get('descr')
+        avatar = ""
+
+        if request.FILES.get('avatar'):
+            file = request.FILES['avatar']
+            # Ensure the AVATAR_PATH exists
+            os.makedirs(settings.AVATAR_PATH, exist_ok=True)
+
+            # Generate a random alphanumeric filename
+            random_filename = generate_random_filename(length=20)
+
+            # Remove the extension of the file and store it
+            _, file_ext = os.path.splitext(file.name)
+
+            avatar = random_filename + file_ext
+
+            with open(os.path.join(settings.AVATAR_PATH, avatar), 'wb+') as destination:
+                for chunk in file.chunks():
+                    destination.write(chunk)
+
+
+            # For excryption, use following code
+            # key = Fernet.generate_key()
+            # key = Fernet(key)
+            # # Remember to save this key separately in a column for each file
+            #
+            # # Ensure the AVATAR_PATH exists
+            # os.makedirs(settings.AVATAR_PATH, exist_ok=True)
+            #
+            # # Generate a random alphanumeric filename
+            # random_filename = generate_random_filename(length=20)
+            #
+            # # Remove the extension of the file and store it
+            # _, file_ext = os.path.splitext(file.name)
+            #
+            # with open(os.path.join(settings.AVATAR_PATH, random_filename), 'wb+') as destination:
+            #     for chunk in file.chunks():
+            #         destination.write(chunk)
+            #
+            # with open(os.path.join(settings.AVATAR_PATH, random_filename), 'rb') as f_in:
+            #     encrypted_data = key.encrypt(f_in.read())
+            #
+            # with open(os.path.join(settings.AVATAR_PATH, f'{random_filename}.encrypted'), 'wb+') as f_out:
+            #     f_out.write(encrypted_data)
+            #
+            # # Remove the original file using os.remove()
+            # os.remove(os.path.join(settings.AVATAR_PATH, random_filename))
+            # avatar = os.path.join(settings.AVATAR_PATH, f'{random_filename}.encrypted')
+            print(avatar)
 
         self.post_data = request.POST.dict()
 
+        form_data = MyForm(fname=fname, lname=lname, email=email, gender=gender, dob=dob, descr=descr, avatar=avatar)
+        print(form_data)
+        print(request.POST)
+
         try:
-            form_data = MyForm(fname=fname, lname=lname, email=email, gender=gender, dob=dob)
-            form_data.full_clean()
             form_data.save()
             messages.success(request, "Form data saved successfully.")
             return redirect('backend:my_form')

@@ -37,7 +37,7 @@
                                 <p class="card-title-desc">You can add more description here</p>
                             </div>
                             <div class="card-body">
-                                <form class="needs-validation" id="form_1" name="form_1" novalidate method="POST" action="{% url 'backend:my_form' %}">
+                                <form class="needs-validation" id="form_1" name="form_1" novalidate method="POST" action="{% url 'backend:my_form' %}" enctype="multipart/form-data">
                                     {% csrf_token %}
 
                                     <div class="row">
@@ -47,7 +47,9 @@
                                                 <input type="text" class="form-control" id="fname" name="fname"
                                                        placeholder="First name" maxlength="50" required
                                                        value="{{ post_data.fname|default:'' }}" >
-                                                <div class="valid-feedback"></div>
+                                                <div class="valid-feedback">
+                                                    Looks good!
+                                                </div>
                                                 <div class="invalid-feedback">
                                                     Please enter a valid first name
                                                 </div>
@@ -58,7 +60,9 @@
                                             <div class="mb-3">
                                                 <label class="form-label" for="lname">Last name</label>
                                                 <input type="text" class="form-control" id="lname" name="lname" placeholder="Last name" value="{{ post_data.lname|default:'' }}" required pattern="[a-zA-Z\s]+" maxlength="50">
-                                                <div class="valid-feedback"></div>
+                                                <div class="valid-feedback">
+                                                    Looks good!
+                                                </div>
                                                 <div class="invalid-feedback">
                                                     Please enter a valid last name
                                                 </div>
@@ -71,7 +75,9 @@
                                             <div class="mb-3">
                                                 <label class="form-label" for="email">Email</label>
                                                 <input type="email" class="form-control" id="email" name="email" placeholder="Email" value="{{ post_data.email|default:'' }}" required maxlength="50">
-                                                <div class="valid-feedback"></div>
+                                                <div class="valid-feedback">
+                                                    Looks good!
+                                                </div>
                                                 <div class="invalid-feedback">
                                                     Please enter a valid email address
                                                 </div>
@@ -82,7 +88,9 @@
                                             <div class="mb-3">
                                                 <label class="form-label" for="password">Password</label>
                                                 <input type="password" class="form-control" id="password" name="password" value="" required maxlength="50">
-                                                <div class="valid-feedback"></div>
+                                                <div class="valid-feedback">
+                                                    Looks good!
+                                                </div>
                                                 <div class="invalid-feedback">
                                                     Please enter a password
                                                 </div>
@@ -132,8 +140,8 @@
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="mb-3">
-                                                <label class="form-label" for="image">Profile image</label>
-                                                <input class="form-control" type="file" id="image" name="image" accept=".jpg,.jpeg,.png" >
+                                                <label class="form-label" for="avatar">Profile image</label>
+                                                <input class="form-control" type="file" id="avatar" name="avatar" accept=".jpg,.jpeg,.png" >
                                                 <div class="valid-feedback"></div>
                                                 <div class="invalid-feedback">
                                                     Please choose a valid image file
@@ -142,6 +150,15 @@
                                             <div class="mb-3">
                                                 <div id="file_info"></div>
                                                 <img id="img_preview" src="" class="img-fluid" style="width: 200px" />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <div class="mb-3">
+                                                <label class="form-label" for="descr">Description</label>
+                                                <textarea id="descr" name="descr"></textarea>
                                             </div>
                                         </div>
                                     </div>
@@ -172,6 +189,20 @@
 {% endblock content %}
 
 {% block extra_js %}
+<!-- ckeditor js -->
+<script src="{% static 'js/pages/ckeditor.js'%}"></script>
+<script>
+    ClassicEditor
+		.create( document.querySelector('#descr'), {
+			// toolbar: [ 'heading', '|', 'bold', 'italic', 'link' ]
+		} )
+		.then( editor => {
+			window.editor = editor;
+		} )
+		.catch( err => {
+			console.error( err.stack );
+		});
+</script>
 <!-- datepicker js -->
 <script src="{% static 'libs/flatpickr/dist/flatpickr.min.js'%}"></script>
 <script>
@@ -204,7 +235,7 @@
 $(function() {
     var maxSize = 3 * 1024 * 1024;
 
-    $('#image').on('change', function() {
+    $('#avatar').on('change', function() {
         // Validate file size
         let file = this.files[0]
 
