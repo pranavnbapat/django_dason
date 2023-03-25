@@ -23,19 +23,17 @@ services:
     volumes:
       - ./mysql_data:/var/lib/mysql
       - ./mariadb_scripts:/docker-entrypoint-initdb.d
-    ports:
-      - "3307:3306"
 
-  phpMyAdmin:
-    image: phpmyadmin
-    environment:
-      PMA_HOST: mysql
-      PMA_ARBITRARY: 1
-    volumes:
-      - /sessions
-    restart: always
-    ports:
-      - "8088:80"
+#  phpMyAdmin:
+#    image: phpmyadmin
+#    environment:
+#      PMA_HOST: mysql
+#      PMA_ARBITRARY: 1
+#    volumes:
+#      - /sessions
+#    restart: always
+#    ports:
+#      - "8088:80"
 
   web:
     build: .
