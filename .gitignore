@@ -7,3 +7,6 @@ venv/
 .env
 *.sqlite3
 .idea/
+*.jpeg
+*.jpg
+*.png

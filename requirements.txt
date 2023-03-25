@@ -23,4 +23,6 @@ sqlparse==0.4.2
 urllib3==1.26.8
 python-dotenv
 mysqlclient
-paho-mqtt
+channels
+django-embed-video
+pandas

@@ -19,21 +19,6 @@ RUN apt-get update && apt-get install -y yarn
 # Install Gulp
 RUN npm install -g gulp-cli
 
-# Copy the custom MySQL configuration file into the container
-#COPY mysql_scripts/1_myconfig.cnf /etc/mysql/conf.d/
-
-# Copy the custom SQL scripts into the container
-#COPY mysql_scripts/2_init.sql /docker-entrypoint-initdb.d/
-
-# Run django tables SQL
-#COPY mysql_scripts/3_django_dason.sql /docker-entrypoint-initdb.d/
-
-#ENV MYSQL_DATABASE=django_dason
-#ENV MYSQL_DATABASE_COLLATION=utf8mb4_unicode_ci
-#ENV MYSQL_PASSWORD=asdASD123!
-#ENV MYSQL_USER=pranav
-#ENV MYSQL_HOST=db
-
 # Start the MySQL service
 CMD ["mysqld"]
 
