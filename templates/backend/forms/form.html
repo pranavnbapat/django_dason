@@ -19,7 +19,7 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                            <h4 class="mb-sm-0 font-size-18">Sample Form</h4>
+                            <h4 class="mb-sm-0 font-size-18">Sample Form {{ greeting }}</h4>
                             <div class="page-title-right">
                                 <ol class="breadcrumb m-0">
                                     <li class="breadcrumb-item"><a href="javascript: void(0);">Sample Form</a></li>
@@ -36,6 +36,15 @@
                                 <h4 class="card-title">Form Name</h4>
                                 <p class="card-title-desc">You can add more description here</p>
                             </div>
+                            {% if form.errors %}
+                                <ul>
+                                {% for field in form %}
+                                    {% for error in field.errors %}
+                                        <li>{{ field.label }}: {{ error }}</li>
+                                    {% endfor %}
+                                {% endfor %}
+                                </ul>
+                            {% endif %}
                             <div class="card-body">
                                 <form class="needs-validation" id="form_1" name="form_1" novalidate method="POST" action="{% url 'backend:my_form' %}" enctype="multipart/form-data">
                                     {% csrf_token %}
@@ -43,10 +52,10 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="mb-3">
-                                                <label class="form-label" for="fname">First name</label>
-                                                <input type="text" class="form-control" id="fname" name="fname"
-                                                       placeholder="First name" maxlength="50" required
-                                                       value="{{ post_data.fname|default:'' }}" >
+{#                                                <label class="form-label" for="fname">First name</label>#}
+                                                <label class="form-label" for="{{ form.fname.id_for_label }}">First name</label>
+                                                {{ form.fname }}
+                                                {{ form.fname.errors }}
                                                 <div class="valid-feedback">
                                                     Looks good!
                                                 </div>
@@ -58,8 +67,8 @@
 
                                         <div class="col-md-6">
                                             <div class="mb-3">
-                                                <label class="form-label" for="lname">Last name</label>
-                                                <input type="text" class="form-control" id="lname" name="lname" placeholder="Last name" value="{{ post_data.lname|default:'' }}" required pattern="[a-zA-Z\s]+" maxlength="50">
+                                                <label class="form-label" for="{{ form.lname.id_for_label }}">Last name</label>
+                                                {{ form.lname }}
                                                 <div class="valid-feedback">
                                                     Looks good!
                                                 </div>

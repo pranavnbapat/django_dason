@@ -2,11 +2,12 @@ from django.views.generic import TemplateView
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.shortcuts import render, redirect
-from .models import MyForm
 from django.conf import settings
 import os
 import string
 import random
+from .context_processors import greeting
+from .forms import MyFormForm
 
 
 def generate_random_filename(length: int):
@@ -17,51 +18,42 @@ def generate_random_filename(length: int):
 class FormView(TemplateView):
     template_name = "backend/forms/form.html"
 
-    post_data = {}
-
-    # Populate fields on page load
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     context['post_data'] = self.post_data
-    #     return context
+    def get(self, request, *args, **kwargs):
+        form = MyFormForm()
+        custom_context = greeting(request)
+        context = {'form': form}
+        context.update(custom_context)
+        return render(request, self.template_name, context)
 
     def post(self, request):
-        fname = request.POST.get('fname')
-        lname = request.POST.get('lname')
-        email = request.POST.get('email')
-        gender = request.POST.get('gender')
-        dob = request.POST.get('dob')
-        descr = request.POST.get('descr')
-        avatar = ""
+        form = MyFormForm(request.POST, request.FILES)
 
-        if request.FILES.get('avatar'):
-            file = request.FILES['avatar']
-            # Ensure the AVATAR_PATH exists
-            os.makedirs(settings.AVATAR_PATH, exist_ok=True)
+        if form.is_valid():
+            form_data = form.save(commit=False)
 
-            # Generate a random alphanumeric filename
-            random_filename = generate_random_filename(length=20)
+            if form_data.avatar:
+                file = request.FILES['avatar']
+                # Ensure the AVATAR_PATH exists
+                os.makedirs(settings.AVATAR_PATH, exist_ok=True)
 
-            # Remove the extension of the file and store it
-            _, file_ext = os.path.splitext(file.name)
+                # Generate a random alphanumeric filename
+                random_filename = generate_random_filename(length=20)
 
-            avatar = random_filename + file_ext
+                # Remove the extension of the file and store it
+                _, file_ext = os.path.splitext(file.name)
 
-            with open(os.path.join(settings.AVATAR_PATH, avatar), 'wb+') as destination:
-                for chunk in file.chunks():
-                    destination.write(chunk)
+                avatar = random_filename + file_ext
 
-        self.post_data = request.POST.dict()
+                with open(os.path.join(settings.AVATAR_PATH, avatar), 'wb+') as destination:
+                    for chunk in file.chunks():
+                        destination.write(chunk)
 
-        form_data = MyForm(fname=fname, lname=lname, email=email, gender=gender, dob=dob, descr=descr, avatar=avatar)
-
-        try:
             form_data.save()
             messages.success(request, "Form data saved successfully.")
             return redirect('backend:my_form')
-        except Exception as e:
-            messages.error(request, e)
-            return render(request, 'backend/forms/form.html', {'post_data': self.post_data})
+        else:
+            messages.error(request, "There was an error processing the form.")
+            return render(request, 'backend/forms/form.html', {'form': form})
 
 
 class ProfileView(TemplateView):
