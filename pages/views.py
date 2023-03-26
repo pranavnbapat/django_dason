@@ -37,18 +37,3 @@ pages_authentication_email_verification_view = PagesView.as_view(
 pages_authentication_two_step_verification_view = PagesView.as_view(
     template_name="pages/authentication/auth-two-step-verification.html"
 )
-#  Pages
-pages_starter_page_view = PagesView.as_view(template_name="pages/pages-starter.html")
-pages_maintenance_view = PagesView.as_view(template_name="pages/pages-maintenance.html")
-pages_comingsoon_view = PagesView.as_view(template_name="pages/pages-comingsoon.html")
-pages_timeline_view = PagesView.as_view(template_name="pages/pages-timeline.html")
-pages_faqs_view = PagesView.as_view(template_name="pages/pages-faqs.html")
-pages_pricing_view = PagesView.as_view(template_name="pages/pages-pricing.html")
-pages_error_404_view = PagesView.as_view(template_name="pages/pages-404.html")
-pages_error_500_view = PagesView.as_view(template_name="pages/pages-500.html")
-
-
-# Horizontal
-pages_horizontal_layout_view = PagesView.as_view(
-    template_name="pages/horizontal/layouts-horizontal.html"
-)

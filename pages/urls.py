@@ -9,15 +9,6 @@ from .views import (
     pages_authentication_confirm_mail_view,
     pages_authentication_email_verification_view,
     pages_authentication_two_step_verification_view,
-    pages_starter_page_view,
-    pages_maintenance_view,
-    pages_comingsoon_view,
-    pages_timeline_view,
-    pages_faqs_view,
-    pages_pricing_view,
-    pages_error_404_view,
-    pages_error_500_view,
-    pages_horizontal_layout_view,
 )
 
 app_name = "pages"
@@ -63,52 +54,5 @@ urlpatterns = [
         "forms/two_step_verification",
         view=pages_authentication_two_step_verification_view,
         name="pages.authentication.two_step_verification",
-    ),
-    # pages
-    path(
-        "starter-page",
-        view=pages_starter_page_view,
-        name="pages.starter_page",
-    ),
-    path(
-        "maintenance",
-        view=pages_maintenance_view,
-        name="pages.maintenance",
-    ),
-    path(
-        "comingsoon",
-        view=pages_comingsoon_view,
-        name="pages.comingsoon",
-    ),
-    path(
-        "timeline",
-        view=pages_timeline_view,
-        name="pages.timeline",
-    ),
-    path(
-        "faqs",
-        view=pages_faqs_view,
-        name="pages.faqs",
-    ),
-    path(
-        "pricing",
-        view=pages_pricing_view,
-        name="pages.pricing",
-    ),
-    path(
-        "error-404",
-        view=pages_error_404_view,
-        name="pages.error_404",
-    ),
-    path(
-        "error-500",
-        view=pages_error_500_view,
-        name="pages.error_500",
-    ),
-    #  Layout
-    path(
-        "layout/horizontal",
-        view=pages_horizontal_layout_view,
-        name="pages.layout.horizontal",
     ),
 ]
