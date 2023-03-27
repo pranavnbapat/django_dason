@@ -15,6 +15,8 @@ from django.views import View
 from django.urls import reverse_lazy
 from allauth.account.views import PasswordSetView, PasswordChangeView
 from django_otp.plugins.otp_totp.models import TOTPDevice
+from django.db import connections
+from django.views.generic.base import ContextMixin
 
 
 def generate_random_filename(length: int):
@@ -22,26 +24,34 @@ def generate_random_filename(length: int):
     return ''.join(random.choices(string.ascii_letters + string.digits, k=length))
 
 
-class FormView(TemplateView):
+class AdminMenuMixin(ContextMixin):
+    def get_admin_menu(self):
+        custom_context = get_admin_menu()
+        return custom_context
+
+    def get_context_data(self, **kwargs):
+        if hasattr(super(), 'get_context_data'):
+            context = super().get_context_data(**kwargs)
+        else:
+            context = kwargs
+        context.update(self.get_admin_menu())
+        return context
+
+
+class FormView(LoginRequiredMixin, TemplateView, AdminMenuMixin):
     template_name = "backend/forms/form.html"
 
     def get(self, request, *args, **kwargs):
         form = MyFormForm()
 
-        custom_context = get_admin_menu()
-
-        context = {'form': form}
-        context.update(custom_context)
-
         custom_context = greeting(request)
+        context = self.get_context_data(form=form)
         context.update(custom_context)
 
         return render(request, self.template_name, context)
 
     def post(self, request):
         form = MyFormForm(request.POST, request.FILES)
-        form.clean()
-        form.full_clean()
 
         if form.is_valid():
             form_data = form.save(commit=False)
@@ -71,11 +81,11 @@ class FormView(TemplateView):
             return render(request, 'backend/forms/form.html', {'form': form})
 
 
-class ProfileView(TemplateView):
+class ProfileView(LoginRequiredMixin, TemplateView, AdminMenuMixin):
     template_name = "backend/user/profile.html"
 
 
-class DashboardView(LoginRequiredMixin, View):
+class DashboardView(LoginRequiredMixin, View, AdminMenuMixin):
     df_users_devices = pd.read_csv("data/analytics/device_specific_visitors.csv")
 
     df_users_over_period = pd.read_csv("data/analytics/users_visiting_over_year.csv")
@@ -100,7 +110,7 @@ class DashboardView(LoginRequiredMixin, View):
     df_page_popularity = pd.read_csv("data/analytics/page_popularity.csv")
     df_page_popularity = df_page_popularity.head(10)
 
-    def get(self, request):
+    def get(self, request, *args, **kwargs):
         data = {'devices': list(self.df_users_devices['Device']), 'users': list(self.df_users_devices['Users'])}
         data_users_over_period = {'date': list(self.df_users_over_period['Date']),
                                   'users': list(self.df_users_over_period['Users'])}
@@ -125,19 +135,26 @@ class DashboardView(LoginRequiredMixin, View):
                    'data_new_ret_users_timeseries': data_new_ret_users_timeseries,
                    'data_page_popularity': data_page_popularity}
 
+        custom_context = self.get_context_data(context=context)
+        context.update(custom_context)
+
         return render(request, "backend/dashboard.html", context)
 
 
-class Settings(LoginRequiredMixin, View):
+class SettingsView(LoginRequiredMixin, TemplateView, AdminMenuMixin):
     template_name = "backend/settings.html"
 
     def __init__(self, *args):
-        super(Settings, self).__init__(*args)
+        super(SettingsView, self).__init__(*args)
 
-    def get(self, request):
+    def get(self, request, *args, **kwargs):
         k = TOTPDevice.objects.filter(user=request.user)
-        context_data = {"k": k}
-        return render(request, self.template_name, context_data)
+        context = {"k": k}
+
+        custom_context = self.get_context_data(context=context)
+        context.update(custom_context)
+
+        return render(request, self.template_name, context)
 
     def post(self, request):
         pass
@@ -151,6 +168,26 @@ class MyPasswordSetView(LoginRequiredMixin, PasswordSetView):
     success_url = reverse_lazy("dashboard")
 
 
+class AllUsersView(LoginRequiredMixin, TemplateView, AdminMenuMixin):
+    template_name = "backend/user/all_users.html"
+
+    def get(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        current_user_id = self.request.user.id
+
+        with connections['default'].cursor() as cursor:
+            cursor.execute('SELECT au.first_name, au.last_name, au.username, au.email, au.last_login, au.is_staff, '
+                           'ag.name as group_name, au.is_active, au.date_joined, au.id '
+                           'FROM auth_user au '
+                           'INNER JOIN auth_user_groups aug ON au.id = aug.user_id '
+                           'INNER JOIN auth_group ag ON ag.id = aug.group_id '
+                           'WHERE au.is_superuser != 1 AND au.id != ' + str(current_user_id))
+            all_users = cursor.fetchall()
+        context['all_users'] = all_users
+
+        return context
+
+
 # Forms
 form_view = login_required(FormView.as_view())
 
@@ -158,3 +195,7 @@ form_view = login_required(FormView.as_view())
 profile_view = login_required(ProfileView.as_view())
 
 dashboard_view = login_required(DashboardView.as_view())
+
+all_users_view = login_required(AllUsersView.as_view())
+
+settings_view = login_required(SettingsView.as_view())

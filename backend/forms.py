@@ -19,3 +19,4 @@ class MyFormForm(forms.ModelForm):
         if self.errors.get('email'):
             email_widget = self.fields['email'].widget
             email_widget.attrs.update({'class': email_widget.attrs['class'] + ' is-invalid'})
+            self.fields['email'].widget.attrs.update({'style': 'border-color: #ef6767;'})
