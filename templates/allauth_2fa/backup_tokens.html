@@ -9,7 +9,7 @@
             <div class="w-100">
                 <div class="d-flex flex-column h-100">
                     <div class="mb-4 mb-md-5 text-center">
-                        <a href="{% url 'dashboard' %}" class="d-block auth-logo">
+                        <a href="{% url 'backend:dashboard' %}" class="d-block auth-logo">
                             <img src="{% static 'images/logo-sm.svg' %}" alt="" height="28"> <span class="logo-txt">EU-Farmbook</span>
                         </a>
                     </div>
@@ -65,7 +65,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.0/FileSaver.min.js"></script>
 <script>
     function DownloadToken(){
-        var arr = "Dason - Admin Template\n\nSAVE YOUR BACKUP CODES \nKeep these backup codes somewhere safe but accessible\n\n"
+        var arr = "SAVE YOUR BACKUP CODES \nKeep these backup codes somewhere safe but accessible\n\n"
         let i=1;
         var token = document.querySelectorAll("#b-token li");
         

@@ -47,12 +47,6 @@ apps_chat_chat_view = ChatViewGetUsers.as_view()
 # users
 apps_users_view = UsersView.as_view()
 
-# Email
-apps_email_inbox_view = AppsView.as_view(
-    template_name="apps/email/apps-email-inbox.html"
-)
-apps_email_read_view = AppsView.as_view(template_name="apps/email/apps-email-read.html")
-
 
 # Contacts
 apps_contacts_usergrid_view = AppsView.as_view(

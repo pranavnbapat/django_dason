@@ -8,7 +8,7 @@
     <div class="w-100">
         <div class="d-flex flex-column h-100">
             <div class="mb-4 mb-md-5 text-center">
-                <a href="{% url 'dashboard' %}" class="d-block auth-logo">
+                <a href="{% url 'backend:dashboard' %}" class="d-block auth-logo">
                     <img src="{% static 'images/logo-sm.svg' %}" alt="" height="28"> <span class="logo-txt">EU-FarmBook</span>
                 </a>
             </div>
@@ -50,12 +50,6 @@
                     </div>
 
                     <ul class="list-inline mb-0">
-                        {% comment %} <li class="list-inline-item">
-                            <a href="{% provider_login_url 'facebook' %}"
-                                class="social-list-item bg-primary text-white border-primary">
-                                <i class="mdi mdi-facebook"></i>
-                            </a>
-                        </li> {% endcomment %}
                         <li class="list-inline-item">
                             <a href="{% provider_login_url 'google' %}"
                                 class="social-list-item bg-danger text-white border-danger">
@@ -72,9 +66,9 @@
                             class="text-primary fw-semibold"> Signup now </a> </p>
                 </div>
             </div>
-<!--            <div class="mt-4 mt-md-5 text-center">-->
-<!--                <p class="mb-0">© <script>document.write(new Date().getFullYear())</script> Dason   . Crafted with <i class="mdi mdi-heart text-danger"></i> by Themesdesign</p>-->
-<!--            </div>-->
+            <div class="mt-4 mt-md-5 text-center">
+                <p class="mb-0">© <script>document.write(new Date().getFullYear())</script> EU-FarmBook
+            </div>
         </div>
     </div>
 </div>

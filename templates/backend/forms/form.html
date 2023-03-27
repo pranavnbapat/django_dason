@@ -52,7 +52,6 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="mb-3">
-{#                                                <label class="form-label" for="fname">First name</label>#}
                                                 <label class="form-label" for="{{ form.fname.id_for_label }}">First name</label>
                                                 {{ form.fname }}
                                                 {{ form.fname.errors }}
@@ -82,13 +81,17 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="mb-3">
-                                                <label class="form-label" for="email">Email</label>
-                                                <input type="email" class="form-control" id="email" name="email" placeholder="Email" value="{{ post_data.email|default:'' }}" required maxlength="50">
+                                                <label class="form-label" for="{{ form.email.id_for_label }}">Email</label>
+                                                {{ form.email }}
                                                 <div class="valid-feedback">
                                                     Looks good!
                                                 </div>
                                                 <div class="invalid-feedback">
-                                                    Please enter a valid email address
+                                                    {% if form.email.errors %}
+                                                        {{ form.email.errors.0 }}
+                                                    {% else %}
+                                                        Please enter a valid email address
+                                                    {% endif %}
                                                 </div>
                                             </div>
                                         </div>

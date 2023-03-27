@@ -6,7 +6,7 @@
                         <div class="w-100">
                             <div class="d-flex flex-column h-100">
                                 <div class="mb-4 mb-md-5 text-center">
-                                    <a href="{% url 'dashboard' %}" class="d-block auth-logo">
+                                    <a href="{% url 'backend:dashboard' %}" class="d-block auth-logo">
                                         <img src="{% static 'images/logo-sm.svg' %}" alt="" height="28"> <span class="logo-txt">EU-FarmBook</span>
                                     </a>
                                 </div>
@@ -19,7 +19,7 @@
                                         <img src="{% static 'images/users/avatar-1.jpg'%}" class="rounded-circle img-thumbnail avatar-lg" alt="thumbnail">
                                         <h5 class="font-size-15 mt-3">Paul</h5>
                                     </div>
-                                    <form class="mt-4" action="{% url 'dashboard'%}">
+                                    <form class="mt-4" action="{% url 'backend:dashboard'%}">
                                         <div class="form-floating form-floating-custom mb-4">
                                             <input type="password" class="form-control" id="input-password" placeholder="Enter Password" > 
                                             <label for="input-password">Password</label>

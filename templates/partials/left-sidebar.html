@@ -12,7 +12,7 @@
                         <li class="menu-title" data-key="t-menu">Menu</li>
 
                         <li>
-                            <a href="{% url 'dashboard' %}">
+                            <a href="{% url 'backend:dashboard' %}">
                                 <i data-feather="home"></i>
                                 <span data-key="t-dashboard">Dashboard</span>
                             </a>
@@ -31,17 +31,6 @@
                                 <i data-feather="users"></i>
                                 <span data-key="t-users">Users</span>
                             </a>
-                        </li>
-
-                        <li>
-                            <a href="javascript: void(0);" class="has-arrow">
-                                <i data-feather="mail"></i>
-                                <span data-key="t-email">Email</span>
-                            </a>
-                            <ul class="sub-menu" aria-expanded="false">
-                                <li><a href="{% url 'apps:email.inbox'%}" data-key="t-inbox">Inbox</a></li>
-                                <li><a href="{% url 'apps:email.read'%}" data-key="t-read-email">Read Email</a></li>
-                            </ul>
                         </li>
                         
                         <li>

@@ -207,8 +207,8 @@ CRISPY_TEMPLATE_PACK = "bootstrap4"
 
 
 LOGIN_URL = "account_login"
-LOGIN_REDIRECT_URL = "/"
-LOGOUT_REDIRECT_URL = "/"
+LOGIN_REDIRECT_URL = "/backend/dashboard/"
+LOGOUT_REDIRECT_URL = "/backend/dashboard/"
 ACCOUNT_LOGOUT_ON_GET = True
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_VERIFICATION = "mandatory"

@@ -6,7 +6,7 @@
                         <div class="w-100">
                             <div class="d-flex flex-column h-100">
                                 <div class="mb-4 mb-md-5 text-center">
-                                    <a href="{% url 'dashboard' %}" class="d-block auth-logo">
+                                    <a href="{% url 'backend:dashboard' %}" class="d-block auth-logo">
                                         <img src="{% static 'images/logo-sm.svg' %}" alt="" height="28"> <span class="logo-txt">EU-FarmBook</span>
                                     </a>
                                 </div>
@@ -26,14 +26,14 @@
                                             <h4 class="mt-4">Verify Your E-mail Address !</h4>
                                             <p class="text-muted">We have sent an e-mail to you for verification. Follow the link provided to finalize the signup process. Please contact us if you do not receive it within a few minutes.</p>
                                             <div class="mt-4">
-                                                <a href="{% url 'dashboard' %}" class="btn btn-primary w-100">Back to Home</a>
+                                                <a href="{% url 'backend:dashboard' %}" class="btn btn-primary w-100">Back to Home</a>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <!-- <div class="mt-4 mt-md-5 text-center">
-                                    <p class="mb-0">© <script>document.write(new Date().getFullYear())</script> Dason   . Crafted with <i class="mdi mdi-heart text-danger"></i> by Themesdesign</p>
-                                </div> -->
+                                <div class="mt-4 mt-md-5 text-center">
+                                    <p class="mb-0">© <script>document.write(new Date().getFullYear())</script> EU-FarmBook
+                                </div>
                             </div>
                         </div>
                     </div>
