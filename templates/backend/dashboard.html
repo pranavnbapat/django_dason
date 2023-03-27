@@ -1,4 +1,4 @@
-{% extends "partials/base.html" %}
+{% extends "backend/base/base.html" %}
 {% load static %}
 
 {% block title %}Dashboard{% endblock title %}
@@ -11,7 +11,7 @@
 {% endblock extra_css %}
 
 {% block content %}
-{% include "partials/content.html" with title='Dashboard' pageview='Dashboard' %}
+{% include "backend/dashboard-content.html" with title='Dashboard' pageview='Dashboard' %}
 {% endblock content %}
 
 {% block extra_js %}

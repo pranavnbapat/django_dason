@@ -22,8 +22,6 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     # path("", views.home, name="home"),
 
-    # path("", login_required(views.DashboardView.as_view()), name="dashboard"),
-
     path("settings", login_required(views.Settings.as_view()), name="settings"),
     # Custom change password done page redirect
     path(

@@ -7,6 +7,7 @@ import os
 import string
 import random
 from .context_processors import get_admin_menu
+from .context_processors import greeting
 from .forms import MyFormForm
 import pandas as pd
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -26,9 +27,15 @@ class FormView(TemplateView):
 
     def get(self, request, *args, **kwargs):
         form = MyFormForm()
+
         custom_context = get_admin_menu()
+
         context = {'form': form}
         context.update(custom_context)
+
+        custom_context = greeting(request)
+        context.update(custom_context)
+
         return render(request, self.template_name, context)
 
     def post(self, request):
