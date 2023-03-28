@@ -62,9 +62,9 @@ def process_dashboard_data():
     }
 
 
-def manage_avatar_upload(file, len=20):
+def manage_avatar_upload(file, length=20):
     os.makedirs(settings.AVATAR_PATH, exist_ok=True)
-    random_filename = generate_random_filename(len)
+    random_filename = generate_random_filename(length)
     _, file_ext = os.path.splitext(file.name)
     avatar = random_filename + file_ext
 

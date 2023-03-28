@@ -16,24 +16,25 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include, re_path
 from euf import views
-from django.contrib.auth.decorators import login_required
+from django.views.generic import RedirectView
+
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    # path("", views.home, name="home"),
+    path("", views.home, name="home"),
 
     # Custom change password done page redirect
-    path(
-        "account/password/change/",
-        login_required(views.MyPasswordChangeView.as_view()),
-        name="account_change_password",
-    ),
-    # Custom set password done page redirect
-    path(
-        "account/password/set/",
-        login_required(views.MyPasswordSetView.as_view()),
-        name="account_set_password",
-    ),
+    # path(
+    #     "account/password/change/",
+    #     login_required(views.MyPasswordChangeView.as_view()),
+    #     name="account_change_password",
+    # ),
+    # # Custom set password done page redirect
+    # path(
+    #     "account/password/set/",
+    #     login_required(views.MyPasswordSetView.as_view()),
+    #     name="account_set_password",
+    # ),
     # Apps
     path("apps/", include("apps.urls")),
     # Backend
@@ -43,4 +44,5 @@ urlpatterns = [
     # Include the allauth and 2FA urls from their respective packages.
     path("/", include("allauth_2fa.urls")),
     path("account/", include("allauth.urls")),
+    path('account/', RedirectView.as_view(url='/account/login/?next=/')),
 ]

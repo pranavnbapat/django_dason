@@ -46,7 +46,7 @@ class FormView(LoginRequiredMixin, TemplateView, AdminMenuMixin):
         if form.is_valid():
             form_data = form.save(commit=False)
 
-            if form_data.avatar:
+            if request.FILES['avatar']:
                 file = request.FILES['avatar']
                 avatar = manage_avatar_upload(file)
                 form_data.avatar = avatar
