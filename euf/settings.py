@@ -213,7 +213,7 @@ ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_VERIFICATION = "mandatory"
 
 
-SITE_ID = 2
+SITE_ID = 1
 SOCIALACCOUNT_PROVIDERS = {
     "google": {
         "SCOPE": [

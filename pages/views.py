@@ -8,6 +8,8 @@ from django.views.generic import TemplateView
 
 User = get_user_model()
 # class PagesView(LoginRequiredMixin, TemplateView):
+
+
 class PagesView(TemplateView):
     pass
 

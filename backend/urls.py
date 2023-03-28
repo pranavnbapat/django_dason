@@ -5,7 +5,6 @@ from .views import (
     profile_view,
     dashboard_view,
     all_users_view,
-    settings_view,
 )
 from django.contrib.auth.decorators import login_required
 
@@ -22,19 +21,4 @@ urlpatterns = [
 
     # Users
     path("users", view=all_users_view, name="users"),
-
-    # Settings
-    path("settings", view=settings_view, name="settings"),
-
-    path(
-        "account/password/change/",
-        login_required(views.MyPasswordChangeView.as_view()),
-        name="account_change_password",
-    ),
-    # Custom set password done page redirect
-    path(
-        "account/password/set/",
-        login_required(views.MyPasswordSetView.as_view()),
-        name="account_set_password",
-    ),
 ]

@@ -6,9 +6,6 @@ from .context_processors import get_admin_menu, greeting
 from .forms import MyFormForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
-from django.urls import reverse_lazy
-from allauth.account.views import PasswordSetView, PasswordChangeView
-from django_otp.plugins.otp_totp.models import TOTPDevice
 from django.db import connections
 from django.views.generic.base import ContextMixin
 from .data_processing import process_dashboard_data, manage_avatar_upload
@@ -73,28 +70,20 @@ class DashboardView(LoginRequiredMixin, View, AdminMenuMixin):
         return render(request, "backend/dashboard.html", context)
 
 
-class SettingsView(LoginRequiredMixin, TemplateView, AdminMenuMixin):
-    template_name = "backend/settings.html"
-
-    def __init__(self, *args):
-        super(SettingsView, self).__init__(*args)
-
-    def get(self, request, *args, **kwargs):
-        k = TOTPDevice.objects.filter(user=request.user)
-        context = {"k": k}
-
-        custom_context = self.get_context_data(context=context)
-        context.update(custom_context)
-
-        return render(request, self.template_name, context)
-
-
-class MyPasswordChangeView(LoginRequiredMixin, PasswordChangeView):
-    success_url = reverse_lazy("dashboard")
-
-
-class MyPasswordSetView(LoginRequiredMixin, PasswordSetView):
-    success_url = reverse_lazy("dashboard")
+# class SettingsView(LoginRequiredMixin, TemplateView, AdminMenuMixin):
+#     template_name = "backend/settings.html"
+#
+#     def __init__(self, *args):
+#         super(SettingsView, self).__init__(*args)
+#
+#     def get(self, request, *args, **kwargs):
+#         k = TOTPDevice.objects.filter(user=request.user)
+#         context = {"k": k}
+#
+#         custom_context = self.get_context_data(context=context)
+#         context.update(custom_context)
+#
+#         return render(request, self.template_name, context)
 
 
 class AllUsersView(LoginRequiredMixin, TemplateView, AdminMenuMixin):
@@ -131,4 +120,4 @@ dashboard_view = login_required(DashboardView.as_view())
 all_users_view = login_required(AllUsersView.as_view())
 
 # Settings
-settings_view = login_required(SettingsView.as_view())
+
