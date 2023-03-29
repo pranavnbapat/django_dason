@@ -2,7 +2,7 @@ from django.views.generic import TemplateView
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.shortcuts import render, redirect
-from .context_processors import get_admin_menu, greeting
+from .context_processors import get_admin_menu, greeting, get_countries
 from .forms import MyFormForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
@@ -31,9 +31,8 @@ class FormView(LoginRequiredMixin, TemplateView, AdminMenuMixin):
     def get(self, request, *args, **kwargs):
         form = MyFormForm()
 
-        custom_context = greeting(request)
         context = self.get_context_data(form=form)
-        context.update(custom_context)
+        context.update(get_countries())
 
         return render(request, self.template_name, context)
 
@@ -68,22 +67,6 @@ class DashboardView(LoginRequiredMixin, View, AdminMenuMixin):
         context = {**data, **custom_context}
 
         return render(request, "backend/dashboard.html", context)
-
-
-# class SettingsView(LoginRequiredMixin, TemplateView, AdminMenuMixin):
-#     template_name = "backend/settings.html"
-#
-#     def __init__(self, *args):
-#         super(SettingsView, self).__init__(*args)
-#
-#     def get(self, request, *args, **kwargs):
-#         k = TOTPDevice.objects.filter(user=request.user)
-#         context = {"k": k}
-#
-#         custom_context = self.get_context_data(context=context)
-#         context.update(custom_context)
-#
-#         return render(request, self.template_name, context)
 
 
 class AllUsersView(LoginRequiredMixin, TemplateView, AdminMenuMixin):

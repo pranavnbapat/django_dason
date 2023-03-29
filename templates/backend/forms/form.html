@@ -111,6 +111,47 @@
                                     </div>
 
                                     <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label class="form-label" for="{{ form.contact_no.id_for_label }}">Contact Number</label>
+                                                {{ form.contact_no }}
+                                                <div class="valid-feedback">
+                                                    Looks good!
+                                                </div>
+                                                <div class="invalid-feedback">
+                                                    {% if form.contact_no.errors %}
+                                                        {{ form.contact_no.errors.0 }}
+                                                    {% else %}
+                                                        Please enter a valid contact number
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label class="form-label" for="country_master_id">Country</label>
+                                                <select class="form-control" id="country_master_id" name="country_master_id" required>
+                                                    <option value="">Please choose your country</option>
+                                                    {% for c in countries %}
+                                                        <option value="{{ c.id }}">{{ c.country }} ({{ c.calling_code }})</option>
+                                                    {% endfor %}
+                                                </select>
+                                                <div class="valid-feedback">
+                                                    Looks good!
+                                                </div>
+                                                <div class="invalid-feedback">
+                                                    {% if form.country_master_id.errors %}
+                                                        {{ form.country_master_id.errors.0 }}
+                                                    {% else %}
+                                                        Please choose a valid country
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
                                         <div class="col-md-12">
                                             <div class="mb-3">
 {#                                                <label class="form-label">Gender</label>#}

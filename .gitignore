@@ -10,3 +10,4 @@ venv/
 *.jpeg
 *.jpg
 *.png
+**/migrations/
