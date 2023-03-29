@@ -96,11 +96,16 @@ class AllUsersView(LoginRequiredMixin, TemplateView, AdminMenuMixin):
             cursor.execute('SELECT au.first_name, au.last_name, au.username, au.email, au.last_login, au.is_staff, '
                            'ag.name as group_name, au.is_active, au.date_joined, au.id '
                            'FROM auth_user au '
-                           'INNER JOIN auth_user_groups aug ON au.id = aug.user_id '
-                           'INNER JOIN auth_group ag ON ag.id = aug.group_id '
+                           'LEFT JOIN auth_user_groups aug ON au.id = aug.user_id '
+                           'LEFT JOIN auth_group ag ON ag.id = aug.group_id '
                            'WHERE au.is_superuser != 1 AND au.id != ' + str(current_user_id))
             all_users = cursor.fetchall()
         context = {'all_users': all_users}
+
+        print(request.path)
+        if request.path == '/backend/users-grid':
+            self.template_name = "backend/user/all-users-grid.html"
+
         custom_context = self.get_context_data(context=context)
         context.update(custom_context)
 
@@ -118,6 +123,4 @@ dashboard_view = login_required(DashboardView.as_view())
 
 # All users
 all_users_view = login_required(AllUsersView.as_view())
-
-# Settings
 

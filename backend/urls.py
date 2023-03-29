@@ -21,4 +21,5 @@ urlpatterns = [
 
     # Users
     path("users", view=all_users_view, name="users"),
+    path("users-grid", view=all_users_view, name="users-grid"),
 ]
