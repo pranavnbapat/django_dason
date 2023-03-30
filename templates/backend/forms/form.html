@@ -113,6 +113,32 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="mb-3">
+                                                <label class="form-label" for="countries_master_id">Country</label>
+                                                <select class="form-control" id="countries_master_id" name="countries_master_id" required>
+                                                    <option value="">Please choose your country</option>
+                                                    {% for c in countries %}
+                                                        {% if form.data.countries_master_id == c.id|stringformat:"s" %}
+                                                            <option value="{{ c.id }}" selected>{{ c.country }} ({{ c.calling_code }})</option>
+                                                        {% else %}
+                                                            <option value="{{ c.id }}">{{ c.country }} ({{ c.calling_code }})</option>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                </select>
+                                                <div class="valid-feedback">
+                                                    Looks good!
+                                                </div>
+                                                <div class="invalid-feedback">
+                                                    {% if form.countries_master_id.errors %}
+                                                        {{ form.countries_master_id.errors.0 }}
+                                                    {% else %}
+                                                        Please choose a valid country
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
                                                 <label class="form-label" for="{{ form.contact_no.id_for_label }}">Contact Number</label>
                                                 {{ form.contact_no }}
                                                 <div class="valid-feedback">
@@ -127,28 +153,6 @@
                                                 </div>
                                             </div>
                                         </div>
-
-                                        <div class="col-md-6">
-                                            <div class="mb-3">
-                                                <label class="form-label" for="country_master_id">Country</label>
-                                                <select class="form-control" id="country_master_id" name="country_master_id" required>
-                                                    <option value="">Please choose your country</option>
-                                                    {% for c in countries %}
-                                                        <option value="{{ c.id }}">{{ c.country }} ({{ c.calling_code }})</option>
-                                                    {% endfor %}
-                                                </select>
-                                                <div class="valid-feedback">
-                                                    Looks good!
-                                                </div>
-                                                <div class="invalid-feedback">
-                                                    {% if form.country_master_id.errors %}
-                                                        {{ form.country_master_id.errors.0 }}
-                                                    {% else %}
-                                                        Please choose a valid country
-                                                    {% endif %}
-                                                </div>
-                                            </div>
-                                        </div>
                                     </div>
 
                                     <div class="row">
@@ -156,15 +160,15 @@
                                             <div class="mb-3">
 {#                                                <label class="form-label">Gender</label>#}
                                                 <div class="form-check form-check-inline mb-3">
-                                                    <input class="form-check-input" type="radio" name="gender" id="male" required value="m" {% if post_data.gender == 'm' %}checked{% endif %}>
+                                                    <input class="form-check-input" type="radio" name="gender" id="male" required value="m" {% if form.data.gender == 'm' %}checked{% endif %}>
                                                     <label class="form-check-label" for="male">Male</label>
                                                 </div>
                                                 <div class="form-check form-check-inline mb-3">
-                                                    <input class="form-check-input" type="radio" name="gender" id="female" required value="f" {% if post_data.gender == 'f' %}checked{% endif %}>
+                                                    <input class="form-check-input" type="radio" name="gender" id="female" required value="f" {% if form.data.gender == 'f' %}checked{% endif %}>
                                                     <label class="form-check-label" for="female">Female</label>
                                                 </div>
                                                 <div class="form-check form-check-inline mb-3">
-                                                    <input class="form-check-input" type="radio" name="gender" id="other" required value="u" {% if post_data.gender == 'u' %}checked{% endif %}>
+                                                    <input class="form-check-input" type="radio" name="gender" id="other" required value="u" {% if form.data.gender == 'u' %}checked{% endif %}>
                                                     <label class="form-check-label" for="other">Unspecified</label>
                                                 </div>
                                             </div>
@@ -211,7 +215,7 @@
                                         <div class="col-sm-12">
                                             <div class="mb-3">
                                                 <label class="form-label" for="descr">Description</label>
-                                                <textarea id="descr" name="descr"></textarea>
+                                                <textarea id="descr" name="descr">{{ form.data.descr }}</textarea>
                                             </div>
                                         </div>
                                     </div>
@@ -219,7 +223,7 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group mb-3 form-check">
-                                                <input id="tnc" type="checkbox" class="form-check-input" name="tnc" required {% if post_data.tnc %}checked{% endif %} />
+                                                <input id="tnc" type="checkbox" class="form-check-input" name="tnc" required {% if form.data.tnc %}checked{% endif %} />
                                                 <label class="form-check-label" for="term-check01">I accept the terms and conditions</label>
                                                 <div class="invalid-feedback">
                                                     Please accept terms and conditions

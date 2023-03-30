@@ -2,7 +2,7 @@ from django.views.generic import TemplateView
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.shortcuts import render, redirect
-from .context_processors import get_admin_menu, greeting, get_countries
+from .context_processors import get_admin_menu, get_countries
 from .forms import MyFormForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
@@ -13,8 +13,8 @@ from .data_processing import process_dashboard_data, manage_avatar_upload
 
 class AdminMenuMixin(ContextMixin):
     def get_admin_menu(self):
-        custom_context = get_admin_menu()
-        return custom_context
+        context = get_admin_menu()
+        return context
 
     def get_context_data(self, **kwargs):
         if hasattr(super(), 'get_context_data'):
@@ -30,11 +30,13 @@ class FormView(LoginRequiredMixin, TemplateView, AdminMenuMixin):
 
     def get(self, request, *args, **kwargs):
         form = MyFormForm()
-
         context = self.get_context_data(form=form)
-        context.update(get_countries())
-
         return render(request, self.template_name, context)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update(get_countries())
+        return context
 
     def post(self, request):
         form = MyFormForm(request.POST, request.FILES)
@@ -52,7 +54,8 @@ class FormView(LoginRequiredMixin, TemplateView, AdminMenuMixin):
             return redirect('backend:my_form')
         else:
             messages.error(request, "There was an error processing the form.")
-            return render(request, 'backend/forms/form.html', {'form': form})
+            context = self.get_context_data(form=form)
+            return render(request, self.template_name, context)
 
 
 class ProfileView(LoginRequiredMixin, TemplateView, AdminMenuMixin):

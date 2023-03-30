@@ -1,5 +1,4 @@
 from django.urls import path
-from backend import views
 from .views import (
     form_view,
     profile_view,

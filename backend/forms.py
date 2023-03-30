@@ -7,7 +7,8 @@ class MyFormForm(forms.ModelForm):
         model = MyForm
         fields = ['fname', 'lname', 'email', 'gender', 'dob', 'descr', 'avatar', 'contact_no', 'countries_master_id']
         widgets = {
-            'fname': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'First Name', 'maxlength': '50'}),
+            'fname': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'First Name', 'maxlength': '50',
+                                            'pattern': '[a-zA-Z\s]+$'}),
             'lname': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Last Name',
                                             'pattern': '[a-zA-Z\s]+$', 'maxlength': '50'}),
             'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Email', 'maxlength': '50'}),

@@ -37,18 +37,22 @@ class MyForm(models.Model):
     id = models.AutoField(primary_key=True, db_column='id', db_index=True, editable=False, unique=True,
                           blank=False, null=False, verbose_name='ID')
     fname = models.CharField(max_length=50, null=False, blank=False,
-                             validators=[RegexValidator(regex=r'^[a-zA-Z\s]+$', message="Invalid characters")])
+                             validators=[RegexValidator(regex=r'^[a-zA-Z\s]+$', message="Invalid characters")],
+                             error_messages={'blank': 'This field is required', 'null': 'This field is required'})
     lname = models.CharField(max_length=50, null=False, blank=False,
-                             validators=[RegexValidator(regex=r'^[a-zA-Z\s]+$', message="Invalid characters")])
+                             validators=[RegexValidator(regex=r'^[a-zA-Z\s]+$', message="Invalid characters")],
+                             error_messages={'blank': 'This field is required', 'null': 'This field is required'})
     email = models.EmailField(max_length=50, unique=True, null=False, blank=False, db_index=True,
-                              error_messages={'unique': 'This email already exists'})
+                              error_messages={'unique': 'This email already exists', 'blank': 'This field is required',
+                                              'null': 'This field is required'})
     contact_no = models.CharField(max_length=15, null=True, db_index=True, default='',
-                                  validators=[RegexValidator(regex=r'^[\d- ]+$', message="Invalid phone number")])
+                                  validators=[RegexValidator(regex=r'^[0-9- ]+$', message="Invalid phone number")])
     countries_master_id = models.ForeignKey(EUCountries, on_delete=models.PROTECT, null=True, to_field="id")
     gender = models.CharField(max_length=1, null=False, blank=False,
                               validators=[RegexValidator(regex=r'^[a-zA-Z]+$', message="Invalid characters")])
     dob = models.DateField(null=False, blank=False,
-                           validators=[RegexValidator(regex=r'^[\d-]+$', message="Invalid characters")])
+                           validators=[RegexValidator(regex=r'^[0-9-]+$', message="Invalid characters")],
+                           error_messages={'blank': 'This field is required', 'null': 'This field is required'})
     avatar = models.CharField(max_length=50, null=True, blank=True,
                               validators=[RegexValidator(regex=r'^[a-zA-Z0-9.-_]+$', message="Invalid characters")])
     descr = models.TextField(null=True, blank=True)
