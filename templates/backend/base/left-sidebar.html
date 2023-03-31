@@ -17,27 +17,6 @@
                                 </a>
                             </li>
                         {% endfor %}
-
-                        <li class="menu-title" data-key="t-apps">Apps</li>
-
-                        <li>
-                            <a href="{% url 'apps:chat'%}">
-                                <i data-feather="message-square"></i>
-                                <span data-key="t-chat">Chat</span>
-                            </a>
-                        </li>
-
-                        <li>
-                            <a href="javascript: void(0);" class="has-arrow">
-                                <i data-feather="users"></i>
-                                <span data-key="t-contacts">Contacts</span>
-                            </a>
-                            <ul class="sub-menu" aria-expanded="false">
-                                <li><a href="{% url 'apps:contacts.usergrid'%}" data-key="t-user-grid">User Grid</a></li>
-                                <li><a href="{% url 'apps:contacts.userlist'%}" data-key="t-user-list">User List</a></li>
-                            </ul>
-                        </li>
-
                     </ul>
                 </div>
                 <!-- Sidebar -->
