@@ -98,6 +98,10 @@ class AllUsersView(LoginRequiredMixin, TemplateView, AdminMenuMixin):
         return render(request, self.template_name, context)
 
 
+class FastApiTestView(LoginRequiredMixin, TemplateView, AdminMenuMixin):
+    template_name = "backend/fastapi_test/fastapi_test_index.html"
+
+
 # Forms
 form_view = login_required(FormView.as_view())
 
@@ -110,3 +114,5 @@ dashboard_view = login_required(DashboardView.as_view())
 # All users
 all_users_view = login_required(AllUsersView.as_view())
 
+# Fast API Test
+fastapi_test_view = login_required(FastApiTestView.as_view())

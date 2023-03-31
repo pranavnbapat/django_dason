@@ -1,6 +1,5 @@
 from django.db import models
 from django.core.validators import RegexValidator
-from django.core.exceptions import ValidationError
 
 
 def default_list():
@@ -86,7 +85,7 @@ class AdminMenuMaster(models.Model):
     menu_icon = models.CharField(max_length=10, null=False, blank=False, default='list',
                                  validators=[RegexValidator(regex=r'^[a-z-]+$', message="Invalid characters")])
     menu_route = models.CharField(max_length=20, unique=True,
-                                  validators=[RegexValidator(regex=r'^[a-zA-Z\s]+$', message="Invalid characters")])
+                                  validators=[RegexValidator(regex=r'^[a-zA-Z\s-]+$', message="Invalid characters")])
     menu_order = models.SmallIntegerField(null=True, blank=True,
                                           validators=[RegexValidator(regex=r'^[0-9]+$', message="Invalid characters")])
     status = models.BooleanField(default=True)

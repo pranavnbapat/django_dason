@@ -39,9 +39,6 @@ urlpatterns = [
         name="account_set_password",
     ),
 
-    # Apps
-    path("apps/", include("apps.urls")),
-
     # Backend
     path("backend/", include("backend.urls")),
 
