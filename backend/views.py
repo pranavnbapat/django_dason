@@ -9,6 +9,7 @@ from django.views import View
 from django.db import connections
 from django.views.generic.base import ContextMixin
 from .data_processing import process_dashboard_data, manage_avatar_upload
+from django.contrib.auth.hashers import make_password
 
 
 class AdminMenuMixin(ContextMixin):
@@ -43,6 +44,11 @@ class FormView(LoginRequiredMixin, TemplateView, AdminMenuMixin):
 
         if form.is_valid():
             form_data = form.save(commit=False)
+
+            # This needs to be tested
+            password = make_password(request.POST.get('password'))
+            form_data.password = password
+            # This needs to be tested
 
             if request.FILES['avatar']:
                 file = request.FILES['avatar']
@@ -98,10 +104,6 @@ class AllUsersView(LoginRequiredMixin, TemplateView, AdminMenuMixin):
         return render(request, self.template_name, context)
 
 
-class FastApiTestView(LoginRequiredMixin, TemplateView, AdminMenuMixin):
-    template_name = "backend/fastapi_test/fastapi_test_index.html"
-
-
 # Forms
 form_view = login_required(FormView.as_view())
 
@@ -114,5 +116,3 @@ dashboard_view = login_required(DashboardView.as_view())
 # All users
 all_users_view = login_required(AllUsersView.as_view())
 
-# Fast API Test
-fastapi_test_view = login_required(FastApiTestView.as_view())

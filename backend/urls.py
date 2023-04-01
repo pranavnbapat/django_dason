@@ -4,7 +4,6 @@ from .views import (
     profile_view,
     dashboard_view,
     all_users_view,
-    fastapi_test_view,
 )
 from django.contrib.auth.decorators import login_required
 
@@ -21,7 +20,5 @@ urlpatterns = [
 
     # Users
     path("users", view=all_users_view, name="users"),
-    path("users-grid", view=all_users_view, name="users-grid"),
-
-    path("fastapi-test/", view=fastapi_test_view, name="fastapi-test")
+    path("users-grid", view=all_users_view, name="users-grid")
 ]

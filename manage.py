@@ -2,9 +2,6 @@
 """Django's command-line utility for administrative tasks."""
 import os
 import sys
-import time
-
-time.sleep(8)
 
 
 def main():

@@ -14,10 +14,10 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, re_path
 from django.contrib.auth.decorators import login_required
 from euf import views
-from django.views.generic import RedirectView
+# from django.views.generic import RedirectView
 
 
 urlpatterns = [
@@ -48,5 +48,5 @@ urlpatterns = [
     # Include the allauth and 2FA urls from their respective packages.
     path("/", include("allauth_2fa.urls")),
     path("account/", include("allauth.urls")),
-    path('account/', RedirectView.as_view(url='/account/login/?next=/')),
+    # path('account/', RedirectView.as_view(url='/account/login/?next=/')),
 ]

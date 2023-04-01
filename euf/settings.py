@@ -61,6 +61,7 @@ THIRD_PARTY_APPS = [
     "django_otp.plugins.otp_static",
     # Enable two-factor auth.
     "allauth_2fa",
+    "django_extensions"
 ]
 INSTALLED_APPS = DEFAULT_APPS + LOCAL_APPS + THIRD_PARTY_APPS
 
@@ -131,7 +132,19 @@ DATABASES = {
         'PASSWORD': os.getenv("MYSQL_PASS"),
         'HOST': os.getenv("MYSQL_HOST"),
         'PORT': os.getenv("MYSQL_PORT"),
-    }
+    },
+    'mongodb': {
+        'ENGINE': 'djongo',
+        'NAME': 'your-db-name',
+        'CLIENT': {
+            'host': os.getenv("MONGODB_HOST"),
+            'port': os.getenv("MONGODB_PORT"),
+            'username': os.getenv("MONGODB_USER"),
+            'password': os.getenv("MONGODB_PASS"),
+            'authSource': os.getenv("MONGODB_DB"),
+            'authMechanism': 'SCRAM-SHA-1',
+        },
+    },
 }
 
 
@@ -174,7 +187,7 @@ USE_TZ = True
 AVATAR_PATH = BASE_DIR / "media/images/users"
 STATIC_URL = "/static/"
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
-STATIC_ROOT = os.path.join(BASE_DIR, 'media')
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
