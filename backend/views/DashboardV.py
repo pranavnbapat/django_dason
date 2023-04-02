@@ -13,7 +13,3 @@ class DashboardView(LoginRequiredMixin, View, AdminMenuMixin):
         context = {**data, **custom_context}
 
         return render(request, "backend/dashboard.html", context)
-
-
-# Dashboard
-# dashboard_view = login_required(DashboardView.as_view())
