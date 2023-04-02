@@ -1,11 +1,11 @@
 class MongoDBRouter:
     def db_for_read(self, model, **hints):
-        if model._meta.app_label == 'your_app_name':
+        if model._meta.app_label == 'backend':
             return 'mongodb'
         return 'default'
 
     def db_for_write(self, model, **hints):
-        if model._meta.app_label == 'your_app_name':
+        if model._meta.app_label == 'backend':
             return 'mongodb'
         return 'default'
 
@@ -13,7 +13,7 @@ class MongoDBRouter:
         return True
 
     def allow_migrate(self, db, app_label, model_name=None, **hints):
-        if app_label == 'your_app_name':
+        if app_label == 'backend':
             return db == 'mongodb'
         return db == 'default'
 

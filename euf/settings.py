@@ -14,6 +14,8 @@ import os
 from pathlib import Path
 from django.contrib.messages import constants as messages
 from dotenv import load_dotenv
+import pymongo
+from pymongo import MongoClient
 
 load_dotenv()
 
@@ -55,10 +57,12 @@ THIRD_PARTY_APPS = [
     "allauth.socialaccount",
     "allauth.socialaccount.providers.google",
     "allauth.socialaccount.providers.facebook",
+
     # Configure the django-otp package.
     "django_otp",
     "django_otp.plugins.otp_totp",
     "django_otp.plugins.otp_static",
+
     # Enable two-factor auth.
     "allauth_2fa",
     "django_extensions"
@@ -133,19 +137,30 @@ DATABASES = {
         'HOST': os.getenv("MYSQL_HOST"),
         'PORT': os.getenv("MYSQL_PORT"),
     },
-    'mongodb': {
-        'ENGINE': 'djongo',
-        'NAME': 'your-db-name',
-        'CLIENT': {
-            'host': os.getenv("MONGODB_HOST"),
-            'port': os.getenv("MONGODB_PORT"),
-            'username': os.getenv("MONGODB_USER"),
-            'password': os.getenv("MONGODB_PASS"),
-            'authSource': os.getenv("MONGODB_DB"),
-            'authMechanism': 'SCRAM-SHA-1',
-        },
-    },
+    # 'mongodb': {
+    #     'ENGINE': 'djongo',
+    #     'NAME': 'your-db-name',
+    #     'CLIENT': {
+    #         'host': os.getenv("MONGODB_HOST"),
+    #         'port': os.getenv("MONGODB_PORT"),
+    #         'username': os.getenv("MONGODB_USER"),
+    #         'password': os.getenv("MONGODB_PASS"),
+    #         'authSource': os.getenv("MONGODB_DB"),
+    #         'authMechanism': 'SCRAM-SHA-1',
+    #     },
+    # },
 }
+
+# DATABASE_ROUTERS = ['euf.mongodb_router.MongoDBRouter']
+
+mongo_client = MongoClient(
+    host=os.getenv("MONGODB_HOST"),
+    port=int(os.getenv("MONGODB_PORT")),
+    username=os.getenv("MONGODB_USER"),
+    password=os.getenv("MONGODB_PASS"),
+    authSource=os.getenv("MONGODB_DB"),
+    authMechanism='SCRAM-SHA-1',
+)
 
 
 # Password validation

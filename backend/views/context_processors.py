@@ -1,4 +1,4 @@
-from .models import AdminMenuMaster, EUCountries
+from ..models import AdminMenuMaster, EUCountries
 
 
 def greeting():

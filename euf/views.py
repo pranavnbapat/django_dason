@@ -3,7 +3,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.views import View
 from django.views.generic.base import ContextMixin
-from backend.context_processors import get_admin_menu
+from backend.views.context_processors import get_admin_menu
 from django.urls import reverse_lazy
 from allauth.account.views import PasswordSetView, PasswordChangeView
 from django_otp.plugins.otp_totp.models import TOTPDevice
