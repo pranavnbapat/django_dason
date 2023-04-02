@@ -2,29 +2,14 @@ from django.shortcuts import render
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.views import View
-from django.views.generic.base import ContextMixin
-from backend.views.context_processors import get_admin_menu
 from django.urls import reverse_lazy
 from allauth.account.views import PasswordSetView, PasswordChangeView
 from django_otp.plugins.otp_totp.models import TOTPDevice
-from backend.urls import urlpatterns as backend_urlpatterns
+from backend.views.mixins import AdminMenuMixin
+
 
 def home(req):
     return render(req, "frontend/home.html")
-
-
-class AdminMenuMixin(ContextMixin):
-    def get_admin_menu(self):
-        custom_context = get_admin_menu()
-        return custom_context
-
-    def get_context_data(self, **kwargs):
-        if hasattr(super(), 'get_context_data'):
-            context = super().get_context_data(**kwargs)
-        else:
-            context = kwargs
-        context.update(self.get_admin_menu())
-        return context
 
 
 class Settings(LoginRequiredMixin, View, AdminMenuMixin):
