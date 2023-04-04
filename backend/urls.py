@@ -25,4 +25,7 @@ urlpatterns = [
 
     # Knowledge Objects
     path("knowledge-objects", view=KOView.as_view(), name="knowledge-objects"),
+
+    # FastAPI View
+    path("fastapi-view", view=KOView.as_view(), name="fastapi-view"),
 ]

@@ -23,4 +23,3 @@ class KOView(TemplateView, LoginRequiredMixin, AdminMenuMixin):
         mongodb_data = get_mongodb_data()
         context['mongodb_data'] = mongodb_data
         return context
-

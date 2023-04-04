@@ -1,29 +1,29 @@
 # django_euf
 
+## Requirements
+1. Python 3.9+
+2. MariaDB (Latest)
+3. Sendgrid email account (for sending emails)
+4. Docker (optional, only if you want to dockerize your application)
+
 ## Installation
 1. Clone this repository.
-2. Download and install Node (v.16+) from this URL:
-```
-https://nodejs.org/en/download
-```
-3. Once Node is installed you should be able to install Yarn using:
-```
-npm install --global yarn
-```
-4. Next, run:
-```
-gulp
-```
-5. Finally, install Python 3.9+ from:
+
+2. Install Python v3.9+
 ```
 https://www.python.org/downloads/
 ```
 - For best compatability, use python 3.9.13
 
-6. Create a new account on sendgrid.com and obtain your API key. We'll use this API to send emails 
+3. Create a new account on sendgrid.com and obtain your API key. We'll use this API to send emails 
 (password recovery, account verification, etc.). Free plan allows you to send 100 emails a day.
 ```
 https://sendgrid.com/
+```
+
+4. Install MariaDB
+```
+https://mariadb.org/download/
 ```
 
 
@@ -42,16 +42,15 @@ pip install django django-allauth django-embed-video django-crispy-forms
 python -m pip install --upgrade pip
 ```
 
-3. Run the scripts inside mariadb_scripts folder to create a new user and database. Modify init file as per your needs.
-
-4. If you don't want to modify the scripts, your default database name will be 'django_euf' and the database username and
+3. Run the scripts inside mariadb_scripts folder to create a new user and database. Modify init file as per your needs. 
+If you don't want to modify the scripts, your default database name will be 'django_euf' and the database username and
 password will be 'root' and 'asdasdasd'
 
-5. Update settings.py in the main directory to configure database connectivity:
+4. Update settings.py in the main directory to configure database connectivity:
 ```
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.#databaseservername#',
+        'ENGINE': 'django.db.backends.mysql',
         'NAME': 'name',
         'USER': 'user',
         'PASSWORD': 'pass',
