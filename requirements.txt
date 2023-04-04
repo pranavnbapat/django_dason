@@ -25,3 +25,7 @@ python-dotenv
 mysqlclient
 django-embed-video
 pandas
+djongo
+pymongo
+django-extensions
+django-werkzeug
