@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.contrib.auth.decorators import login_required
 from euf import views
+from django.views.generic import RedirectView
 
 
 urlpatterns = [
@@ -29,6 +30,9 @@ urlpatterns = [
 
     # Pages
     path("pages/", include("pages.urls")),
+
+    # Add the redirect for the '/account' URL
+    path("account/", RedirectView.as_view(url="/account/login/?next=/", permanent=False), name="account_redirect"),
 
     # Include the allauth and 2FA urls from their respective packages.
     path("/", include("allauth_2fa.urls")),

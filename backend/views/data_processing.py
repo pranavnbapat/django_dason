@@ -73,3 +73,18 @@ def manage_avatar_upload(file, length=20):
             destination.write(chunk)
 
     return avatar
+
+
+def nested_list_to_csv(nested_list):
+    def flatten_list(nested_list):
+        flat_list = []
+        for item in nested_list:
+            if isinstance(item, list):
+                flat_list.extend(flatten_list(item))
+            else:
+                flat_list.append(item)
+        return flat_list
+
+    flat_list = flatten_list(nested_list)
+    return ', '.join(str(item) for item in flat_list)
+

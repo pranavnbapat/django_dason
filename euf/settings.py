@@ -2,7 +2,6 @@ import os
 from pathlib import Path
 from django.contrib.messages import constants as messages
 from dotenv import load_dotenv
-import pymongo
 from pymongo import MongoClient
 
 load_dotenv()
@@ -141,7 +140,7 @@ DATABASES = {
 
 # DATABASE_ROUTERS = ['euf.mongodb_router.MongoDBRouter']
 
-mongo_client = MongoClient(
+MONGO_CLIENT = MongoClient(
     host=os.getenv("MONGODB_HOST"),
     port=int(os.getenv("MONGODB_PORT")),
     username=os.getenv("MONGODB_USER"),

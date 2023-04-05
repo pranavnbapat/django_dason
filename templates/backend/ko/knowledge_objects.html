@@ -1,7 +1,15 @@
 {% extends 'backend/base/base.html' %}
 {% load static %}
 
-{% block title %}Starter Page{% endblock title %} {"title": "Starter Page"})
+{% block title %}Starter Page{% endblock title %} {"title": "Knowledge Objects"})
+
+{% block extra_css %}
+    <!-- DataTables -->
+    <link href="{% static 'libs/datatables.net-bs4/css/dataTables.bootstrap4.min.css'%}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'libs/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css'%}" rel="stylesheet" type="text/css" />
+
+    <link href="{% static 'libs/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css'%}" rel="stylesheet" type="text/css" />
+{% endblock extra_css %}
 
 {% block content %}
 <!-- ============================================================== -->
@@ -30,8 +38,39 @@
             <!-- end page title -->
 
             <div class="row">
-                <div class="col-sm-12">
-                    This is from another PC, FastAPI GET call
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="card-title">All knowledge objects</h4>
+                            <p class="card-title-desc">This is just an example of how knowledge object data can be shown
+                                here by connecting to external MongoDB database server</p>
+                        </div>
+                        <div class="card-body">
+                            <table id="datatable-buttons" class="table table-bordered dt-responsive nowrap w-100">
+                                <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Age</th>
+                                    <th>City</th>
+                                    <th>Email</th>
+                                    <th>Hobbies</th>
+                                </tr>
+                                </thead>
+
+                                {% for k in ko %}
+                                    <tr>
+                                        <td>{{ k.name }}</td>
+                                        <td>{{ k.age }}</td>
+                                        <td>{{ k.city }}</td>
+                                        <td>{{ k.email }}</td>
+                                        <td>{{ k.hobbies }}</td>
+                                    </tr>
+                                {% endfor %}
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -47,3 +86,24 @@
 </div>
 <!-- end main content-->
 {% endblock content %}
+
+{% block extra_js %}
+<!-- Required datatable js -->
+<script src="{% static 'libs/datatables.net/js/jquery.dataTables.min.js'%}"></script>
+<script src="{% static 'libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js'%}"></script>
+<!-- Buttons -->
+<script src="{% static 'libs/datatables.net-buttons/js/dataTables.buttons.min.js'%}"></script>
+<script src="{% static 'libs/datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js'%}"></script>
+<script src="{% static 'libs/pdfmake/build/pdfmake.min.js'%}"></script>
+<script src="{% static 'libs/pdfmake/build/vfs_fonts.js'%}"></script>
+<script src="{% static 'libs/datatables.net-buttons/js/buttons.html5.min.js'%}"></script>
+<script src="{% static 'libs/datatables.net-buttons/js/buttons.print.min.js'%}"></script>
+<script src="{% static 'libs/datatables.net-buttons/js/buttons.colVis.min.js'%}"></script>
+
+<!-- Responsive -->
+<script src="{% static 'libs/datatables.net-responsive/js/dataTables.responsive.min.js'%}"></script>
+<script src="{% static 'libs/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js'%}"></script>
+
+<!-- Datatable init js -->
+<script src="{% static 'js/pages/datatables.init.js'%}"></script>
+{% endblock extra_js %}
