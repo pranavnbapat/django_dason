@@ -1,13 +1,6 @@
+from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.core.validators import RegexValidator
-
-
-def default_list():
-    return "list"
-
-
-def default_undefined():
-    return "undefined"
 
 
 class EUCountries(models.Model):
@@ -93,3 +86,22 @@ class AdminMenuMaster(models.Model):
     deleted_at = models.DateTimeField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+
+class KnowledgeObjects(models.Model):
+    class Meta:
+        db_table = "knowledge_objects"
+
+    id = models.SmallAutoField(primary_key=True, db_column='id', db_index=True, editable=False, unique=True,
+                               blank=False, null=False, verbose_name='ID')
+    status = models.BooleanField(default=True)
+    deleted = models.BooleanField(default=False)
+    deleted_at = models.DateTimeField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+
+class DefaultAuthUserExtend(AbstractUser):
+    contact_no = models.CharField(max_length=10, null=True, db_index=True, default='', blank=True,
+                                  validators=[RegexValidator(regex=r'^[0-9- ]+$', message="Invalid phone number")])
+    

@@ -46,7 +46,7 @@
                                 </ul>
                             {% endif %}
                             <div class="card-body">
-                                <form class="needs-validation" id="form_1" name="form_1" novalidate method="POST" action="{% url 'backend:my_form' %}" enctype="multipart/form-data">
+                                <form class="needs-validation" id="form_1" name="form_1" novalidate method="POST" action="{% url 'backend:my-form' %}" enctype="multipart/form-data">
                                     {% csrf_token %}
 
                                     <div class="row">
@@ -231,9 +231,10 @@
                                             </div>
                                         </div>
                                     </div>
-
+                                    {% if user.is_superuser or add_permission in permissions.keys and permissions.add_permission %}
                                     <button class="btn btn-primary" type="submit">Submit</button>
                                     <button class="btn btn-secondary" type="reset" id="reset">Reset</button>
+                                    {% endif %}
 
                                 </form>
                             </div>

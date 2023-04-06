@@ -1,0 +1,18 @@
+-- This script removes all the tables from the database including foreign key checks
+
+-- Disable foreign key checks
+SET FOREIGN_KEY_CHECKS = 0;
+
+-- Get all tables from the current database
+SET GROUP_CONCAT_MAX_LEN = 100000;
+SET @tables = (SELECT GROUP_CONCAT(table_name) FROM information_schema.tables WHERE table_schema = (SELECT DATABASE()));
+SELECT @tables;
+
+-- Drop all tables in one command
+SET @dropTablesQuery = CONCAT('DROP TABLE IF EXISTS ', @tables);
+PREPARE stmt FROM @dropTablesQuery;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
+
+-- Enable foreign key checks
+SET FOREIGN_KEY_CHECKS = 1;

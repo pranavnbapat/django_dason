@@ -1,7 +1,5 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views import View
 from .mixins import AdminMenuMixin
-from django.shortcuts import render
 from django.views.generic import TemplateView
 from .data_processing import process_dashboard_data
 

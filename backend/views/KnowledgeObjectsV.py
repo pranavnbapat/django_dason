@@ -1,14 +1,15 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .mixins import AdminMenuMixin
+from .mixins import AdminMenuMixin, PermissionRequiredMixin
 from django.views.generic import TemplateView
 import os
 from django.conf import settings
 from .data_processing import nested_list_to_csv
-from django.db import connections
+from django.contrib.auth.mixins import UserPassesTestMixin
 
 
-class KOView(TemplateView, LoginRequiredMixin, AdminMenuMixin):
+class KOView(PermissionRequiredMixin, UserPassesTestMixin, TemplateView, LoginRequiredMixin, AdminMenuMixin):
     template_name = "backend/ko/knowledge_objects.html"
+    permission_required = 'backend.view_users'
 
     @staticmethod
     def get_mongodb_data():
@@ -25,10 +26,10 @@ class KOView(TemplateView, LoginRequiredMixin, AdminMenuMixin):
         context['ko'] = mongodb_data
         context['array_to_csv'] = nested_list_to_csv
 
-        with connections['default'].cursor() as cursor:
-            cursor.execute('SELECT * FROM admin_menu_master')
-            all_users = cursor.fetchall()
-
-        context.update({'all_users': all_users})
+        # with connections['default'].cursor() as cursor:
+        #     cursor.execute('SELECT * FROM knowledge_objects')
+        #     all_users = cursor.fetchall()
+        #
+        # context.update({'all_users': all_users})
 
         return context

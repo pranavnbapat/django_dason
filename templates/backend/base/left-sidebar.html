@@ -1,4 +1,5 @@
 {% load static %}
+{% load custom_filters %}
 {% block left_sidebar %}
         <!-- ========== Left Sidebar Start ========== -->
         <div class="vertical-menu">
@@ -9,13 +10,20 @@
                 <div id="sidebar-menu">
                     <!-- Left Menu Start -->
                     <ul class="metismenu list-unstyled" id="side-menu">
+                        {{ permissions }}
                         {% for am in admin_menu %}
-                            <li>
-                                <a href="{% url 'backend:'|add:am.menu_route %}">
-                                    <i data-feather="{{ am.menu_icon }}"></i>
-                                    <span data-key="t-{{ am.menu_route }}">{{ am.menu_name|title }}</span>
-                                </a>
-                            </li>
+                            {% with 'can_view_'|add:am.menu_route|lower|remove_chars as view_permission %}
+                                {% if user.is_superuser or view_permission in permissions or am.menu_route|lower == 'dashboard' %}
+                                    <li>
+                                        <a href="{% url 'backend:'|add:am.menu_route %}">
+                                            <i data-feather="{{ am.menu_icon }}"></i>
+                                            <span data-key="t-{{ am.menu_route }}">{{ am.menu_name|title }}</span>
+                                        </a>
+                                    </li>
+                                {% else %}
+
+                                {% endif %}
+                            {% endwith %}
                         {% endfor %}
                     </ul>
                 </div>

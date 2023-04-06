@@ -11,7 +11,7 @@ from django.contrib.auth.decorators import login_required
 app_name = "backend"
 
 urlpatterns = [
-    path("my_form/", view=FormView.as_view(), name="my_form"),
+    path("my-form/", view=FormView.as_view(), name="my-form"),
     # path("my_form/submit/", view=form_view, name="my_form_submit"),
 
     path("user/profile", view=ProfileView.as_view(), name="user.profile"),

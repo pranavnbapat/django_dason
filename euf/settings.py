@@ -54,13 +54,10 @@ THIRD_PARTY_APPS = [
     "allauth_2fa",
     "django_extensions"
 ]
-INSTALLED_APPS = DEFAULT_APPS + LOCAL_APPS + THIRD_PARTY_APPS
 
-# CHANNEL_LAYERS = {
-#     "default": {
-#         "BACKEND": "channels.layers.InMemoryChannelLayer"
-#     },
-# }
+AUTH_USER_MODEL = 'backend.DefaultAuthUserExtend'
+
+INSTALLED_APPS = DEFAULT_APPS + LOCAL_APPS + THIRD_PARTY_APPS
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -124,21 +121,7 @@ DATABASES = {
         'HOST': os.getenv("MYSQL_HOST"),
         'PORT': os.getenv("MYSQL_PORT"),
     },
-    # 'mongodb': {
-    #     'ENGINE': 'djongo',
-    #     'NAME': 'your-db-name',
-    #     'CLIENT': {
-    #         'host': os.getenv("MONGODB_HOST"),
-    #         'port': os.getenv("MONGODB_PORT"),
-    #         'username': os.getenv("MONGODB_USER"),
-    #         'password': os.getenv("MONGODB_PASS"),
-    #         'authSource': os.getenv("MONGODB_DB"),
-    #         'authMechanism': 'SCRAM-SHA-1',
-    #     },
-    # },
 }
-
-# DATABASE_ROUTERS = ['euf.mongodb_router.MongoDBRouter']
 
 MONGO_CLIENT = MongoClient(
     host=os.getenv("MONGODB_HOST"),
