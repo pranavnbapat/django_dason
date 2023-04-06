@@ -5731,7 +5731,7 @@ body[data-layout-mode=dark] .timeline .timeline-launch .timeline-box::after {
 }
 
 .profile-user {
-  background-image: url(../images/profile-bg-1.jpg);
+  background-image: url(../images/profile_default_bg.jpg);
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;

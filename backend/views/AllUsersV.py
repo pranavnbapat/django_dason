@@ -1,33 +1,36 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .mixins import AdminMenuMixin, PermissionRequiredMixin
-from django.views.generic import TemplateView
-from django.db import connections
-from django.shortcuts import render, redirect
+from django.views.generic import ListView
+from django.shortcuts import redirect
 from django.contrib.auth.mixins import UserPassesTestMixin
+from ..models import DefaultAuthUserExtend
 
 
-class AllUsersView(PermissionRequiredMixin, UserPassesTestMixin, LoginRequiredMixin, TemplateView, AdminMenuMixin):
+class AllUsersView(PermissionRequiredMixin, UserPassesTestMixin, LoginRequiredMixin, ListView, AdminMenuMixin):
     template_name = "backend/user/all_users.html"
     permission_required = 'backend.view_users'
+    context_object_name = 'all_users'
+    model = DefaultAuthUserExtend
 
-    def get(self, request, *args, **kwargs):
-        current_user_id = self.request.user.id
+    def test_func(self):
+        user = self.request.user
+        if user.is_superuser or user.has_perm('backend.view_users'):
+            return True
+        return False
 
-        with connections['default'].cursor() as cursor:
-            cursor.execute('SELECT au.first_name, au.last_name, au.username, au.email, au.last_login, au.is_staff, '
-                           'ag.name as group_name, au.is_active, au.date_joined, au.id '
-                           'FROM backend_defaultauthuserextend au '
-                           'LEFT JOIN backend_defaultauthuserextend_groups aug ON au.id = aug.defaultauthuserextend_id '
-                           'LEFT JOIN auth_group ag ON ag.id = aug.group_id '
-                           'WHERE au.is_superuser != 1 AND au.id != ' + str(current_user_id))
-            all_users = cursor.fetchall()
-        context = {'all_users': all_users}
+    def handle_no_permission(self):
+        return redirect('backend:dashboard')
 
-        print(request.path)
-        if request.path == '/backend/users-grid':
-            self.template_name = "backend/user/all-users-grid.html"
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        queryset = queryset.exclude(
+            is_superuser=True,
+            id=self.request.user.id
+        ).prefetch_related('groups')
 
-        custom_context = self.get_context_data(context=context)
-        context.update(custom_context)
+        return queryset
 
-        return render(request, self.template_name, context)
+    def get_template_names(self):
+        if self.request.path == '/backend/users-grid':
+            return ["backend/user/all-users-grid.html"]
+        return super().get_template_names()
