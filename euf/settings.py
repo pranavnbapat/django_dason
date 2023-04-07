@@ -52,7 +52,11 @@ THIRD_PARTY_APPS = [
 
     # Enable two-factor auth.
     "allauth_2fa",
-    "django_extensions"
+    "django_extensions",
+
+    # REST framework
+    "rest_framework",
+    "rest_framework.authtoken",
 ]
 
 AUTH_USER_MODEL = 'backend.DefaultAuthUserExtend'
@@ -243,3 +247,8 @@ PASSWORD_HASHERS = [
 STORAGE_DIR = os.path.join(BASE_DIR, 'storage')
 PDF2TEXT_PATH = os.path.join(STORAGE_DIR, 'pdf2text')
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+}

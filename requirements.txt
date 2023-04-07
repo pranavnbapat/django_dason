@@ -32,5 +32,7 @@ django-werkzeug
 argon2-cffi
 PyPDF2~=2.0
 pdfplumber
+djangorestframework
+djangorestframework_simplejwt
 
 

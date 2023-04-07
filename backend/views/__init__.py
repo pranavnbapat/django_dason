@@ -4,3 +4,4 @@ from .ProfileV import ProfileView
 from .AllUsersV import AllUsersView
 from .KnowledgeObjectsV import KOView
 from .PDF2TextV import PDF2TextView
+from .PDF2TextV import PDF2TextCreateAPIView

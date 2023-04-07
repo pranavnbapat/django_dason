@@ -6,6 +6,7 @@ from .views import (
     AllUsersView,
     KOView,
     PDF2TextView,
+    PDF2TextCreateAPIView,
 )
 
 app_name = "backend"
@@ -31,4 +32,5 @@ urlpatterns = [
 
     # PDF2Text
     path("pdf2text", view=PDF2TextView.as_view(), name="pdf2text"),
+    path('api/pdf2text/', view=PDF2TextCreateAPIView.as_view(), name='pdf2text-api'),
 ]

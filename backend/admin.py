@@ -1,7 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from django.contrib.auth.models import User
-from .models import AdminMenuMaster, MyForm, KnowledgeObjects, DefaultAuthUserExtend
+from .models import AdminMenuMaster, MyForm, KnowledgeObjects, DefaultAuthUserExtend, PDF2Text
 
 # Unregister the old User model from the admin site
 # admin.site.unregister(User)
@@ -24,4 +23,9 @@ class MyFormAdmin(admin.ModelAdmin):
 @admin.register(KnowledgeObjects)
 class KnowledgeObjectsAdmin(admin.ModelAdmin):
     list_display = ('id', 'status', 'deleted', 'created_at', 'updated_at')
+
+
+@admin.register(PDF2Text)
+class PDF2TextAdmin(admin.ModelAdmin):
+    list_display = ('old_filename', 'new_filename', 'status', 'created_at', 'updated_at')
 
