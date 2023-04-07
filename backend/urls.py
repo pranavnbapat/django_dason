@@ -5,8 +5,8 @@ from .views import (
     DashboardView,
     AllUsersView,
     KOView,
+    PDF2TextView,
 )
-from django.contrib.auth.decorators import login_required
 
 app_name = "backend"
 
@@ -28,4 +28,7 @@ urlpatterns = [
 
     # FastAPI View
     path("fastapi-view", view=KOView.as_view(), name="fastapi-view"),
+
+    # PDF2Text
+    path("pdf2text", view=PDF2TextView.as_view(), name="pdf2text"),
 ]

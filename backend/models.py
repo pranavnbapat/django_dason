@@ -74,11 +74,11 @@ class AdminMenuMaster(models.Model):
     id = models.SmallAutoField(primary_key=True, db_column='id', db_index=True, editable=False, unique=True,
                                blank=False, null=False, verbose_name='ID')
     menu_name = models.CharField(max_length=20, null=False, blank=False, unique=True,
-                                 validators=[RegexValidator(regex=r'^[a-zA-Z\s]+$', message="Invalid characters")])
+                                 validators=[RegexValidator(regex=r'^[a-zA-Z0-9\s]+$', message="Invalid characters")])
     menu_icon = models.CharField(max_length=10, null=False, blank=False, default='list',
                                  validators=[RegexValidator(regex=r'^[a-z-]+$', message="Invalid characters")])
     menu_route = models.CharField(max_length=20, unique=True,
-                                  validators=[RegexValidator(regex=r'^[a-zA-Z\s-]+$', message="Invalid characters")])
+                                  validators=[RegexValidator(regex=r'^[a-zA-Z0-9\s-]+$', message="Invalid characters")])
     menu_order = models.SmallIntegerField(null=True, blank=True,
                                           validators=[RegexValidator(regex=r'^[0-9]+$', message="Invalid characters")])
     status = models.BooleanField(default=True)
@@ -94,6 +94,24 @@ class KnowledgeObjects(models.Model):
 
     id = models.SmallAutoField(primary_key=True, db_column='id', db_index=True, editable=False, unique=True,
                                blank=False, null=False, verbose_name='ID')
+    status = models.BooleanField(default=True)
+    deleted = models.BooleanField(default=False)
+    deleted_at = models.DateTimeField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+
+class PDF2Text(models.Model):
+    class Meta:
+        db_table = "pdf2text"
+
+    id = models.SmallAutoField(primary_key=True, db_column='id', db_index=True, editable=False, unique=True,
+                               blank=False, null=False, verbose_name='ID')
+    old_filename = models.CharField(max_length=255, null=False, blank=False,
+                                    validators=[RegexValidator(regex=r'^[\w\.-\s]+$', message="Invalid characters")])
+    new_filename = models.CharField(max_length=255, null=False, blank=False)
+    application_type = models.CharField(max_length=20, null=False, blank=False)
+    file_text = models.TextField(blank=True, null=True)
     status = models.BooleanField(default=True)
     deleted = models.BooleanField(default=False)
     deleted_at = models.DateTimeField(null=True, blank=True)

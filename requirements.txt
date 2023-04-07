@@ -29,3 +29,5 @@ djongo
 pymongo
 django-extensions
 django-werkzeug
+argon2-cffi
+PyPDF2~=2.0

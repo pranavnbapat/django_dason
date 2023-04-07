@@ -3,6 +3,8 @@ import os
 import random
 import string
 from django.conf import settings
+from django.http import JsonResponse
+import datetime
 
 
 def generate_random_filename(length: int):
@@ -88,3 +90,33 @@ def nested_list_to_csv(nested_list):
     flat_list = flatten_list(nested_list)
     return ', '.join(str(item) for item in flat_list)
 
+
+def file_async_upload(request, dest, file_type):
+    if request.method == "POST":
+        uploaded_file = request.FILES.get('file')
+
+        if uploaded_file:
+            # Check if the file type matches the expected file_type
+            if uploaded_file.content_type != file_type:
+                return {"status": "error", "message": "Invalid file type"}
+
+            # Check if the filename is longer than 200 characters
+            if len(uploaded_file.name) > 200:
+                return {"status": "error", "message": "Filename too long (more than 200 characters)"}
+
+            # Append a timestamp to the filename
+            filename, ext = os.path.splitext(uploaded_file.name)
+            timestamp = datetime.datetime.now().strftime("%Y%m%d%H%M%S%f")
+            new_filename = f"{timestamp}{ext}"
+
+            # Save the file to the specified folder
+            save_path = os.path.join(settings.BASE_DIR, dest, new_filename)
+            with open(save_path, 'wb+') as destination:
+                for chunk in uploaded_file.chunks():
+                    destination.write(chunk)
+
+            # return JsonResponse({"status": "success", "message": "File uploaded successfully"})
+            return {"status": "success", "old_filename": uploaded_file.name, "new_filename": new_filename}
+
+    return {"status": "error", "message": "Invalid file type"}
+    # return JsonResponse({"status": "error", "message": "Invalid request method"})

@@ -13,3 +13,4 @@ venv/
 **/migrations/
 **/staticfiles/
 assets/
+*.pdf
