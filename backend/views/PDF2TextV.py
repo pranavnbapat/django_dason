@@ -6,7 +6,9 @@ from .data_processing import file_async_upload
 from django.conf import settings
 from ..models import PDF2Text
 from django.http import JsonResponse
-import PyPDF2
+from pdf2image import convert_from_path
+import pytesseract
+import pdfplumber
 
 
 class PDF2TextView(PermissionRequiredMixin, UserPassesTestMixin, TemplateView, LoginRequiredMixin, AdminMenuMixin):
@@ -17,11 +19,20 @@ class PDF2TextView(PermissionRequiredMixin, UserPassesTestMixin, TemplateView, L
         result = file_async_upload(request, settings.PDF2TEXT_PATH, "application/pdf")
 
         if result["status"] == "success":
-            pdf_reader = PyPDF2.PdfFileReader(request.FILES['file'])
             extracted_text = ""
-            for page_number in range(pdf_reader.numPages):
-                page = pdf_reader.getPage(page_number)
-                extracted_text += page.extractText()
+
+            with pdfplumber.open(request.FILES['file']) as pdf:
+                # Check if the first page contains text
+                page = pdf.pages[0]
+                if not page.extract_text():
+                    # If not, use OCR to extract text from the image-based PDF
+                    images = convert_from_path(request.FILES['file'].temporary_file_path())
+                    for image in images:
+                        extracted_text += pytesseract.image_to_string(image)
+                else:
+                    # Extract text from plain text PDF
+                    for page in pdf.pages:
+                        extracted_text += page.extract_text()
 
             file_entry = PDF2Text(
                 old_filename=result["old_filename"],
@@ -35,3 +46,9 @@ class PDF2TextView(PermissionRequiredMixin, UserPassesTestMixin, TemplateView, L
             return JsonResponse({"status": "success", "message": "File uploaded successfully"})
 
         return JsonResponse(result)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        pdf_files = PDF2Text.objects.all()
+        context['pdf_files'] = pdf_files
+        return context
