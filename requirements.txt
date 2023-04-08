@@ -34,5 +34,4 @@ PyPDF2~=2.0
 pdfplumber
 djangorestframework
 djangorestframework_simplejwt
-
-
+django-elasticsearch-dsl

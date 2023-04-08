@@ -57,6 +57,9 @@ THIRD_PARTY_APPS = [
     # REST framework
     "rest_framework",
     "rest_framework.authtoken",
+
+    # For elastic search on long columns
+    "django_elasticsearch_dsl",
 ]
 
 AUTH_USER_MODEL = 'backend.DefaultAuthUserExtend'
@@ -252,4 +255,12 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
+}
+
+ELASTICSEARCH_DSL = {
+    'default': {
+        'hosts': 'https://localhost:9200',  # or the address of your Elasticsearch instance
+        'http_auth': ('elastic', 'asdasdasd'),
+        'verify_certs': False,
+    },
 }

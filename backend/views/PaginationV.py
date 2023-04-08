@@ -2,17 +2,15 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from .mixins import AdminMenuMixin, PermissionRequiredMixin
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.views.generic import TemplateView
-from django.core.paginator import Paginator
-from rest_framework.views import APIView
-from rest_framework.response import Response
 from backend.models import FakerModel
 from backend.serializers import FakerModelSerializer
 from django.http import JsonResponse
-from django.db.models import Q
-from django.db.models import F
+from backend.documents import FakerModelDocument
 from rest_framework import pagination
 from rest_framework.generics import ListAPIView
-from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from rest_framework.permissions import IsAuthenticated
+from django.db.models import Q
+from elasticsearch_dsl.connections import connections
 
 
 class PaginationView(PermissionRequiredMixin, UserPassesTestMixin, LoginRequiredMixin, AdminMenuMixin, TemplateView):
@@ -55,12 +53,45 @@ class PaginationAPI(ListAPIView):
     def get_queryset(self):
         search_value = self.request.GET.get('search[value]', '')
 
-        if search_value:
-            queryset = FakerModel.objects.filter(
-                Q(description__icontains=search_value) |
-                Q(keywords__icontains=search_value)
+        # Check if Elasticsearch server is running
+        es_client = connections.get_connection()
+        if es_client.ping() and search_value:
+            print("Using Elasticsearch")
+            # By default, elastic search performs OR operation if more than one search parameter is passed.
+
+            # Use Elasticsearch to perform the search in multiple columns
+            search = FakerModelDocument.search().query(
+                'multi_match',
+                query=search_value,
+                fields=['keywords', 'description']
             )
+
+            # Search in only one column (e.g., keywords)
+            # search = FakerModelDocument.search().query(
+            #     'match',
+            #     keywords=search_value
+            # )
+
+            # Search with a preference for keywords, and then in description if not found in keywords:
+            # search = FakerModelDocument.search().query(
+            #     'bool',
+            #     should=[
+            #         {"match": {"keywords": {"query": search_value, "boost": 2}}},
+            #         {"match": {"description": search_value}},
+            #     ],
+            #     minimum_should_match=1
+            # )
+            ids = [hit.meta.id for hit in search]
+            queryset = FakerModel.objects.filter(id__in=ids)
         else:
-            queryset = FakerModel.objects.all()
+            print("Using default search method")
+            # Fall back to default search method
+            if search_value:
+                queryset = FakerModel.objects.filter(
+                    Q(description__icontains=search_value) |
+                    Q(keywords__icontains=search_value)
+                )
+            else:
+                queryset = FakerModel.objects.all()
 
         return queryset
