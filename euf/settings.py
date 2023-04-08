@@ -249,6 +249,7 @@ PDF2TEXT_PATH = os.path.join(STORAGE_DIR, 'pdf2text')
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.SessionAuthentication',
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
 }

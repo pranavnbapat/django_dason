@@ -125,9 +125,9 @@ class FakerModel(models.Model):
 
     id = models.BigAutoField(primary_key=True, db_column='id', db_index=True, editable=False, unique=True,
                              blank=False, null=False, verbose_name='ID')
-    keywords = models.CharField(max_length=255, null=False, blank=False,
+    keywords = models.CharField(max_length=255, null=False, blank=False, db_index=True,
                                 validators=[RegexValidator(regex=r'^[\w\.-\s,_]+$', message="Invalid characters")])
-    description = models.TextField(blank=True, null=True)
+    description = models.TextField(blank=True, null=True, db_index=True)
     status = models.BooleanField(default=True)
     deleted = models.BooleanField(default=False)
     deleted_at = models.DateTimeField(null=True, blank=True)

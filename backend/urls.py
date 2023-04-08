@@ -8,6 +8,7 @@ from .views import (
     PDF2TextView,
     PDF2TextCreateAPIView,
     PaginationView,
+    PaginationAPI
 )
 
 app_name = "backend"
@@ -35,5 +36,6 @@ urlpatterns = [
     path('api/pdf2text/', view=PDF2TextCreateAPIView.as_view(), name='pdf2text-api'),
 
     # Pagination
-    path("pagination/", view=PaginationView.as_view(), name='pagination')
+    path("pagination/", view=PaginationView.as_view(), name='pagination'),
+    path("pagination-api/", view=PaginationAPI.as_view(), name='pagination-api'),
 ]
