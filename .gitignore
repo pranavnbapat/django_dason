@@ -14,3 +14,4 @@ venv/
 **/staticfiles/
 assets/
 *.pdf
+**/__pycache__/

@@ -60,11 +60,30 @@ class PaginationAPI(ListAPIView):
             # By default, elastic search performs OR operation if more than one search parameter is passed.
 
             # Use Elasticsearch to perform the search in multiple columns
+            # search = FakerModelDocument.search().query(
+            #     'multi_match',
+            #     query=search_value,
+            #     fields=['keywords', 'description']
+            # )
+
+            # Code below searched for records using AND operation
+            # Split the search_value into individual terms
+            search_terms = search_value.split()
             search = FakerModelDocument.search().query(
-                'multi_match',
-                query=search_value,
-                fields=['keywords', 'description']
+                'bool',
+                must=[
+                    {
+                        'multi_match': {
+                            'query': term,
+                            'fields': ['keywords', 'description']
+                        }
+                    }
+                    for term in search_terms
+                ]
             )
+            # To retrieve more records, append this to the search above
+            # .extra(size=1000)  # Increase the size to get more results
+            # By default, it gives only 10 results
 
             # Search in only one column (e.g., keywords)
             # search = FakerModelDocument.search().query(
