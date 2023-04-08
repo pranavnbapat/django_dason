@@ -92,8 +92,8 @@ class KnowledgeObjects(models.Model):
     class Meta:
         db_table = "knowledge_objects"
 
-    id = models.SmallAutoField(primary_key=True, db_column='id', db_index=True, editable=False, unique=True,
-                               blank=False, null=False, verbose_name='ID')
+    id = models.AutoField(primary_key=True, db_column='id', db_index=True, editable=False, unique=True,
+                          blank=False, null=False, verbose_name='ID')
     status = models.BooleanField(default=True)
     deleted = models.BooleanField(default=False)
     deleted_at = models.DateTimeField(null=True, blank=True)
@@ -105,8 +105,8 @@ class PDF2Text(models.Model):
     class Meta:
         db_table = "pdf2text"
 
-    id = models.SmallAutoField(primary_key=True, db_column='id', db_index=True, editable=False, unique=True,
-                               blank=False, null=False, verbose_name='ID')
+    id = models.AutoField(primary_key=True, db_column='id', db_index=True, editable=False, unique=True,
+                          blank=False, null=False, verbose_name='ID')
     old_filename = models.CharField(max_length=255, null=False, blank=False,
                                     validators=[RegexValidator(regex=r'^[\w\.-\s]+$', message="Invalid characters")])
     new_filename = models.CharField(max_length=255, null=False, blank=False)
@@ -119,7 +119,22 @@ class PDF2Text(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
 
+class FakerModel(models.Model):
+    class Meta:
+        db_table = "faker_model"
+
+    id = models.BigAutoField(primary_key=True, db_column='id', db_index=True, editable=False, unique=True,
+                             blank=False, null=False, verbose_name='ID')
+    keywords = models.CharField(max_length=255, null=False, blank=False,
+                                validators=[RegexValidator(regex=r'^[\w\.-\s,_]+$', message="Invalid characters")])
+    description = models.TextField(blank=True, null=True)
+    status = models.BooleanField(default=True)
+    deleted = models.BooleanField(default=False)
+    deleted_at = models.DateTimeField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+
 class DefaultAuthUserExtend(AbstractUser):
     contact_no = models.CharField(max_length=10, null=True, db_index=True, default='', blank=True,
                                   validators=[RegexValidator(regex=r'^[0-9- ]+$', message="Invalid phone number")])
-    

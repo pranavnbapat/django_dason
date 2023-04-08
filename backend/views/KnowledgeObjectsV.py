@@ -26,10 +26,4 @@ class KOView(PermissionRequiredMixin, UserPassesTestMixin, TemplateView, LoginRe
         context['ko'] = mongodb_data
         context['array_to_csv'] = nested_list_to_csv
 
-        # with connections['default'].cursor() as cursor:
-        #     cursor.execute('SELECT * FROM knowledge_objects')
-        #     all_users = cursor.fetchall()
-        #
-        # context.update({'all_users': all_users})
-
         return context

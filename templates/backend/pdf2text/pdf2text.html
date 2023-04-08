@@ -216,20 +216,13 @@
 <!-- Datatable init js -->
 <script>
 $(document).ready(function() {
-    $("#datatable").DataTable({
+    $("#datatable, #datatable-buttons").DataTable({
         order: [[2, 'desc']], // Sort by the 3rd column (uploaded_at) in descending order
-        lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]], // Customize records per page dropdown
-        buttons: ["copy", "excel", "pdf", "colvis"]
-    });
-
-    $("#datatable-buttons").DataTable({
-        lengthChange: !1,
+        lengthMenu: [[5, 10, 15, 20, -1], [5, 10, 15, 20, "All"]], // Customize records per page dropdown
         buttons: ["copy", "excel", "pdf", "colvis"]
     }).buttons().container().appendTo("#datatable-buttons_wrapper .col-md-6:eq(0)");
 
     $(".dataTables_length select").addClass("form-select form-select-sm");
-
-
 });
 </script>
 {% endblock extra_js %}

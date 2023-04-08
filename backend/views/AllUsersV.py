@@ -1,7 +1,6 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .mixins import AdminMenuMixin, PermissionRequiredMixin
 from django.views.generic import ListView
-from django.shortcuts import redirect
 from django.contrib.auth.mixins import UserPassesTestMixin
 from ..models import DefaultAuthUserExtend
 
