@@ -1,6 +1,7 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.core.validators import RegexValidator
+from django.conf import settings
 
 
 class EUCountries(models.Model):
@@ -133,6 +134,19 @@ class FakerModel(models.Model):
     deleted_at = models.DateTimeField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+
+class UserActivityLog(models.Model):
+    class Meta:
+        db_table = 'user_activity'
+
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    method = models.CharField(max_length=10, default=None)
+    activity = models.TextField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user} - {self.method} {self.activity} - {self.timestamp}"
 
 
 class DefaultAuthUserExtend(AbstractUser):

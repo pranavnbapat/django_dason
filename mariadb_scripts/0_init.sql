@@ -2,8 +2,8 @@ CREATE DATABASE IF NOT EXISTS `django_euf` CHARACTER SET utf8mb4 COLLATE utf8mb4
 
 USE django_euf;
 
-CREATE USER 'django_admin'@'%' IDENTIFIED BY 'asdasdasd';
+CREATE USER 'euf_admin'@'localhost' IDENTIFIED BY 'asdasdasd';
 
-GRANT ALL PRIVILEGES ON `django_euf`.* TO 'django_admin'@'%' WITH GRANT OPTION;
+GRANT ALL PRIVILEGES ON `django_euf`.* TO 'euf_admin'@'localhost' WITH GRANT OPTION;
 
 FLUSH PRIVILEGES;

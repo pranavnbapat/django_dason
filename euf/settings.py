@@ -80,6 +80,7 @@ MIDDLEWARE = [
     # flow is reset if another page is loaded between login and successfully
     # entering two-factor credentials.
     "allauth_2fa.middleware.AllauthTwoFactorMiddleware",
+    "euf.middleware.UserActivityMiddleware"
 ]
 
 ACCOUNT_ADAPTER = "allauth_2fa.adapter.OTPAdapter"
@@ -265,3 +266,31 @@ ELASTICSEARCH_DSL = {
         'verify_certs': False,
     },
 }
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'file': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(BASE_DIR, 'user_activity.log'),
+            'formatter': 'verbose',
+        },
+    },
+    'loggers': {
+        'backend.models': {
+            'handlers': ['file'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+    },
+}
+
+

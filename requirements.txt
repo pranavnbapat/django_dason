@@ -58,3 +58,4 @@ sqlparse
 # sqlparse==0.4.2
 urllib3
 # urllib3==1.26.8
+django-db-logger
