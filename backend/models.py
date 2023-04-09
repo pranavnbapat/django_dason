@@ -142,11 +142,12 @@ class UserActivityLog(models.Model):
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     method = models.CharField(max_length=10, default=None)
+    user_timezone = models.CharField(max_length=63)
     activity = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.user} - {self.method} {self.activity} - {self.timestamp}"
+        return f"{self.user} - {self.method} {self.activity} - {self.timestamp} - {self.user_timezone}"  # Include user_timezone here
 
 
 class DefaultAuthUserExtend(AbstractUser):

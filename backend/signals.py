@@ -9,5 +9,5 @@ logger = logging.getLogger('backend.models')
 @receiver(post_save, sender=UserActivityLog)
 def log_user_activity(sender, instance, created, **kwargs):
     if created:
-        log_entry = f"{instance.user} - {instance.activity} - {instance.timestamp}"
+        log_entry = f"{instance.user} - {instance.method} {instance.activity} - {instance.timestamp} - {instance.user_timezone}"  # Include user_timezone here
         logger.info(log_entry)

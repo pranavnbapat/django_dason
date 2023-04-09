@@ -16,3 +16,4 @@ assets/
 *.pdf
 **/__pycache__/
 *.txt
+*.log

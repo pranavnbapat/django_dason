@@ -35,7 +35,8 @@ DEFAULT_APPS = [
 ]
 LOCAL_APPS = [
     "pages",
-    "backend",
+    # "backend",
+    "backend.apps.BackendConfig",
 ]
 THIRD_PARTY_APPS = [
     "crispy_forms",
@@ -72,6 +73,8 @@ MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
+    # Custom middlewre to track user activity
+    "euf.middleware.UserActivityMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     # AuthenticationMiddleware.
@@ -80,7 +83,6 @@ MIDDLEWARE = [
     # flow is reset if another page is loaded between login and successfully
     # entering two-factor credentials.
     "allauth_2fa.middleware.AllauthTwoFactorMiddleware",
-    "euf.middleware.UserActivityMiddleware"
 ]
 
 ACCOUNT_ADAPTER = "allauth_2fa.adapter.OTPAdapter"
