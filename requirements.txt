@@ -1,6 +1,8 @@
 asgiref
 # asgiref==3.4.1
-backports.zoneinfo==0.2.1
+argon2-cffi
+backports.zoneinfo
+# backports.zoneinfo==0.2.1
 certifi
 # certifi==2021.10.8
 cffi
@@ -18,16 +20,32 @@ django-allauth
 django-allauth-2fa
 # django-allauth-2fa==0.8
 django-crispy-forms==1.13.0
+django-embed-video
+django-elasticsearch-dsl
+django-extensions
 django-otp
 # django-otp==1.1.3
+django-werkzeug
+djangorestframework
+djangorestframework_simplejwt
+djongo
+elasticsearch-dsl
 idna
 # idna==3.3
+mysqlclient
 oauthlib
 # oauthlib==3.1.1
-pycparser==2.21
+pandas
+pdfplumber
 PyJWT
 # PyJWT==2.3.0
-python3-openid==3.2.0
+PyPDF2~=2.0
+pycparser
+# pycparser==2.21
+pymongo
+python-dotenv
+python3-openid
+# python3-openid==3.2.0
 pytz
 # pytz==2021.3
 qrcode
@@ -40,18 +58,3 @@ sqlparse
 # sqlparse==0.4.2
 urllib3
 # urllib3==1.26.8
-python-dotenv
-mysqlclient
-django-embed-video
-pandas
-djongo
-pymongo
-django-extensions
-django-werkzeug
-argon2-cffi
-PyPDF2~=2.0
-pdfplumber
-djangorestframework
-djangorestframework_simplejwt
-django-elasticsearch-dsl
-elasticsearch-dsl

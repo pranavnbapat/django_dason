@@ -15,3 +15,4 @@ venv/
 assets/
 *.pdf
 **/__pycache__/
+*.txt

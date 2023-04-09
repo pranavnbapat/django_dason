@@ -29,11 +29,11 @@ class Settings(LoginRequiredMixin, View, AdminMenuMixin):
 
 
 class MyPasswordChangeView(LoginRequiredMixin, PasswordChangeView):
-    success_url = reverse_lazy("dashboard")
+    success_url = reverse_lazy("backend:dashboard")
 
 
 class MyPasswordSetView(LoginRequiredMixin, PasswordSetView):
-    success_url = reverse_lazy("dashboard")
+    success_url = reverse_lazy("dashboard:dashboard")
 
 
 settings_view = login_required(Settings.as_view())
