@@ -35,3 +35,4 @@ pdfplumber
 djangorestframework
 djangorestframework_simplejwt
 django-elasticsearch-dsl
+elasticsearch-dsl

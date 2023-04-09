@@ -1,7 +1,7 @@
 from .mixins import AdminMenuMixin, PermissionRequiredMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView
-from ..forms import MyFormForm
+from backend.forms import MyFormForm
 from django.shortcuts import render, redirect
 from .context_processors import get_countries
 from django.contrib.auth.hashers import make_password
@@ -41,7 +41,7 @@ class FormView(PermissionRequiredMixin, LoginRequiredMixin, TemplateView, AdminM
 
             form_data.save()
             messages.success(request, "Form data saved successfully.")
-            return redirect('backend:my_form')
+            return redirect('backend:my-form')
         else:
             messages.error(request, "There was an error processing the form.")
             context = self.get_context_data(form=form)
