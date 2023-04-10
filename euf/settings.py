@@ -9,10 +9,6 @@ load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
-
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv("DJANGO_SECRET")
 
@@ -161,9 +157,6 @@ WSGI_APPLICATION = "euf.wsgi.application"
 ASGI_APPLICATION = 'euf.asgi.application'
 
 
-# Database
-# https://docs.djangoproject.com/en/3.2/ref/settings/#databases
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
@@ -185,9 +178,6 @@ MONGO_CLIENT = MongoClient(
 )
 
 
-# Password validation
-# https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
@@ -207,9 +197,6 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
-# Internationalization
-# https://docs.djangoproject.com/en/3.2/topics/i18n/
-
 LANGUAGE_CODE = "en-us"
 
 TIME_ZONE = "Europe/Amsterdam"
@@ -220,17 +207,10 @@ USE_L10N = True
 
 USE_TZ = True
 
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/3.2/howto/static-files/
-
 AVATAR_PATH = BASE_DIR / "media/images/users"
 STATIC_URL = "/static/"
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 STATIC_ROOT = os.path.join(BASE_DIR, 'assets')
-
-# Default primary key field type
-# https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
@@ -268,7 +248,8 @@ ACCOUNT_LOGIN_ATTEMPTS_TIMEOUT = 300  # 5 minutes
 ACCOUNT_UNIQUE_EMAIL = True
 # When set to True, new users will be asked to provide their e-mail address when signing up using a social account.
 SOCIALACCOUNT_EMAIL_REQUIRED = True
-# When set to True, the e-mail address of the user is fetched “indirectly”, i.e. the user is asked to type their e-mail address manually.
+# When set to True, the e-mail address of the user is fetched “indirectly”, i.e. the user is asked to type
+# their e-mail address manually.
 SOCIALACCOUNT_QUERY_EMAIL = True
 # Indicates whether the email address should be stored in the EmailAddress model.
 SOCIALACCOUNT_STORE_EMAILS = True
@@ -280,8 +261,8 @@ SITE_ID = 1
 SOCIALACCOUNT_PROVIDERS = {
     "google": {
         'APP': {
-            'client_id': '663066773670-t4otp1sifl4k30hgt6pvumpc2kn9757o.apps.googleusercontent.com',
-            'secret': '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',
+            'client_id': os.getenv("GOOGLE_CLIENT_ID"),
+            'secret': os.getenv("GOOGLE_SECRET"),
             'key': ''
         },
         "SCOPE": [
@@ -294,8 +275,8 @@ SOCIALACCOUNT_PROVIDERS = {
     },
     'facebook': {
         'APP': {
-            'client_id': '221546703892085',
-            'secret': '79961ec2709c632abcff3a72b40834e8',
+            'client_id': os.getenv("FACEBOOK_CLIENT_ID"),
+            'secret': os.getenv("FACEBOOK_SECRET"),
             'key': ''
         },
         'METHOD': 'oauth2',
@@ -339,8 +320,8 @@ REST_FRAMEWORK = {
 # For elasticsearch for millions of records, server connection
 ELASTICSEARCH_DSL = {
     'default': {
-        'hosts': 'https://localhost:9200',  # or the address of your Elasticsearch instance
-        'http_auth': ('elastic', 'asdasdasd'),
+        'hosts': os.getenv("ELASTICSEARCH_URL"),  # or the address of your Elasticsearch instance
+        'http_auth': (os.getenv("ELASTICSEARCH_USERNAME"), os.getenv("ELASTICSEARCH_PASSWORD")),
         'verify_certs': False,
     },
 }
