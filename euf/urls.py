@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from euf import views
 from django.views.generic import RedirectView
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+from django.conf import settings
 
 
 urlpatterns = [
@@ -43,3 +44,10 @@ urlpatterns = [
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]
+
+if settings.DEBUG:
+    import debug_toolbar
+
+    urlpatterns += [
+        path(r'^__debug__/', include(debug_toolbar.urls)),
+    ]

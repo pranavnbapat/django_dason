@@ -67,6 +67,9 @@ THIRD_PARTY_APPS = [
 
     # For tweaking built-in widgets
     "widget_tweaks",
+
+    # For advanced debugging
+    "debug_toolbar",
 ]
 
 AUTH_USER_MODEL = 'backend.DefaultAuthUserExtend'
@@ -77,6 +80,7 @@ MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
+    "debug_toolbar.middleware.DebugToolbarMiddleware",  # For debugging
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     # Custom middlewre to track user activity
@@ -92,6 +96,8 @@ MIDDLEWARE = [
     "axes.middleware.AxesMiddleware",
     "csp.middleware.CSPMiddleware",
 ]
+
+# For django content security policy, additional security
 
 CSP_INCLUDE_NONCE_IN = ('script-src', 'style-src')
 CSP_IMG_SRC = ("'self'", "data:")
@@ -109,7 +115,8 @@ SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 # SECURE_SSL_REDIRECT = True # This can be implemented once the site is HTTPS
 
-ACCOUNT_ADAPTER = "allauth_2fa.adapter.OTPAdapter"
+# ACCOUNT_ADAPTER = "allauth_2fa.adapter.OTPAdapter"
+ACCOUNT_ADAPTER = "euf.social_account_adapter.SocialAccountAdapter"
 
 ROOT_URLCONF = "euf.urls"
 
@@ -205,7 +212,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = "UTC"
+TIME_ZONE = "Europe/Amsterdam"
 
 USE_I18N = True
 
@@ -256,11 +263,27 @@ ACCOUNT_LOGOUT_REDIRECT_URL = '/backend/dashboard/'
 ACCOUNT_LOGOUT_ON_GET = True
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_VERIFICATION = "mandatory"
-
+ACCOUNT_LOGIN_ATTEMPTS_LIMIT = 5
+ACCOUNT_LOGIN_ATTEMPTS_TIMEOUT = 300  # 5 minutes
+ACCOUNT_UNIQUE_EMAIL = True
+# When set to True, new users will be asked to provide their e-mail address when signing up using a social account.
+SOCIALACCOUNT_EMAIL_REQUIRED = True
+# When set to True, the e-mail address of the user is fetched “indirectly”, i.e. the user is asked to type their e-mail address manually.
+SOCIALACCOUNT_QUERY_EMAIL = True
+# Indicates whether the email address should be stored in the EmailAddress model.
+SOCIALACCOUNT_STORE_EMAILS = True
+# In case of a conflict, prompt the user to choose a new email address
+SOCIALACCOUNT_EMAIL_VERIFICATION = "mandatory"
 
 SITE_ID = 1
+
 SOCIALACCOUNT_PROVIDERS = {
     "google": {
+        'APP': {
+            'client_id': '663066773670-t4otp1sifl4k30hgt6pvumpc2kn9757o.apps.googleusercontent.com',
+            'secret': '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',
+            'key': ''
+        },
         "SCOPE": [
             "profile",
             "email",
@@ -268,8 +291,21 @@ SOCIALACCOUNT_PROVIDERS = {
         "AUTH_PARAMS": {
             "access_type": "online",
         },
+    },
+    'facebook': {
+        'APP': {
+            'client_id': '221546703892085',
+            'secret': '79961ec2709c632abcff3a72b40834e8',
+            'key': ''
+        },
+        'METHOD': 'oauth2',
+        'VERIFIED_EMAIL': False,
+        'SCOPE': ['email', 'public_profile'],
+        'AUTH_PARAMS': {'auth_type': 'reauthenticate'},
+        'VERSION': 'v16.0',
     }
 }
+
 # To Customised Forms fields style
 ACCOUNT_FORMS = {
     "login": "euf.forms.UserLoginForm",
@@ -292,6 +328,7 @@ PASSWORD_HASHERS = [
 STORAGE_DIR = os.path.join(BASE_DIR, 'storage')
 PDF2TEXT_PATH = os.path.join(STORAGE_DIR, 'pdf2text')
 
+# For REST framework, creating API endpoints
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.SessionAuthentication',
@@ -299,6 +336,7 @@ REST_FRAMEWORK = {
     ),
 }
 
+# For elasticsearch for millions of records, server connection
 ELASTICSEARCH_DSL = {
     'default': {
         'hosts': 'https://localhost:9200',  # or the address of your Elasticsearch instance
@@ -307,6 +345,7 @@ ELASTICSEARCH_DSL = {
     },
 }
 
+# Database and file logging of user actions
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -333,4 +372,8 @@ LOGGING = {
     },
 }
 
-
+# For advanced debugging toolbar
+INTERNAL_IPS = [
+    # Use the local IP address (127.0.0.1) for development
+    '127.0.0.1',
+]

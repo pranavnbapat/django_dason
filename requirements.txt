@@ -40,3 +40,4 @@ django-db-logger
 django-csp
 django-axes
 django-widget-tweaks
+django-debug-toolbar
