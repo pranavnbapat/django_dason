@@ -61,6 +61,12 @@ THIRD_PARTY_APPS = [
 
     # For elastic search on long columns
     "django_elasticsearch_dsl",
+
+    # For rate-limit on failed password attempts
+    "axes",
+
+    # For tweaking built-in widgets
+    "widget_tweaks",
 ]
 
 AUTH_USER_MODEL = 'backend.DefaultAuthUserExtend'
@@ -83,7 +89,25 @@ MIDDLEWARE = [
     # flow is reset if another page is loaded between login and successfully
     # entering two-factor credentials.
     "allauth_2fa.middleware.AllauthTwoFactorMiddleware",
+    "axes.middleware.AxesMiddleware",
+    "csp.middleware.CSPMiddleware",
 ]
+
+CSP_INCLUDE_NONCE_IN = ('script-src', 'style-src')
+CSP_IMG_SRC = ("'self'", "data:")
+CSP_SCRIPT_SRC = ("'self'", "'unsafe-inline'",)
+CSP_STYLE_SRC = ("'self'", "'unsafe-inline'", "https://fonts.googleapis.com",)
+CSP_CONNECT_SRC = ("'self'", "http://localhost:27017",)
+CSP_FONT_SRC = ("'self'", "https://fonts.gstatic.com", "https://fonts.googleapis.com",)
+CSP_MEDIA_SRC = ("'self'",)
+
+# Extra layers of security
+X_FRAME_OPTIONS = 'DENY'
+SECURE_CONTENT_TYPE_NOSNIFF = True
+SECURE_BROWSER_XSS_FILTER = True
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+# SECURE_SSL_REDIRECT = True # This can be implemented once the site is HTTPS
 
 ACCOUNT_ADAPTER = "allauth_2fa.adapter.OTPAdapter"
 
@@ -108,11 +132,22 @@ TEMPLATES = [
 ]
 
 AUTHENTICATION_BACKENDS = [
+    # For failed password attempts rate limit
+    "axes.backends.AxesStandaloneBackend",
     # Needed to login by username in Django admin, regardless of `allauth`
     "django.contrib.auth.backends.ModelBackend",
     # `allauth` specific authentication methods, such as login by e-mail
     "allauth.account.auth_backends.AuthenticationBackend",
 ]
+
+# AXES_FAILURE_LIMIT = 5  # Number of failed login attempts before lockout
+AXES_LOCK_OUT_BY_COMBINATION_USER_AND_IP = True  # Lockout based on the combination of user and IP address
+AXES_LOCKOUT_FUNCTION = 'euf.axes_handlers.custom_lockout_time'
+# AXES_COOLOFF_TIME = 60
+AXES_RESET_ON_SUCCESS = True
+AXES_LOG_ACCESS_ATTEMPTS = True
+AXES_LOG_ACCESS_FAILURE_ATTEMPTS = True
+AXES_LOG_FAILURE_ATTEMPTS = True
 
 WSGI_APPLICATION = "euf.wsgi.application"
 
@@ -152,6 +187,9 @@ AUTH_PASSWORD_VALIDATORS = [
     },
     {
         "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
+        'OPTIONS': {
+            'min_length': 8,
+        }
     },
     {
         "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",

@@ -66,7 +66,7 @@ class PaginationAPI(ListAPIView):
             #     fields=['keywords', 'description']
             # )
 
-            # Code below searched for records using AND operation
+            # Code below searches for records using AND operation
             # Split the search_value into individual terms
             search_terms = search_value.split()
             search = FakerModelDocument.search().query(

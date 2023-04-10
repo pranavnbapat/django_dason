@@ -46,8 +46,9 @@
                                             <label class="fw-normal">
                                                 {{ form.token.label }}
                                             </label>
+                                            {% load widget_tweaks %}
                                             <div class="d-flex">
-                                                {{ form.token }}
+                                                {{ form.token|add_class:"form-control" }}
                                                 <button type="submit" class="btn btn-primary btn-sm shadow-none ms-3">Verify</button>
                                             </div>
                                         </div>

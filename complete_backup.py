@@ -16,7 +16,7 @@ database_name = 'django_euf'
 
 # Define the path to the mysqldump executable (assuming it's in your PATH)
 mysqldump_path = 'mysqldump'
-username = 'root'
+username = 'euf_admin'
 password = 'asdasdasd'
 
 # Ask the user whether they want to take backups of files and database
