@@ -41,3 +41,5 @@ django-csp
 django-axes
 django-widget-tweaks
 django-debug-toolbar
+faker
+pymysql
