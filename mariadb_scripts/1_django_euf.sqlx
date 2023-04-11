@@ -1,0 +1,792 @@
+-- --------------------------------------------------------
+-- Host:                         127.0.0.1
+-- Server version:               10.11.2-MariaDB - mariadb.org binary distribution
+-- Server OS:                    Win64
+-- HeidiSQL Version:             12.4.0.6659
+-- --------------------------------------------------------
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET NAMES utf8 */;
+/*!50503 SET NAMES utf8mb4 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+
+-- Dumping database structure for django_euf
+DROP DATABASE IF EXISTS `django_euf`;
+CREATE DATABASE IF NOT EXISTS `django_euf` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci */;
+USE `django_euf`;
+
+-- Dumping structure for table django_euf.account_emailaddress
+DROP TABLE IF EXISTS `account_emailaddress`;
+CREATE TABLE IF NOT EXISTS `account_emailaddress` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `email` varchar(254) NOT NULL,
+  `verified` tinyint(1) NOT NULL,
+  `primary` tinyint(1) NOT NULL,
+  `user_id` bigint(20) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `email` (`email`),
+  KEY `account_emailaddress_user_id_2c513194_fk_backend_d` (`user_id`),
+  CONSTRAINT `account_emailaddress_user_id_2c513194_fk_backend_d` FOREIGN KEY (`user_id`) REFERENCES `backend_defaultauthuserextend` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Dumping data for table django_euf.account_emailaddress: ~2 rows (approximately)
+DELETE FROM `account_emailaddress`;
+
+-- Dumping structure for table django_euf.account_emailconfirmation
+DROP TABLE IF EXISTS `account_emailconfirmation`;
+CREATE TABLE IF NOT EXISTS `account_emailconfirmation` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `created` datetime(6) NOT NULL,
+  `sent` datetime(6) DEFAULT NULL,
+  `key` varchar(64) NOT NULL,
+  `email_address_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `key` (`key`),
+  KEY `account_emailconfirm_email_address_id_5b7f8c58_fk_account_e` (`email_address_id`),
+  CONSTRAINT `account_emailconfirm_email_address_id_5b7f8c58_fk_account_e` FOREIGN KEY (`email_address_id`) REFERENCES `account_emailaddress` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Dumping data for table django_euf.account_emailconfirmation: ~0 rows (approximately)
+DELETE FROM `account_emailconfirmation`;
+
+-- Dumping structure for table django_euf.admin_menu_master
+DROP TABLE IF EXISTS `admin_menu_master`;
+CREATE TABLE IF NOT EXISTS `admin_menu_master` (
+  `id` smallint(6) NOT NULL AUTO_INCREMENT,
+  `menu_name` varchar(20) NOT NULL,
+  `menu_icon` varchar(10) NOT NULL,
+  `menu_route` varchar(20) NOT NULL,
+  `menu_order` smallint(6) DEFAULT NULL,
+  `status` tinyint(1) NOT NULL,
+  `deleted` tinyint(1) NOT NULL,
+  `deleted_at` datetime(6) DEFAULT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `updated_at` datetime(6) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `menu_name` (`menu_name`),
+  UNIQUE KEY `menu_route` (`menu_route`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Dumping data for table django_euf.admin_menu_master: ~6 rows (approximately)
+DELETE FROM `admin_menu_master`;
+INSERT INTO `admin_menu_master` (`id`, `menu_name`, `menu_icon`, `menu_route`, `menu_order`, `status`, `deleted`, `deleted_at`, `created_at`, `updated_at`) VALUES
+	(1, 'Dashboard', 'home', 'dashboard', 1, 1, 0, NULL, '2023-04-06 20:11:12.417713', '2023-04-06 20:11:12.417713'),
+	(2, 'Users', 'users', 'users', 2, 1, 0, NULL, '2023-04-06 20:11:41.639915', '2023-04-06 20:11:41.639915'),
+	(3, 'Sample Form', 'list', 'my-form', 3, 1, 0, NULL, '2023-04-06 21:59:57.474732', '2023-04-06 21:59:57.474732'),
+	(4, 'Knowledge Objects', 'link', 'knowledge-objects', 4, 1, 0, NULL, '2023-04-06 22:00:09.641949', '2023-04-06 22:00:09.641949'),
+	(5, 'PDF2Text (API)', 'file-text', 'pdf2text', 5, 1, 0, NULL, '2023-04-06 22:01:27.687624', '2023-04-06 22:01:27.687624'),
+	(6, 'Pagination', 'book-open', 'pagination', 6, 1, 0, NULL, '2023-04-08 09:15:01.889719', '2023-04-08 09:15:01.889719');
+
+-- Dumping structure for table django_euf.authtoken_token
+DROP TABLE IF EXISTS `authtoken_token`;
+CREATE TABLE IF NOT EXISTS `authtoken_token` (
+  `key` varchar(40) NOT NULL,
+  `created` datetime(6) NOT NULL,
+  `user_id` bigint(20) NOT NULL,
+  PRIMARY KEY (`key`),
+  UNIQUE KEY `user_id` (`user_id`),
+  CONSTRAINT `authtoken_token_user_id_35299eff_fk_backend_d` FOREIGN KEY (`user_id`) REFERENCES `backend_defaultauthuserextend` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Dumping data for table django_euf.authtoken_token: ~0 rows (approximately)
+DELETE FROM `authtoken_token`;
+
+-- Dumping structure for table django_euf.auth_group
+DROP TABLE IF EXISTS `auth_group`;
+CREATE TABLE IF NOT EXISTS `auth_group` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(150) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name` (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Dumping data for table django_euf.auth_group: ~0 rows (approximately)
+DELETE FROM `auth_group`;
+
+-- Dumping structure for table django_euf.auth_group_permissions
+DROP TABLE IF EXISTS `auth_group_permissions`;
+CREATE TABLE IF NOT EXISTS `auth_group_permissions` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `group_id` int(11) NOT NULL,
+  `permission_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `auth_group_permissions_group_id_permission_id_0cd325b0_uniq` (`group_id`,`permission_id`),
+  KEY `auth_group_permissio_permission_id_84c5c92e_fk_auth_perm` (`permission_id`),
+  CONSTRAINT `auth_group_permissio_permission_id_84c5c92e_fk_auth_perm` FOREIGN KEY (`permission_id`) REFERENCES `auth_permission` (`id`),
+  CONSTRAINT `auth_group_permissions_group_id_b120cbf9_fk_auth_group_id` FOREIGN KEY (`group_id`) REFERENCES `auth_group` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Dumping data for table django_euf.auth_group_permissions: ~0 rows (approximately)
+DELETE FROM `auth_group_permissions`;
+
+-- Dumping structure for table django_euf.auth_permission
+DROP TABLE IF EXISTS `auth_permission`;
+CREATE TABLE IF NOT EXISTS `auth_permission` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `content_type_id` int(11) NOT NULL,
+  `codename` varchar(100) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `auth_permission_content_type_id_codename_01ab375a_uniq` (`content_type_id`,`codename`),
+  CONSTRAINT `auth_permission_content_type_id_2f476e4b_fk_django_co` FOREIGN KEY (`content_type_id`) REFERENCES `django_content_type` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=109 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Dumping data for table django_euf.auth_permission: ~108 rows (approximately)
+DELETE FROM `auth_permission`;
+INSERT INTO `auth_permission` (`id`, `name`, `content_type_id`, `codename`) VALUES
+	(1, 'Can add log entry', 1, 'add_logentry'),
+	(2, 'Can change log entry', 1, 'change_logentry'),
+	(3, 'Can delete log entry', 1, 'delete_logentry'),
+	(4, 'Can view log entry', 1, 'view_logentry'),
+	(5, 'Can add permission', 2, 'add_permission'),
+	(6, 'Can change permission', 2, 'change_permission'),
+	(7, 'Can delete permission', 2, 'delete_permission'),
+	(8, 'Can view permission', 2, 'view_permission'),
+	(9, 'Can add group', 3, 'add_group'),
+	(10, 'Can change group', 3, 'change_group'),
+	(11, 'Can delete group', 3, 'delete_group'),
+	(12, 'Can view group', 3, 'view_group'),
+	(13, 'Can add content type', 4, 'add_contenttype'),
+	(14, 'Can change content type', 4, 'change_contenttype'),
+	(15, 'Can delete content type', 4, 'delete_contenttype'),
+	(16, 'Can view content type', 4, 'view_contenttype'),
+	(17, 'Can add session', 5, 'add_session'),
+	(18, 'Can change session', 5, 'change_session'),
+	(19, 'Can delete session', 5, 'delete_session'),
+	(20, 'Can view session', 5, 'view_session'),
+	(21, 'Can add site', 6, 'add_site'),
+	(22, 'Can change site', 6, 'change_site'),
+	(23, 'Can delete site', 6, 'delete_site'),
+	(24, 'Can view site', 6, 'view_site'),
+	(25, 'Can add user', 7, 'add_defaultauthuserextend'),
+	(26, 'Can change user', 7, 'change_defaultauthuserextend'),
+	(27, 'Can delete user', 7, 'delete_defaultauthuserextend'),
+	(28, 'Can view user', 7, 'view_defaultauthuserextend'),
+	(29, 'Can add admin_menu_master', 8, 'add_adminmenumaster'),
+	(30, 'Can change admin_menu_master', 8, 'change_adminmenumaster'),
+	(31, 'Can delete admin_menu_master', 8, 'delete_adminmenumaster'),
+	(32, 'Can view admin_menu_master', 8, 'view_adminmenumaster'),
+	(33, 'Can add eu countries', 9, 'add_eucountries'),
+	(34, 'Can change eu countries', 9, 'change_eucountries'),
+	(35, 'Can delete eu countries', 9, 'delete_eucountries'),
+	(36, 'Can view eu countries', 9, 'view_eucountries'),
+	(37, 'Can add faker model', 10, 'add_fakermodel'),
+	(38, 'Can change faker model', 10, 'change_fakermodel'),
+	(39, 'Can delete faker model', 10, 'delete_fakermodel'),
+	(40, 'Can view faker model', 10, 'view_fakermodel'),
+	(41, 'Can add knowledge objects', 11, 'add_knowledgeobjects'),
+	(42, 'Can change knowledge objects', 11, 'change_knowledgeobjects'),
+	(43, 'Can delete knowledge objects', 11, 'delete_knowledgeobjects'),
+	(44, 'Can view knowledge objects', 11, 'view_knowledgeobjects'),
+	(45, 'Can add pd f2 text', 12, 'add_pdf2text'),
+	(46, 'Can change pd f2 text', 12, 'change_pdf2text'),
+	(47, 'Can delete pd f2 text', 12, 'delete_pdf2text'),
+	(48, 'Can view pd f2 text', 12, 'view_pdf2text'),
+	(49, 'Can add user activity log', 13, 'add_useractivitylog'),
+	(50, 'Can change user activity log', 13, 'change_useractivitylog'),
+	(51, 'Can delete user activity log', 13, 'delete_useractivitylog'),
+	(52, 'Can view user activity log', 13, 'view_useractivitylog'),
+	(53, 'Can add my form', 14, 'add_myform'),
+	(54, 'Can change my form', 14, 'change_myform'),
+	(55, 'Can delete my form', 14, 'delete_myform'),
+	(56, 'Can view my form', 14, 'view_myform'),
+	(57, 'Can add email address', 15, 'add_emailaddress'),
+	(58, 'Can change email address', 15, 'change_emailaddress'),
+	(59, 'Can delete email address', 15, 'delete_emailaddress'),
+	(60, 'Can view email address', 15, 'view_emailaddress'),
+	(61, 'Can add email confirmation', 16, 'add_emailconfirmation'),
+	(62, 'Can change email confirmation', 16, 'change_emailconfirmation'),
+	(63, 'Can delete email confirmation', 16, 'delete_emailconfirmation'),
+	(64, 'Can view email confirmation', 16, 'view_emailconfirmation'),
+	(65, 'Can add social account', 17, 'add_socialaccount'),
+	(66, 'Can change social account', 17, 'change_socialaccount'),
+	(67, 'Can delete social account', 17, 'delete_socialaccount'),
+	(68, 'Can view social account', 17, 'view_socialaccount'),
+	(69, 'Can add social application', 18, 'add_socialapp'),
+	(70, 'Can change social application', 18, 'change_socialapp'),
+	(71, 'Can delete social application', 18, 'delete_socialapp'),
+	(72, 'Can view social application', 18, 'view_socialapp'),
+	(73, 'Can add social application token', 19, 'add_socialtoken'),
+	(74, 'Can change social application token', 19, 'change_socialtoken'),
+	(75, 'Can delete social application token', 19, 'delete_socialtoken'),
+	(76, 'Can view social application token', 19, 'view_socialtoken'),
+	(77, 'Can add TOTP device', 20, 'add_totpdevice'),
+	(78, 'Can change TOTP device', 20, 'change_totpdevice'),
+	(79, 'Can delete TOTP device', 20, 'delete_totpdevice'),
+	(80, 'Can view TOTP device', 20, 'view_totpdevice'),
+	(81, 'Can add static device', 21, 'add_staticdevice'),
+	(82, 'Can change static device', 21, 'change_staticdevice'),
+	(83, 'Can delete static device', 21, 'delete_staticdevice'),
+	(84, 'Can view static device', 21, 'view_staticdevice'),
+	(85, 'Can add static token', 22, 'add_statictoken'),
+	(86, 'Can change static token', 22, 'change_statictoken'),
+	(87, 'Can delete static token', 22, 'delete_statictoken'),
+	(88, 'Can view static token', 22, 'view_statictoken'),
+	(89, 'Can add Token', 23, 'add_token'),
+	(90, 'Can change Token', 23, 'change_token'),
+	(91, 'Can delete Token', 23, 'delete_token'),
+	(92, 'Can view Token', 23, 'view_token'),
+	(93, 'Can add token', 24, 'add_tokenproxy'),
+	(94, 'Can change token', 24, 'change_tokenproxy'),
+	(95, 'Can delete token', 24, 'delete_tokenproxy'),
+	(96, 'Can view token', 24, 'view_tokenproxy'),
+	(97, 'Can add access attempt', 25, 'add_accessattempt'),
+	(98, 'Can change access attempt', 25, 'change_accessattempt'),
+	(99, 'Can delete access attempt', 25, 'delete_accessattempt'),
+	(100, 'Can view access attempt', 25, 'view_accessattempt'),
+	(101, 'Can add access log', 26, 'add_accesslog'),
+	(102, 'Can change access log', 26, 'change_accesslog'),
+	(103, 'Can delete access log', 26, 'delete_accesslog'),
+	(104, 'Can view access log', 26, 'view_accesslog'),
+	(105, 'Can add access failure', 27, 'add_accessfailurelog'),
+	(106, 'Can change access failure', 27, 'change_accessfailurelog'),
+	(107, 'Can delete access failure', 27, 'delete_accessfailurelog'),
+	(108, 'Can view access failure', 27, 'view_accessfailurelog');
+
+-- Dumping structure for table django_euf.axes_accessattempt
+DROP TABLE IF EXISTS `axes_accessattempt`;
+CREATE TABLE IF NOT EXISTS `axes_accessattempt` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_agent` varchar(255) NOT NULL,
+  `ip_address` char(39) DEFAULT NULL,
+  `username` varchar(255) DEFAULT NULL,
+  `http_accept` varchar(1025) NOT NULL,
+  `path_info` varchar(255) NOT NULL,
+  `attempt_time` datetime(6) NOT NULL,
+  `get_data` longtext NOT NULL,
+  `post_data` longtext NOT NULL,
+  `failures_since_start` int(10) unsigned NOT NULL CHECK (`failures_since_start` >= 0),
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `axes_accessattempt_username_ip_address_user_agent_8ea22282_uniq` (`username`,`ip_address`,`user_agent`),
+  KEY `axes_accessattempt_ip_address_10922d9c` (`ip_address`),
+  KEY `axes_accessattempt_user_agent_ad89678b` (`user_agent`),
+  KEY `axes_accessattempt_username_3f2d4ca0` (`username`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Dumping data for table django_euf.axes_accessattempt: ~0 rows (approximately)
+DELETE FROM `axes_accessattempt`;
+
+-- Dumping structure for table django_euf.axes_accessfailurelog
+DROP TABLE IF EXISTS `axes_accessfailurelog`;
+CREATE TABLE IF NOT EXISTS `axes_accessfailurelog` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_agent` varchar(255) NOT NULL,
+  `ip_address` char(39) DEFAULT NULL,
+  `username` varchar(255) DEFAULT NULL,
+  `http_accept` varchar(1025) NOT NULL,
+  `path_info` varchar(255) NOT NULL,
+  `attempt_time` datetime(6) NOT NULL,
+  `locked_out` tinyint(1) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `axes_accessfailurelog_user_agent_ea145dda` (`user_agent`),
+  KEY `axes_accessfailurelog_ip_address_2e9f5a7f` (`ip_address`),
+  KEY `axes_accessfailurelog_username_a8b7e8a4` (`username`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Dumping data for table django_euf.axes_accessfailurelog: ~0 rows (approximately)
+DELETE FROM `axes_accessfailurelog`;
+
+-- Dumping structure for table django_euf.axes_accesslog
+DROP TABLE IF EXISTS `axes_accesslog`;
+CREATE TABLE IF NOT EXISTS `axes_accesslog` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_agent` varchar(255) NOT NULL,
+  `ip_address` char(39) DEFAULT NULL,
+  `username` varchar(255) DEFAULT NULL,
+  `http_accept` varchar(1025) NOT NULL,
+  `path_info` varchar(255) NOT NULL,
+  `attempt_time` datetime(6) NOT NULL,
+  `logout_time` datetime(6) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `axes_accesslog_ip_address_86b417e5` (`ip_address`),
+  KEY `axes_accesslog_user_agent_0e659004` (`user_agent`),
+  KEY `axes_accesslog_username_df93064b` (`username`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Dumping data for table django_euf.axes_accesslog: ~0 rows (approximately)
+DELETE FROM `axes_accesslog`;
+
+-- Dumping structure for table django_euf.backend_defaultauthuserextend
+DROP TABLE IF EXISTS `backend_defaultauthuserextend`;
+CREATE TABLE IF NOT EXISTS `backend_defaultauthuserextend` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `password` varchar(128) NOT NULL,
+  `last_login` datetime(6) DEFAULT NULL,
+  `is_superuser` tinyint(1) NOT NULL,
+  `username` varchar(150) NOT NULL,
+  `first_name` varchar(150) NOT NULL,
+  `last_name` varchar(150) NOT NULL,
+  `email` varchar(254) NOT NULL,
+  `is_staff` tinyint(1) NOT NULL,
+  `is_active` tinyint(1) NOT NULL,
+  `date_joined` datetime(6) NOT NULL,
+  `contact_no` varchar(10) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `username` (`username`),
+  KEY `backend_defaultauthuserextend_contact_no_7bbfdae9` (`contact_no`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Dumping data for table django_euf.backend_defaultauthuserextend: ~1 rows (approximately)
+DELETE FROM `backend_defaultauthuserextend`;
+
+-- Dumping structure for table django_euf.backend_defaultauthuserextend_groups
+DROP TABLE IF EXISTS `backend_defaultauthuserextend_groups`;
+CREATE TABLE IF NOT EXISTS `backend_defaultauthuserextend_groups` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `defaultauthuserextend_id` bigint(20) NOT NULL,
+  `group_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `backend_defaultauthusere_defaultauthuserextend_id_fa717e65_uniq` (`defaultauthuserextend_id`,`group_id`),
+  KEY `backend_defaultauthu_group_id_2d45b284_fk_auth_grou` (`group_id`),
+  CONSTRAINT `backend_defaultauthu_defaultauthuserexten_72f5e8c3_fk_backend_d` FOREIGN KEY (`defaultauthuserextend_id`) REFERENCES `backend_defaultauthuserextend` (`id`),
+  CONSTRAINT `backend_defaultauthu_group_id_2d45b284_fk_auth_grou` FOREIGN KEY (`group_id`) REFERENCES `auth_group` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Dumping data for table django_euf.backend_defaultauthuserextend_groups: ~0 rows (approximately)
+DELETE FROM `backend_defaultauthuserextend_groups`;
+
+-- Dumping structure for table django_euf.backend_defaultauthuserextend_user_permissions
+DROP TABLE IF EXISTS `backend_defaultauthuserextend_user_permissions`;
+CREATE TABLE IF NOT EXISTS `backend_defaultauthuserextend_user_permissions` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `defaultauthuserextend_id` bigint(20) NOT NULL,
+  `permission_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `backend_defaultauthusere_defaultauthuserextend_id_3ecbde56_uniq` (`defaultauthuserextend_id`,`permission_id`),
+  KEY `backend_defaultauthu_permission_id_a33fc22f_fk_auth_perm` (`permission_id`),
+  CONSTRAINT `backend_defaultauthu_defaultauthuserexten_243c37ff_fk_backend_d` FOREIGN KEY (`defaultauthuserextend_id`) REFERENCES `backend_defaultauthuserextend` (`id`),
+  CONSTRAINT `backend_defaultauthu_permission_id_a33fc22f_fk_auth_perm` FOREIGN KEY (`permission_id`) REFERENCES `auth_permission` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Dumping data for table django_euf.backend_defaultauthuserextend_user_permissions: ~0 rows (approximately)
+DELETE FROM `backend_defaultauthuserextend_user_permissions`;
+
+-- Dumping structure for table django_euf.countries_master
+DROP TABLE IF EXISTS `countries_master`;
+CREATE TABLE IF NOT EXISTS `countries_master` (
+  `id` smallint(6) NOT NULL AUTO_INCREMENT,
+  `country` varchar(50) NOT NULL,
+  `country_code` varchar(2) NOT NULL,
+  `calling_code` varchar(4) NOT NULL,
+  `status` tinyint(1) NOT NULL,
+  `deleted` tinyint(1) NOT NULL,
+  `deleted_at` datetime(6) DEFAULT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `updated_at` datetime(6) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Dumping data for table django_euf.countries_master: ~27 rows (approximately)
+DELETE FROM `countries_master`;
+INSERT INTO `countries_master` (`id`, `country`, `country_code`, `calling_code`, `status`, `deleted`, `deleted_at`, `created_at`, `updated_at`) VALUES
+	(1, 'Austria', 'AT', '+43', 1, 0, NULL, '2023-04-08 11:10:56.000000', '2023-04-08 11:10:56.000000'),
+	(2, 'Belgium', 'BE', '+32', 1, 0, NULL, '2023-04-08 11:10:56.000000', '2023-04-08 11:10:56.000000'),
+	(3, 'Bulgaria', 'BG', '+359', 1, 0, NULL, '2023-04-08 11:10:56.000000', '2023-04-08 11:10:56.000000'),
+	(4, 'Croatia', 'HR', '+385', 1, 0, NULL, '2023-04-08 11:10:56.000000', '2023-04-08 11:10:56.000000'),
+	(5, 'Cyprus', 'CY', '+357', 1, 0, NULL, '2023-04-08 11:10:56.000000', '2023-04-08 11:10:56.000000'),
+	(6, 'Czech Republic', 'CZ', '+420', 1, 0, NULL, '2023-04-08 11:10:56.000000', '2023-04-08 11:10:56.000000'),
+	(7, 'Denmark', 'DK', '+45', 1, 0, NULL, '2023-04-08 11:10:56.000000', '2023-04-08 11:10:56.000000'),
+	(8, 'Estonia', 'EE', '+372', 1, 0, NULL, '2023-04-08 11:10:56.000000', '2023-04-08 11:10:56.000000'),
+	(9, 'Finland', 'FI', '+358', 1, 0, NULL, '2023-04-08 11:10:56.000000', '2023-04-08 11:10:56.000000'),
+	(10, 'France', 'FR', '+33', 1, 0, NULL, '2023-04-08 11:10:56.000000', '2023-04-08 11:10:56.000000'),
+	(11, 'Germany', 'DE', '+49', 1, 0, NULL, '2023-04-08 11:10:56.000000', '2023-04-08 11:10:56.000000'),
+	(12, 'Greece', 'GR', '+30', 1, 0, NULL, '2023-04-08 11:10:56.000000', '2023-04-08 11:10:56.000000'),
+	(13, 'Hungary', 'HU', '+36', 1, 0, NULL, '2023-04-08 11:10:56.000000', '2023-04-08 11:10:56.000000'),
+	(14, 'Ireland', 'IE', '+353', 1, 0, NULL, '2023-04-08 11:10:56.000000', '2023-04-08 11:10:56.000000'),
+	(15, 'Italy', 'IT', '+39', 1, 0, NULL, '2023-04-08 11:10:56.000000', '2023-04-08 11:10:56.000000'),
+	(16, 'Latvia', 'LV', '+371', 1, 0, NULL, '2023-04-08 11:10:56.000000', '2023-04-08 11:10:56.000000'),
+	(17, 'Lithuania', 'LT', '+370', 1, 0, NULL, '2023-04-08 11:10:56.000000', '2023-04-08 11:10:56.000000'),
+	(18, 'Luxembourg', 'LU', '+352', 1, 0, NULL, '2023-04-08 11:10:56.000000', '2023-04-08 11:10:56.000000'),
+	(19, 'Malta', 'MT', '+356', 1, 0, NULL, '2023-04-08 11:10:56.000000', '2023-04-08 11:10:56.000000'),
+	(20, 'Netherlands', 'NL', '+31', 1, 0, NULL, '2023-04-08 11:10:56.000000', '2023-04-08 11:10:56.000000'),
+	(21, 'Poland', 'PL', '+48', 1, 0, NULL, '2023-04-08 11:10:56.000000', '2023-04-08 11:10:56.000000'),
+	(22, 'Portugal', 'PT', '+351', 1, 0, NULL, '2023-04-08 11:10:56.000000', '2023-04-08 11:10:56.000000'),
+	(23, 'Romania', 'RO', '+40', 1, 0, NULL, '2023-04-08 11:10:56.000000', '2023-04-08 11:10:56.000000'),
+	(24, 'Slovakia', 'SK', '+421', 1, 0, NULL, '2023-04-08 11:10:56.000000', '2023-04-08 11:10:56.000000'),
+	(25, 'Slovenia', 'SI', '+386', 1, 0, NULL, '2023-04-08 11:10:56.000000', '2023-04-08 11:10:56.000000'),
+	(26, 'Spain', 'ES', '+34', 1, 0, NULL, '2023-04-08 11:10:56.000000', '2023-04-08 11:10:56.000000'),
+	(27, 'Sweden', 'SE', '+46', 1, 0, NULL, '2023-04-08 11:10:56.000000', '2023-04-08 11:10:56.000000');
+
+-- Dumping structure for table django_euf.django_admin_log
+DROP TABLE IF EXISTS `django_admin_log`;
+CREATE TABLE IF NOT EXISTS `django_admin_log` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `action_time` datetime(6) NOT NULL,
+  `object_id` longtext DEFAULT NULL,
+  `object_repr` varchar(200) NOT NULL,
+  `action_flag` smallint(5) unsigned NOT NULL CHECK (`action_flag` >= 0),
+  `change_message` longtext NOT NULL,
+  `content_type_id` int(11) DEFAULT NULL,
+  `user_id` bigint(20) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `django_admin_log_content_type_id_c4bce8eb_fk_django_co` (`content_type_id`),
+  KEY `django_admin_log_user_id_c564eba6_fk_backend_d` (`user_id`),
+  CONSTRAINT `django_admin_log_content_type_id_c4bce8eb_fk_django_co` FOREIGN KEY (`content_type_id`) REFERENCES `django_content_type` (`id`),
+  CONSTRAINT `django_admin_log_user_id_c564eba6_fk_backend_d` FOREIGN KEY (`user_id`) REFERENCES `backend_defaultauthuserextend` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Dumping data for table django_euf.django_admin_log: ~0 rows (approximately)
+DELETE FROM `django_admin_log`;
+
+-- Dumping structure for table django_euf.django_content_type
+DROP TABLE IF EXISTS `django_content_type`;
+CREATE TABLE IF NOT EXISTS `django_content_type` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `app_label` varchar(100) NOT NULL,
+  `model` varchar(100) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `django_content_type_app_label_model_76bd3d3b_uniq` (`app_label`,`model`)
+) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Dumping data for table django_euf.django_content_type: ~24 rows (approximately)
+DELETE FROM `django_content_type`;
+INSERT INTO `django_content_type` (`id`, `app_label`, `model`) VALUES
+	(15, 'account', 'emailaddress'),
+	(16, 'account', 'emailconfirmation'),
+	(1, 'admin', 'logentry'),
+	(3, 'auth', 'group'),
+	(2, 'auth', 'permission'),
+	(23, 'authtoken', 'token'),
+	(24, 'authtoken', 'tokenproxy'),
+	(25, 'axes', 'accessattempt'),
+	(27, 'axes', 'accessfailurelog'),
+	(26, 'axes', 'accesslog'),
+	(8, 'backend', 'adminmenumaster'),
+	(7, 'backend', 'defaultauthuserextend'),
+	(9, 'backend', 'eucountries'),
+	(10, 'backend', 'fakermodel'),
+	(11, 'backend', 'knowledgeobjects'),
+	(14, 'backend', 'myform'),
+	(12, 'backend', 'pdf2text'),
+	(13, 'backend', 'useractivitylog'),
+	(4, 'contenttypes', 'contenttype'),
+	(21, 'otp_static', 'staticdevice'),
+	(22, 'otp_static', 'statictoken'),
+	(20, 'otp_totp', 'totpdevice'),
+	(5, 'sessions', 'session'),
+	(6, 'sites', 'site'),
+	(17, 'socialaccount', 'socialaccount'),
+	(18, 'socialaccount', 'socialapp'),
+	(19, 'socialaccount', 'socialtoken');
+
+-- Dumping structure for table django_euf.django_migrations
+DROP TABLE IF EXISTS `django_migrations`;
+CREATE TABLE IF NOT EXISTS `django_migrations` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `app` varchar(255) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `applied` datetime(6) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=44 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Dumping data for table django_euf.django_migrations: ~39 rows (approximately)
+DELETE FROM `django_migrations`;
+INSERT INTO `django_migrations` (`id`, `app`, `name`, `applied`) VALUES
+	(1, 'contenttypes', '0001_initial', '2023-04-09 23:28:01.807600'),
+	(2, 'contenttypes', '0002_remove_content_type_name', '2023-04-09 23:28:01.849359'),
+	(3, 'auth', '0001_initial', '2023-04-09 23:28:01.997724'),
+	(4, 'auth', '0002_alter_permission_name_max_length', '2023-04-09 23:28:02.022522'),
+	(5, 'auth', '0003_alter_user_email_max_length', '2023-04-09 23:28:02.026805'),
+	(6, 'auth', '0004_alter_user_username_opts', '2023-04-09 23:28:02.031805'),
+	(7, 'auth', '0005_alter_user_last_login_null', '2023-04-09 23:28:02.036798'),
+	(8, 'auth', '0006_require_contenttypes_0002', '2023-04-09 23:28:02.039767'),
+	(9, 'auth', '0007_alter_validators_add_error_messages', '2023-04-09 23:28:02.045807'),
+	(10, 'auth', '0008_alter_user_username_max_length', '2023-04-09 23:28:02.051775'),
+	(11, 'auth', '0009_alter_user_last_name_max_length', '2023-04-09 23:28:02.057807'),
+	(12, 'auth', '0010_alter_group_name_max_length', '2023-04-09 23:28:02.074655'),
+	(13, 'auth', '0011_update_proxy_permissions', '2023-04-09 23:28:02.080124'),
+	(14, 'auth', '0012_alter_user_first_name_max_length', '2023-04-09 23:28:02.085156'),
+	(15, 'backend', '0001_initial', '2023-04-09 23:28:02.347013'),
+	(16, 'account', '0001_initial', '2023-04-09 23:28:02.421073'),
+	(17, 'account', '0002_email_max_length', '2023-04-09 23:28:02.440981'),
+	(18, 'admin', '0001_initial', '2023-04-09 23:28:02.515508'),
+	(19, 'admin', '0002_logentry_remove_auto_add', '2023-04-09 23:28:02.522535'),
+	(20, 'admin', '0003_logentry_add_action_flag_choices', '2023-04-09 23:28:02.529512'),
+	(21, 'authtoken', '0001_initial', '2023-04-09 23:28:02.569658'),
+	(22, 'authtoken', '0002_auto_20160226_1747', '2023-04-09 23:28:02.593651'),
+	(23, 'authtoken', '0003_tokenproxy', '2023-04-09 23:28:02.597237'),
+	(24, 'otp_static', '0001_initial', '2023-04-09 23:28:02.683790'),
+	(25, 'otp_static', '0002_throttling', '2023-04-09 23:28:02.727122'),
+	(26, 'otp_totp', '0001_initial', '2023-04-09 23:28:02.776546'),
+	(27, 'otp_totp', '0002_auto_20190420_0723', '2023-04-09 23:28:02.822953'),
+	(28, 'sessions', '0001_initial', '2023-04-09 23:28:02.846256'),
+	(29, 'sites', '0001_initial', '2023-04-09 23:28:02.858291'),
+	(30, 'sites', '0002_alter_domain_unique', '2023-04-09 23:28:02.873259'),
+	(31, 'socialaccount', '0001_initial', '2023-04-09 23:28:03.106965'),
+	(32, 'socialaccount', '0002_token_max_lengths', '2023-04-09 23:28:03.166479'),
+	(33, 'socialaccount', '0003_extra_data_default_dict', '2023-04-09 23:28:03.176489'),
+	(34, 'backend', '0002_useractivitylog_method', '2023-04-09 23:43:24.811520'),
+	(35, 'backend', '0003_useractivitylog_user_timezone', '2023-04-09 23:58:17.693921'),
+	(36, 'axes', '0001_initial', '2023-04-10 07:28:08.803411'),
+	(37, 'axes', '0002_auto_20151217_2044', '2023-04-10 07:28:08.956137'),
+	(38, 'axes', '0003_auto_20160322_0929', '2023-04-10 07:28:08.974061'),
+	(39, 'axes', '0004_auto_20181024_1538', '2023-04-10 07:28:08.987034'),
+	(40, 'axes', '0005_remove_accessattempt_trusted', '2023-04-10 07:28:09.007067'),
+	(41, 'axes', '0006_remove_accesslog_trusted', '2023-04-10 07:28:09.025071'),
+	(42, 'axes', '0007_alter_accessattempt_unique_together', '2023-04-10 07:28:09.073004'),
+	(43, 'axes', '0008_accessfailurelog', '2023-04-10 07:28:09.128425');
+
+-- Dumping structure for table django_euf.django_session
+DROP TABLE IF EXISTS `django_session`;
+CREATE TABLE IF NOT EXISTS `django_session` (
+  `session_key` varchar(40) NOT NULL,
+  `session_data` longtext NOT NULL,
+  `expire_date` datetime(6) NOT NULL,
+  PRIMARY KEY (`session_key`),
+  KEY `django_session_expire_date_a5c62663` (`expire_date`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Dumping data for table django_euf.django_session: ~0 rows (approximately)
+DELETE FROM `django_session`;
+
+-- Dumping structure for table django_euf.django_site
+DROP TABLE IF EXISTS `django_site`;
+CREATE TABLE IF NOT EXISTS `django_site` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `domain` varchar(100) NOT NULL,
+  `name` varchar(50) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `django_site_domain_a2e37b91_uniq` (`domain`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Dumping data for table django_euf.django_site: ~1 rows (approximately)
+DELETE FROM `django_site`;
+INSERT INTO `django_site` (`id`, `domain`, `name`) VALUES
+	(1, 'eufarmbook.eu', 'eufarmbook.eu'),
+	(2, 'localhost:8000', 'localhost:8000');
+
+-- Dumping structure for table django_euf.faker_model
+DROP TABLE IF EXISTS `faker_model`;
+CREATE TABLE IF NOT EXISTS `faker_model` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `keywords` varchar(255) NOT NULL,
+  `description` longtext DEFAULT NULL,
+  `status` tinyint(1) NOT NULL,
+  `deleted` tinyint(1) NOT NULL,
+  `deleted_at` datetime(6) DEFAULT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `updated_at` datetime(6) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `faker_model_keywords_87c1041d` (`keywords`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Dumping data for table django_euf.faker_model: ~0 rows (approximately)
+DELETE FROM `faker_model`;
+
+-- Dumping structure for table django_euf.knowledge_objects
+DROP TABLE IF EXISTS `knowledge_objects`;
+CREATE TABLE IF NOT EXISTS `knowledge_objects` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `status` tinyint(1) NOT NULL,
+  `deleted` tinyint(1) NOT NULL,
+  `deleted_at` datetime(6) DEFAULT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `updated_at` datetime(6) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Dumping data for table django_euf.knowledge_objects: ~0 rows (approximately)
+DELETE FROM `knowledge_objects`;
+
+-- Dumping structure for table django_euf.my_form
+DROP TABLE IF EXISTS `my_form`;
+CREATE TABLE IF NOT EXISTS `my_form` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `fname` varchar(50) NOT NULL,
+  `lname` varchar(50) NOT NULL,
+  `email` varchar(50) NOT NULL,
+  `contact_no` varchar(15) DEFAULT NULL,
+  `gender` varchar(1) NOT NULL,
+  `dob` date NOT NULL,
+  `avatar` varchar(50) DEFAULT NULL,
+  `descr` longtext DEFAULT NULL,
+  `status` tinyint(1) NOT NULL,
+  `deleted` tinyint(1) NOT NULL,
+  `deleted_at` datetime(6) DEFAULT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `updated_at` datetime(6) NOT NULL,
+  `countries_master_id_id` smallint(6) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `email` (`email`),
+  KEY `my_form_countries_master_id_id_4a7dfff0_fk_countries_master_id` (`countries_master_id_id`),
+  KEY `my_form_contact_no_7de63d35` (`contact_no`),
+  CONSTRAINT `my_form_countries_master_id_id_4a7dfff0_fk_countries_master_id` FOREIGN KEY (`countries_master_id_id`) REFERENCES `countries_master` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Dumping data for table django_euf.my_form: ~0 rows (approximately)
+DELETE FROM `my_form`;
+
+-- Dumping structure for table django_euf.otp_static_staticdevice
+DROP TABLE IF EXISTS `otp_static_staticdevice`;
+CREATE TABLE IF NOT EXISTS `otp_static_staticdevice` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(64) NOT NULL,
+  `confirmed` tinyint(1) NOT NULL,
+  `user_id` bigint(20) NOT NULL,
+  `throttling_failure_count` int(10) unsigned NOT NULL CHECK (`throttling_failure_count` >= 0),
+  `throttling_failure_timestamp` datetime(6) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `otp_static_staticdev_user_id_7f9cff2b_fk_backend_d` (`user_id`),
+  CONSTRAINT `otp_static_staticdev_user_id_7f9cff2b_fk_backend_d` FOREIGN KEY (`user_id`) REFERENCES `backend_defaultauthuserextend` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Dumping data for table django_euf.otp_static_staticdevice: ~0 rows (approximately)
+DELETE FROM `otp_static_staticdevice`;
+
+-- Dumping structure for table django_euf.otp_static_statictoken
+DROP TABLE IF EXISTS `otp_static_statictoken`;
+CREATE TABLE IF NOT EXISTS `otp_static_statictoken` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `token` varchar(16) NOT NULL,
+  `device_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `otp_static_statictok_device_id_74b7c7d1_fk_otp_stati` (`device_id`),
+  KEY `otp_static_statictoken_token_d0a51866` (`token`),
+  CONSTRAINT `otp_static_statictok_device_id_74b7c7d1_fk_otp_stati` FOREIGN KEY (`device_id`) REFERENCES `otp_static_staticdevice` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Dumping data for table django_euf.otp_static_statictoken: ~0 rows (approximately)
+DELETE FROM `otp_static_statictoken`;
+
+-- Dumping structure for table django_euf.otp_totp_totpdevice
+DROP TABLE IF EXISTS `otp_totp_totpdevice`;
+CREATE TABLE IF NOT EXISTS `otp_totp_totpdevice` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(64) NOT NULL,
+  `confirmed` tinyint(1) NOT NULL,
+  `key` varchar(80) NOT NULL,
+  `step` smallint(5) unsigned NOT NULL CHECK (`step` >= 0),
+  `t0` bigint(20) NOT NULL,
+  `digits` smallint(5) unsigned NOT NULL CHECK (`digits` >= 0),
+  `tolerance` smallint(5) unsigned NOT NULL CHECK (`tolerance` >= 0),
+  `drift` smallint(6) NOT NULL,
+  `last_t` bigint(20) NOT NULL,
+  `user_id` bigint(20) NOT NULL,
+  `throttling_failure_count` int(10) unsigned NOT NULL CHECK (`throttling_failure_count` >= 0),
+  `throttling_failure_timestamp` datetime(6) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `otp_totp_totpdevice_user_id_0fb18292_fk_backend_d` (`user_id`),
+  CONSTRAINT `otp_totp_totpdevice_user_id_0fb18292_fk_backend_d` FOREIGN KEY (`user_id`) REFERENCES `backend_defaultauthuserextend` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Dumping data for table django_euf.otp_totp_totpdevice: ~0 rows (approximately)
+DELETE FROM `otp_totp_totpdevice`;
+
+-- Dumping structure for table django_euf.pdf2text
+DROP TABLE IF EXISTS `pdf2text`;
+CREATE TABLE IF NOT EXISTS `pdf2text` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `old_filename` varchar(255) NOT NULL,
+  `new_filename` varchar(255) NOT NULL,
+  `application_type` varchar(20) NOT NULL,
+  `file_text` longtext DEFAULT NULL,
+  `status` tinyint(1) NOT NULL,
+  `deleted` tinyint(1) NOT NULL,
+  `deleted_at` datetime(6) DEFAULT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `updated_at` datetime(6) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Dumping data for table django_euf.pdf2text: ~0 rows (approximately)
+DELETE FROM `pdf2text`;
+
+-- Dumping structure for table django_euf.socialaccount_socialaccount
+DROP TABLE IF EXISTS `socialaccount_socialaccount`;
+CREATE TABLE IF NOT EXISTS `socialaccount_socialaccount` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `provider` varchar(30) NOT NULL,
+  `uid` varchar(191) NOT NULL,
+  `last_login` datetime(6) NOT NULL,
+  `date_joined` datetime(6) NOT NULL,
+  `extra_data` longtext NOT NULL,
+  `user_id` bigint(20) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `socialaccount_socialaccount_provider_uid_fc810c6e_uniq` (`provider`,`uid`),
+  KEY `socialaccount_social_user_id_8146e70c_fk_backend_d` (`user_id`),
+  CONSTRAINT `socialaccount_social_user_id_8146e70c_fk_backend_d` FOREIGN KEY (`user_id`) REFERENCES `backend_defaultauthuserextend` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Dumping data for table django_euf.socialaccount_socialaccount: ~1 rows (approximately)
+DELETE FROM `socialaccount_socialaccount`;
+
+-- Dumping structure for table django_euf.socialaccount_socialapp
+DROP TABLE IF EXISTS `socialaccount_socialapp`;
+CREATE TABLE IF NOT EXISTS `socialaccount_socialapp` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `provider` varchar(30) NOT NULL,
+  `name` varchar(40) NOT NULL,
+  `client_id` varchar(191) NOT NULL,
+  `secret` varchar(191) NOT NULL,
+  `key` varchar(191) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Dumping data for table django_euf.socialaccount_socialapp: ~2 rows (approximately)
+DELETE FROM `socialaccount_socialapp`;
+INSERT INTO `socialaccount_socialapp` (`id`, `provider`, `name`, `client_id`, `secret`, `key`) VALUES
+	(1, 'google', 'EU-FarmBook Google+ Login', '663066773670-t4otp1sifl4k30hgt6pvumpc2kn9757o.apps.googleusercontent.com', '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', ''),
+	(2, 'facebook', 'EU-FarmBook Facebook Login', '221546703892085', '79961ec2709c632abcff3a72b40834e8', '');
+
+-- Dumping structure for table django_euf.socialaccount_socialapp_sites
+DROP TABLE IF EXISTS `socialaccount_socialapp_sites`;
+CREATE TABLE IF NOT EXISTS `socialaccount_socialapp_sites` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `socialapp_id` int(11) NOT NULL,
+  `site_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `socialaccount_socialapp_sites_socialapp_id_site_id_71a9a768_uniq` (`socialapp_id`,`site_id`),
+  KEY `socialaccount_socialapp_sites_site_id_2579dee5_fk_django_site_id` (`site_id`),
+  CONSTRAINT `socialaccount_social_socialapp_id_97fb6e7d_fk_socialacc` FOREIGN KEY (`socialapp_id`) REFERENCES `socialaccount_socialapp` (`id`),
+  CONSTRAINT `socialaccount_socialapp_sites_site_id_2579dee5_fk_django_site_id` FOREIGN KEY (`site_id`) REFERENCES `django_site` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Dumping data for table django_euf.socialaccount_socialapp_sites: ~0 rows (approximately)
+DELETE FROM `socialaccount_socialapp_sites`;
+
+-- Dumping structure for table django_euf.socialaccount_socialtoken
+DROP TABLE IF EXISTS `socialaccount_socialtoken`;
+CREATE TABLE IF NOT EXISTS `socialaccount_socialtoken` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `token` longtext NOT NULL,
+  `token_secret` longtext NOT NULL,
+  `expires_at` datetime(6) DEFAULT NULL,
+  `account_id` int(11) NOT NULL,
+  `app_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `socialaccount_socialtoken_app_id_account_id_fca4e0ac_uniq` (`app_id`,`account_id`),
+  KEY `socialaccount_social_account_id_951f210e_fk_socialacc` (`account_id`),
+  CONSTRAINT `socialaccount_social_account_id_951f210e_fk_socialacc` FOREIGN KEY (`account_id`) REFERENCES `socialaccount_socialaccount` (`id`),
+  CONSTRAINT `socialaccount_social_app_id_636a42d7_fk_socialacc` FOREIGN KEY (`app_id`) REFERENCES `socialaccount_socialapp` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Dumping data for table django_euf.socialaccount_socialtoken: ~0 rows (approximately)
+DELETE FROM `socialaccount_socialtoken`;
+
+-- Dumping structure for table django_euf.user_activity
+DROP TABLE IF EXISTS `user_activity`;
+CREATE TABLE IF NOT EXISTS `user_activity` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `activity` longtext NOT NULL,
+  `timestamp` datetime(6) NOT NULL,
+  `user_id` bigint(20) NOT NULL,
+  `method` varchar(10) NOT NULL,
+  `user_timezone` varchar(63) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `user_activity_user_id_9d5b7120_fk_backend_d` (`user_id`),
+  CONSTRAINT `user_activity_user_id_9d5b7120_fk_backend_d` FOREIGN KEY (`user_id`) REFERENCES `backend_defaultauthuserextend` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Dumping data for table django_euf.user_activity: ~0 rows (approximately)
+DELETE FROM `user_activity`;
+
+/*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
+/*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
+/*!40014 SET FOREIGN_KEY_CHECKS=IFNULL(@OLD_FOREIGN_KEY_CHECKS, 1) */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40111 SET SQL_NOTES=IFNULL(@OLD_SQL_NOTES, 1) */;

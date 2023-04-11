@@ -1,20 +1,7 @@
 version: '3'
 
 services:
-  apicore:
-    build: ./apicore
-    volumes:
-      - .:/var/www
-    ports:
-      - "8001:8001"
-
-  api-mongo-test:
-    build: ./api-mongo-test
-    volumes:
-      - .:/var/www
-    ports:
-      - "8002:8002"
-
+  # MariaDB
   mariadb:
     image: mariadb
     restart: always
@@ -24,23 +11,31 @@ services:
       - ./mysql_data:/var/lib/mysql
       - ./mariadb_scripts:/docker-entrypoint-initdb.d
 
-#  phpMyAdmin:
-#    image: phpmyadmin
-#    environment:
-#      PMA_HOST: mysql
-#      PMA_ARBITRARY: 1
-#    volumes:
-#      - /sessions
-#    restart: always
-#    ports:
-#      - "8088:80"
+  # Add Elasticsearch service
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.7.0
+    environment:
+      - "discovery.type=single-node"
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    volumes:
+      - esdata:/usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
+      - "9300:9300"
 
+  # Django application
   web:
     build: .
-    command: python manage.py runserver 0.0.0.0:8080
+#    command: python manage.py runserver 0.0.0.0:8080
     volumes:
       - .:/var/www
     ports:
       - "8080:8080"
     depends_on:
       - mariadb
+      - elasticsearch
+
+# Define the esdata volume
+volumes:
+  esdata:
+

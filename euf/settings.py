@@ -308,6 +308,9 @@ PASSWORD_HASHERS = [
 # Storage path for PDF2TEXT
 STORAGE_DIR = os.path.join(BASE_DIR, 'storage')
 PDF2TEXT_PATH = os.path.join(STORAGE_DIR, 'pdf2text')
+# Create directories if they don't exist
+os.makedirs(STORAGE_DIR, exist_ok=True)
+os.makedirs(PDF2TEXT_PATH, exist_ok=True)
 
 # For REST framework, creating API endpoints
 REST_FRAMEWORK = {

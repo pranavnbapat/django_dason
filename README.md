@@ -6,7 +6,7 @@
 3. Sendgrid email account (for sending emails)
 4. Elasticsearch server
 
-:wrench: Installation
+## Installation
 Here’s a step-by-step procedure of the installation process for Python 3.9 and Git on Windows, Linux
 (Ubuntu), and macOS:
 
@@ -127,6 +127,7 @@ Here’s a step-by-step procedure of the installation process for Python 3.9 and
    2. Install Elasticsearch: `brew install elasticsearch`
    3. Start the service: `brew services start elasticsearch` 
    4. Set the elastic user password: `/usr/local/bin/elasticsearch-setup-passwords interactive`
+   5. For macOS, there maybe another version for elasticsearch depending on the architecture (ARM64)
 
 
 ## Setup
@@ -145,14 +146,19 @@ Here’s a step-by-step procedure of the installation process for Python 3.9 and
       or
       ss -tuln | grep 3306
       ```
+   2. If the database is not running, you won't be able to proceed further.
+   3. Create a database and the user.
 
-3. Change the default MariaDB port (optional)
-   1. Windows: Edit the `my.ini` file in the MariaDB installation directory, typically `C:\Program Files\MariaDB X.Y\`. 
-   2. Linux: Edit the `my.cnf` or `50-server.cnf` file in `/etc/mysql/` or `/etc/mysql/mariadb.conf.d/`. 
-   3. macOS: Edit the `my.cnf` file in `/usr/local/etc/`.
+[//]: # (3. Change the default MariaDB port &#40;optional&#41;)
 
-4. Run MariaDB SQL scripts to setup the database
-   1. Navigate to the 'mariadb\_scripts' folder inside the cloned repository.
+[//]: # (   1. Windows: Edit the `my.ini` file in the MariaDB installation directory, typically `C:\Program Files\MariaDB X.Y\`. )
+
+[//]: # (   2. Linux: Edit the `my.cnf` or `50-server.cnf` file in `/etc/mysql/` or `/etc/mysql/mariadb.conf.d/`. )
+
+[//]: # (   3. macOS: Edit the `my.cnf` file in `/usr/local/etc/`.)
+
+3. Run MariaDB SQL scripts to setup the database
+   1. Navigate to the `mariadb_scripts` folder inside the cloned repository.
    2. Login to the MariaDB server as the root user or another user with necessary privileges:
       ```
       mysql -u root -p
@@ -161,42 +167,28 @@ Here’s a step-by-step procedure of the installation process for Python 3.9 and
    4. Execute following scripts:
       ```
       0_init.sql
-      1_countries_master.sql
-      2_admin_menu_master.sql
+      1_django_euf.sql
       ```
    5. Exit the MariaDB server by running:
       ```
       exit
       ```
-   6. Run `generate_faker_data.py` from the terminal. It will take around half an hour to generate fake data using faker. It is optional, but it is required if you want to test how elastic search works for millions of records. You can modify this file as per your needs. Don't forget to fill in your database credentials in this file.
 
-5. Rename .env.sample to .env 
+[//]: # (   6. Run `generate_faker_data.py` from the terminal. It will take around half an hour to generate fake data using faker. It is optional, but it is required if you want to test how elastic search works for millions of records. You can modify this file as per your needs. Don't forget to fill in your database credentials in this file.)
+
+[//]: # (   7. The database name, user, and password are mentioned in the `0_init.sql` file. Feel free to change it.)
+
+4. Rename .env.sample to .env 
    1. Locate the .env.sample file in the project's root folder and rename it to .env. It will have a structure like this:
-      ```
-      MYSQL_USER=
-      MYSQL_DB=
-      MYSQL_PASS=
-      MYSQL_HOST=
-      MYSQL_PORT=
-    
-      EMAIL_HOST_PASSWORD=
-      DEFAULT_FROM_EMAIL=
-      EMAIL_HOST_USER=apikey
-      EMAIL_HOST=smtp.sendgrid.net
-      EMAIL_PORT=587
-      EMAIL_USE_TLS=True
-    
-      DJANGO_SECRET=
-      ```
    2. You will use and edit this file later.
 
-6. Generate Django secret key 
+5. Generate Django secret key 
    1. Visit `https://djecrety.ir/` and click on the `Generate` button.
    2. You will get a unique secret key. Copy and paste it into the .env file where it says `DJANGO_SECRET`.
       ```
       DJANGO_SECRET=3n8$sb-qtudexj*da&*eyf87%-srom(od65y65%w)e!@5cn0gh
       ```
-7. Set up database credentials
+6. Set up database credentials
    1. Locate the `.env` file in the repository folder or create one if it does not exist.
    2. Set the environment variables as required, for example:
       ```
@@ -208,7 +200,7 @@ Here’s a step-by-step procedure of the installation process for Python 3.9 and
       ```
    3. Save and close the file.
 
-8. Set up SendGrid account and API key 
+7. Set up SendGrid account and API key 
    1. Visit the SendGrid website at `https://sendgrid.com/` and sign up for a free account.
    2. Once you have created an account and logged in, navigate to the "API Keys" page in the dashboard, which can be found under "Settings" on the left-hand side menu.
    3. Click the "Create API Key" button at the top-right corner of the page.
@@ -227,25 +219,26 @@ Here’s a step-by-step procedure of the installation process for Python 3.9 and
       ```
    9. Replace your\_sendgrid\_api\_key and your\_sendgrid\_email with the actual API key you obtained from SendGrid and your SendGrid email address.
    10. Save and close the .env file.
+   11. Note: Sometimes, SendGrid requires some additional verification. You'll have to provide the necessary information.
 
-9. Setup Elasticsearch host, username, and password
+8. Setup Elasticsearch host, username, and password
    1. The credentials your created while setting up elasticsearch, enter them in the `.env` file
 
-10. Install requirements
+9. Install requirements
    1. Navigate to the root directory of the cloned repository.
    2. Install the required packages from the `requirements.txt` file by running the following command:
       ```
       python -m pip install -r requirements.txt
       ```
 
-11. Create database tables
+10. Create database tables
     1. Once the database connection is established, run the following command from your project's root folder:
        ```
        python manage.py makemigrations
        python manage.py migrate
        ```
 
-12. Creating a new superuser using django
+11. Creating a new superuser using django
     1. Make sure you are in the root directory of the cloned repository.
     2. Run the following command to create a new superuser:
        ```
@@ -254,7 +247,7 @@ Here’s a step-by-step procedure of the installation process for Python 3.9 and
     3. You will be prompted to enter a username, email address, and password for the new superuser. Provide the necessary information and confirm the password.
     4. Once the superuser is created, you can log in to your application using the new credentials.
 
-13. Run the Django application
+12. Run the Django application
     1. Make sure you are in the root directory of the cloned repository.
     2. Run the following command to start the Django application:
        ```
@@ -264,7 +257,7 @@ Here’s a step-by-step procedure of the installation process for Python 3.9 and
        ```
     3. By default, the Django application will run on IP address `127.0.0.1` (localhost) and port `8000`. You can access the application in your web browser by navigating to `http://127.0.0.1:8000`.
 
-14. Change the default IP address and port (optional)
+13. Change the default IP address and port (optional)
     1. If you want to run the Django application on a different IP address or port, you can provide the desired values as arguments when running the `runserver` command. For example, to run the application on IP address `192.168.1.2` and port `8080`, use the following command:
        ```
        python manage.py runserver 192.168.1.2:8080
