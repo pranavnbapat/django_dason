@@ -2,14 +2,14 @@ version: '3'
 
 services:
   # MariaDB
-  mariadb:
-    image: mariadb
-    restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: asdasdasd
-    volumes:
-      - ./mysql_data:/var/lib/mysql
-      - ./mariadb_scripts:/docker-entrypoint-initdb.d
+#  mariadb:
+#    image: mariadb
+#    restart: always
+#    environment:
+#      MYSQL_ROOT_PASSWORD: asdasdasd
+#    volumes:
+#      - ./mysql_data:/var/lib/mysql
+#      - ./mariadb_scripts:/docker-entrypoint-initdb.d
 
   # Add Elasticsearch service
   elasticsearch:
@@ -17,6 +17,7 @@ services:
     environment:
       - "discovery.type=single-node"
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - "ELASTIC_PASSWORD=asdasdasd"
     volumes:
       - esdata:/usr/share/elasticsearch/data
     ports:
@@ -26,13 +27,12 @@ services:
   # Django application
   web:
     build: .
-#    command: python manage.py runserver 0.0.0.0:8080
     volumes:
       - .:/var/www
     ports:
       - "8080:8080"
     depends_on:
-      - mariadb
+#      - mariadb
       - elasticsearch
 
 # Define the esdata volume

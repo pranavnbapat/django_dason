@@ -2,11 +2,11 @@ from faker import Faker
 import pymysql
 
 # Database connection parameters
-db_host = ""
-db_user = ""
-db_password = ""
-db_name = ""
-db_port = ""
+db_host = "localhost"
+db_user = "euf_admin"
+db_password = "asdasdasd"
+db_name = "django_euf"
+db_port = 3307
 
 connection = pymysql.connect(host=db_host, user=db_user, password=db_password, database=db_name, port=db_port)
 

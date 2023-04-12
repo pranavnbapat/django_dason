@@ -1,0 +1,5 @@
+INFO 2023-04-12 11:50:57,130 signals pranav - POST /account/login/ - 2023-04-12 09:50:57.128729+00:00 - Europe/Paris
+INFO 2023-04-12 11:50:57,402 signals pranav - GET /backend/dashboard - 2023-04-12 09:50:57.401000+00:00 - Europe/Paris
+INFO 2023-04-12 11:50:57,919 signals pranav - GET /backend/dashboard/ - 2023-04-12 09:50:57.917786+00:00 - Europe/Paris
+INFO 2023-04-12 11:51:07,564 signals pranav - GET /backend/pagination/ - 2023-04-12 09:51:07.561424+00:00 - Europe/Amsterdam
+INFO 2023-04-12 11:51:11,509 signals pranav - GET /backend/pagination-api/ - 2023-04-12 09:51:11.507744+00:00 - Europe/Amsterdam

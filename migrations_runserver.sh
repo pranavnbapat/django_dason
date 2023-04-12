@@ -2,13 +2,22 @@
 
 # Apply database migrations
 echo "Applying database migrations..."
-python manage.py makemigrations
-python manage.py migrate
+python3 manage.py makemigrations
+python3 manage.py migrate
+
+# Generate fake data
+echo "Generating fake data..."
+python3 generate_faker_data.py &
+
+# Execute SQL files
+echo "Executing SQL files..."
+mysql -u $MYSQL_USER -p$MYSQL_PASS -h $MYSQL_HOST -P $MYSQL_PORT $MYSQL_DB < /var/www/docker_scripts/1_admin_menu_master.sql
+mysql -u $MYSQL_USER -p$MYSQL_PASS -h $MYSQL_HOST -P $MYSQL_PORT $MYSQL_DB < /var/www/docker_scripts/2_countries_master.sql
 
 # Rebuild Elasticsearch search index
 echo "Rebuilding Elasticsearch search index..."
-python manage.py search_index --rebuild
+python3 manage.py search_index --rebuild &
 
 # Start the Django app
 echo "Starting Django server..."
-exec python manage.py runserver 0.0.0.0:8080
+exec python3 manage.py runserver 0.0.0.0:8080

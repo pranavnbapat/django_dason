@@ -38,7 +38,7 @@ class MyForm(models.Model):
     email = models.EmailField(max_length=50, unique=True, null=False, blank=False, db_index=True,
                               error_messages={'unique': 'This email already exists', 'blank': 'This field is required',
                                               'null': 'This field is required'})
-    contact_no = models.CharField(max_length=15, null=True, db_index=True, default='',
+    contact_no = models.CharField(max_length=15, unique=True, null=False, blank=False, db_index=True, default="",
                                   validators=[RegexValidator(regex=r'^[0-9- ]+$', message="Invalid phone number")])
     countries_master_id = models.ForeignKey(EUCountries, on_delete=models.PROTECT, null=True, to_field="id")
     gender = models.CharField(max_length=1, null=False, blank=False,
