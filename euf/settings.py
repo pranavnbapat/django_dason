@@ -103,12 +103,12 @@ CSP_CONNECT_SRC = ("'self'", "http://localhost:27017",)
 CSP_FONT_SRC = ("'self'", "https://fonts.gstatic.com", "https://fonts.googleapis.com",)
 CSP_MEDIA_SRC = ("'self'",)
 
-# Extra layers of security
+# Extra layers of security (Remember to modify this for production environment, all should be True)
 X_FRAME_OPTIONS = 'DENY'
 SECURE_CONTENT_TYPE_NOSNIFF = True
 SECURE_BROWSER_XSS_FILTER = True
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = False
+CSRF_COOKIE_SECURE = False
 # SECURE_SSL_REDIRECT = True # This can be implemented once the site is HTTPS
 
 # ACCOUNT_ADAPTER = "allauth_2fa.adapter.OTPAdapter"

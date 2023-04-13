@@ -1,20 +1,30 @@
-.yarnrc.yml
+# Folders
 node_modules/
 .yarn/
 mysql_data/
 db/
 venv/
-.env
-*.sqlite3
 .idea/
-*.jpeg
-*.jpg
-*.png
 **/migrations/
 **/staticfiles/
 assets/
-*.pdf
 **/__pycache__/
+
+# Files
+.yarnrc.yml
+.env
+*.sqlite3
+*.pdf
 *.txt
-!requirements.txt
 *.log
+!requirements.txt
+
+# Image files - Ignore all, except in the 'static' folder
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.svg
+*.webp
+*.bmp
+!static/**/*.*
