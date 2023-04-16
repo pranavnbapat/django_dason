@@ -150,6 +150,23 @@ class UserActivityLog(models.Model):
         return f"{self.user} - {self.method} {self.activity} - {self.timestamp} - {self.user_timezone}"  # Include user_timezone here
 
 
+class LargeFileUpload(models.Model):
+    class Meta:
+        db_table = "large_file_upload"
+
+    id = models.AutoField(primary_key=True, db_column='id', db_index=True, editable=False, unique=True,
+                          blank=False, null=False, verbose_name='ID')
+    old_filename = models.CharField(max_length=255, null=False, blank=False,
+                                    validators=[RegexValidator(regex=r'^[\w\.-\s]+$', message="Invalid characters")])
+    new_filename = models.CharField(max_length=255, null=False, blank=False)
+    application_type = models.CharField(max_length=20, null=False, blank=False)
+    status = models.BooleanField(default=True)
+    deleted = models.BooleanField(default=False)
+    deleted_at = models.DateTimeField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+
 class DefaultAuthUserExtend(AbstractUser):
     contact_no = models.CharField(max_length=10, null=True, db_index=True, default='', blank=True,
                                   validators=[RegexValidator(regex=r'^[0-9- ]+$', message="Invalid phone number")])

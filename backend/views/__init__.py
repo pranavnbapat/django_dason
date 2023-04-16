@@ -7,3 +7,4 @@ from .PDF2TextV import PDF2TextView
 from .PDF2TextV import PDF2TextCreateAPIView
 from .PaginationV import PaginationView
 from .PaginationV import PaginationAPI
+from .LargeFileUploadV import LargeFileUploadView

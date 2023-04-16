@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 from .views import (
     FormView,
     ProfileView,
@@ -8,7 +8,8 @@ from .views import (
     PDF2TextView,
     PDF2TextCreateAPIView,
     PaginationView,
-    PaginationAPI
+    PaginationAPI,
+    LargeFileUploadView,
 )
 
 app_name = "backend"
@@ -38,4 +39,8 @@ urlpatterns = [
     # Pagination
     path("pagination/", view=PaginationView.as_view(), name='pagination'),
     path("pagination-api/", view=PaginationAPI.as_view(), name='pagination-api'),
+
+    # Large File Upload
+    path("large-file-upload/", LargeFileUploadView.as_view(), name='large-file-upload'),
+    path('large-file-upload-page/', LargeFileUploadView.as_view(), name='large-file-upload-page'),
 ]
