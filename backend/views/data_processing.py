@@ -121,25 +121,25 @@ def file_async_upload(request, dest, file_type):
     # return JsonResponse({"status": "error", "message": "Invalid request method"})
 
 
-def rotation_angle(image):
-    """
-        Determine the rotation angle of the text in an image using the Radon Transform.
-
-        :param image: The image to analyze.
-        :type image: Image.Image
-        :returns: The rotation angle.
-        :rtype: float
-        """
-    # Convert the image to grayscale
-    gray = image.convert('L')
-
-    # Convert the grayscale image to a numpy array
-    img_np = np.array(gray)
-
-    # Compute the Radon transform
-    rt = radon(img_np)
-
-    # Determine the rotation angle
-    angle = np.argmax(np.sum(rt, axis=0))
-    return angle
-
+# def rotation_angle(image):
+#     """
+#         Determine the rotation angle of the text in an image using the Radon Transform.
+#
+#         :param image: The image to analyze.
+#         :type image: Image.Image
+#         :returns: The rotation angle.
+#         :rtype: float
+#         """
+#     # Convert the image to grayscale
+#     gray = image.convert('L')
+#
+#     # Convert the grayscale image to a numpy array
+#     img_np = np.array(gray)
+#
+#     # Compute the Radon transform
+#     rt = radon(img_np)
+#
+#     # Determine the rotation angle
+#     angle = np.argmax(np.sum(rt, axis=0))
+#     return angle
+#

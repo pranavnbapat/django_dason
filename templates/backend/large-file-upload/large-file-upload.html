@@ -75,6 +75,12 @@
                             </div>
                         </div>
                     </div>
+                    <div id="progress-container" style="display:none;">
+                        <p>Progress: <span id="upload-progress">0</span>%</p>
+                        <div class="progress">
+                            <div class="progress-bar" role="progressbar" id="progress-bar" style="width: 0;" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                    </div>
                 </div>
                 {% endif %}
             </div>
@@ -86,47 +92,183 @@
 
     <!-- form validation -->
     <script>
-    ! function() {
-        "use strict";
-        window.addEventListener("load", function() {
-            var e = document.getElementsByClassName("needs-validation");
-            Array.prototype.filter.call(e, function(t) {
-                t.addEventListener("submit", function(e) {
-                    !1 === t.checkValidity() && (e.preventDefault(), e.stopPropagation()), t.classList.add("was-validated")
-                }, !1)
-            })
-        }, !1)
-    }();
+        !function() {
+            "use strict";
+            window.addEventListener("load", function() {
+                var e = document.getElementsByClassName("needs-validation");
+                Array.prototype.filter.call(e, function(t) {
+                    t.addEventListener("submit", function(e) {
+                        !1 === t.checkValidity() && (e.preventDefault(), e.stopPropagation()), t.classList.add("was-validated")
+                    }, !1)
+                })
+            }, !1)
+        }();
 
-    $(function() {
-        let maxSize = 10 * 1024 * 1024 * 1024;  // 10 GB max
+        $(function() {
+            let maxSize = 10 * 1024 * 1024 * 1024;  // 10 GB max
 
-        $('#large_file').on('change', function() {
-            // Validate file size
-            let file = this.files[0]
+            $('#large_file').on('change', function() {
+                // Validate file size
+                let file = this.files[0]
 
-            // Get file info
-            let size = (file.size / (1024 * 1024)).toFixed(2) + " MB";
-            let type = file.type;
+                // Get file info
+                let size = (file.size / (1024 * 1024)).toFixed(2) + " MB";
+                let type = file.type;
 
-            let validFileTypes = ["application/zip", "application/x-rar-compressed", "application/x-zip-compressed", "application/gzip"];
+                let validFileTypes = ["application/zip", "application/x-rar-compressed", "application/x-zip-compressed", "application/gzip"];
 
-            let fileSize = file.size;
+                let fileSize = file.size;
 
-            if (fileSize > maxSize || !validFileTypes.includes(type)) {
-                alert('File size exceeds maximum limit of 10 GB or only ZIP, RAR, and GZIP types are allowed');
-                $(this).val('');
-                return;
-            }
+                if (fileSize > maxSize || !validFileTypes.includes(type)) {
+                    alert('File size exceeds maximum limit of 10 GB or only ZIP, RAR, and GZIP types are allowed');
+                    $(this).val('');
+                    return;
+                }
 
-            $('#file_info').html("File info: " + size + ", " + type);
+                $('#file_info').html("File info: " + size + ", " + type);
+            });
         });
-    });
 
-    $("#reset").click(function(){
-        $('#file_info').html("");
-    });
+
+
+        let chunkSize = 5 * 1024 * 1024; // 5 MB chunks
+
+        let file;
+        let fileReader = new FileReader();
+        let currentChunk = 0;
+        let totalChunks;
+        let isPaused = false;
+        let isUploading = false;
+
+        function uploadChunk() {
+            if (isPaused || !isUploading) return;
+
+            let start = currentChunk * chunkSize;
+            let end = Math.min(file.size, start + chunkSize);
+
+            fileReader.onload = function(e) {
+                let chunk = e.target.result;
+                let chunkNum = currentChunk + 1;
+
+                let formData = new FormData();
+                formData.append('large_file', new Blob([chunk]), file.name);
+
+                $.ajax({
+                    url: "{% url 'backend:api_chunked_upload' %}",
+                    type: "POST",
+                    headers: {"X-CSRFToken": "{{ csrf_token }}"},
+                    processData: false,
+                    contentType: false,
+                    data: formData,
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader('Content-Disposition', 'attachment; filename=' + encodeURIComponent(file.name));
+                        xhr.setRequestHeader('Content-Type', file.type);
+                        xhr.setRequestHeader('Content-Range', 'bytes ' + start + '-' + (end - 1) + '/' + file.size);
+                    },
+                    success: function (data) {
+                        if (chunkNum === totalChunks) {
+                            completeUpload(data.upload_id);
+                        } else {
+                            currentChunk++;
+                            updateProgress();
+                            uploadChunk();
+                        }
+                    },
+                    error: function () {
+                        alert("An error occurred while uploading the file. Please try again.");
+                        resetUpload();
+                    }
+                });
+            };
+
+            fileReader.readAsArrayBuffer(file.slice(start, end));
+        }
+
+        function completeUpload(uploadId) {
+            let formData = new FormData();
+            formData.append('upload_id', uploadId);
+
+            $.ajax({
+                url: "{% url 'backend:api_chunked_upload_complete' %}",
+                type: "POST",
+                headers: {"X-CSRFToken": "{{ csrf_token }}"},
+                processData: false,
+                contentType: false,
+                data: formData,
+                success: function () {
+                    alert("File uploaded successfully.");
+                    resetUpload();
+                },
+                error: function () {
+                    alert("An error occurred while completing the upload. Please try again.");
+                    resetUpload();
+                }
+            });
+        }
+
+        function updateProgress() {
+            let progress = Math.round((currentChunk / totalChunks) * 100);
+            $('#upload-progress').text(progress);
+            $('#progress-bar').css('width', progress + '%');
+        }
+
+        function resetUpload() {
+            isUploading = false;
+            isPaused = false;
+            currentChunk = 0;
+            updateProgress();
+            $('#progress-container').hide();
+            $('#upload-button').prop('disabled', false);
+            $('#pause-button').prop('disabled', true);
+        }
+
+        $(function () {
+            // (your existing code)
+
+            $('#form_1').on('submit', function (e) {
+                e.preventDefault();
+
+                if (isUploading) {
+                    alert("Upload is already in progress.");
+                    return;
+                }
+
+                file = $('#large_file')[0].files[0];
+
+                if (!file) {
+                    alert("Please select a file to upload.");
+                    return;
+                }
+
+                totalChunks = Math.ceil(file.size / chunkSize);
+
+                $('#upload-button').prop('disabled', true);
+                $('#pause-button').prop('disabled', false);
+                $('#progress-container').show();
+
+                isUploading = true;
+                uploadChunk();
+            });
+
+            $('#pause-button').on('click', function () {
+                if (isPaused) {
+                    isPaused = false;
+                    $(this).text('Pause');
+                    uploadChunk();
+                } else {
+                    isPaused = true;
+                    $(this).text('Resume');
+                }
+            });
+
+            $("#reset").click(function () {
+                resetUpload();
+                $('#file_info').html("");
+            });
+        });
     </script>
+
+
 
 
 {% endblock extra_js %}

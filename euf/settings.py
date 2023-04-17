@@ -66,6 +66,9 @@ THIRD_PARTY_APPS = [
 
     # For advanced debugging
     "debug_toolbar",
+
+    # For django chunked upload
+    "chunked_upload",
 ]
 
 AUTH_USER_MODEL = 'backend.DefaultAuthUserExtend'
@@ -308,7 +311,9 @@ PASSWORD_HASHERS = [
 # Storage path for PDF2TEXT
 STORAGE_DIR = os.path.join(BASE_DIR, 'storage')
 PDF2TEXT_PATH = os.path.join(STORAGE_DIR, 'pdf2text')
+# Storage for large files
 FILE_UPLOAD_DIR = os.path.join(STORAGE_DIR, 'large_files')
+DATA_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024  # 10 MB
 # Create directories if they don't exist
 os.makedirs(STORAGE_DIR, exist_ok=True)
 os.makedirs(PDF2TEXT_PATH, exist_ok=True)
