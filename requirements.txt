@@ -45,4 +45,3 @@ faker
 pymysql
 pytesseract
 pdf2image
-django-chunked-upload
