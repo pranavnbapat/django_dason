@@ -72,7 +72,7 @@
                                             <i class="mdi mdi-account-outline"></i>    
                                         </div>
                                         <div class="flex-grow-1">
-                                            <label class="form-label font-size-16 mb-0">User Name</label>
+                                            <label class="form-label font-size-16 mb-0">Username</label>
                                             <p class="font-size-15">{{user.username}}</p>
                                         </div>
                                     </div>
@@ -120,6 +120,18 @@
                                             <p class="mb-0 font-size-15"></p>
                                         </div>
                                     </div>
+                                    <div class="mt-3">
+                                        {% if user.avatar %}
+                                        <img src="{{ AVATAR_PATH }} 'images/users/' user.avatar" alt="Avatar image" style="width: 150px;" />
+                                        {% else %}
+                                        <img src="{% static 'images/users/default_avatar.png' %}" alt="Avatar image" style="width: 150px;" />
+                                        {% endif %}
+                                        <div class="mt-3">
+                                            <input type="file" id="avatar" name="avatar" class="form-control" accept="image/">
+                                            <button class="btn btn-primary" id="change-avatar-btn">Change Avatar</button>
+                                            <button class="btn btn-secondary" id="upload-avatar-btn">Upload New Avatar</button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -138,7 +150,7 @@
                                 {% for ks in k %}
                                     {% if ks.confirmed is True %}
                                         <a class="dropdown-item font-size-16" href="{% url 'two-factor-remove' %}"><span class="text-primary"><i class="mdi mdi-lock-off-outline font-size-17 align-middle me-1"></i></span> Disable Two Factor Authentication</a>
-                                        <a class="dropdown-item font-size-16" href="{% url 'two-factor-backup-tokens' %}"><span class="text-primary"><i class="mdi mdi-file-document-outline font-size-17 align-middle me-1"></i></span> Genrate Backup Tokens</a>
+                                        <a class="dropdown-item font-size-16" href="{% url 'two-factor-backup-tokens' %}"><span class="text-primary"><i class="mdi mdi-file-document-outline font-size-17 align-middle me-1"></i></span> Generate Backup Tokens</a>
                                     {% else %}
                                         <a class="dropdown-item font-size-16" href="{% url 'two-factor-setup' %}"><span class="text-primary"><i class="mdi mdi-lock-outline font-size-17 align-middle me-1"></i></span> Enable Two Factor Authentication</a>
                                     {% endif %}
@@ -182,8 +194,7 @@
 </div>
 <!-- end main content-->
 {% endblock content %}
-
-{% block extra_js %}
-        <!-- Bootstrap Toasts Js -->
-        <script src="{% static 'js/pages/bootstrap-toasts.init.js' %}"></script>
-{% endblock %}
+{#    {% block extra_js %}#}
+{#        <!-- Bootstrap Toasts Js -->#}
+{#        <script src="{% static 'js/pages/bootstrap-toasts.init.js' %}"></script>#}
+{#    {% endblock %}#}

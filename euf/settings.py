@@ -15,11 +15,16 @@ SECRET_KEY = os.getenv("DJANGO_SECRET")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["*"]
+# ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = ['eufarmbooknew.eu', 'localhost', '127.0.0.1', '145.127.79.185', '192.168.0.101']
 
+CSRF_TRUSTED_ORIGINS = ['https://eufarmbooknew.eu']
+
+# Log out user automatically after 30 minutes
+SESSION_COOKIE_AGE = 2 * 60  # 30 minutes * 60 seconds
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 
 # Application definition
-
 DEFAULT_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -66,9 +71,6 @@ THIRD_PARTY_APPS = [
 
     # For advanced debugging
     "debug_toolbar",
-
-    # For django chunked upload
-    "chunked_upload",
 ]
 
 AUTH_USER_MODEL = 'backend.DefaultAuthUserExtend'
@@ -110,9 +112,11 @@ CSP_MEDIA_SRC = ("'self'",)
 X_FRAME_OPTIONS = 'DENY'
 SECURE_CONTENT_TYPE_NOSNIFF = True
 SECURE_BROWSER_XSS_FILTER = True
-SESSION_COOKIE_SECURE = False
-CSRF_COOKIE_SECURE = False
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+SECURE_SSL_REDIRECT = False
 # SECURE_SSL_REDIRECT = True # This can be implemented once the site is HTTPS
+USE_X_FORWARDED_PORT = True
 
 # ACCOUNT_ADAPTER = "allauth_2fa.adapter.OTPAdapter"
 ACCOUNT_ADAPTER = "euf.social_account_adapter.SocialAccountAdapter"
@@ -132,7 +136,10 @@ TEMPLATES = [
                 "django.contrib.messages.context_processors.messages",
                 # `allauth` needs this from django
                 "django.template.context_processors.request",
+                # Handling user session timeout
+                "backend.views.context_processors.session_cookie_age",
             ],
+            "debug": True,
         },
     },
 ]
@@ -210,7 +217,8 @@ USE_L10N = True
 
 USE_TZ = True
 
-AVATAR_PATH = BASE_DIR / "media/images/users"
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+AVATAR_PATH = MEDIA_ROOT + "/images/users"
 STATIC_URL = "/static/"
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 STATIC_ROOT = os.path.join(BASE_DIR, 'assets')

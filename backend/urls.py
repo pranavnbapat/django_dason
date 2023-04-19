@@ -10,8 +10,6 @@ from .views import (
     PaginationView,
     PaginationAPI,
     LargeFileUploadView,
-    MyChunkedUploadView,
-    MyChunkedUploadCompleteView
 )
 
 app_name = "backend"
@@ -44,6 +42,4 @@ urlpatterns = [
 
     # Large File Upload
     path("large-file-upload/", LargeFileUploadView.as_view(), name='large-file-upload'),
-    path('api/chunked_upload/', MyChunkedUploadView.as_view(), name='api_chunked_upload'),
-    path('api/chunked_upload_complete/', MyChunkedUploadCompleteView.as_view(), name='api_chunked_upload_complete'),
 ]

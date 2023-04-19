@@ -1,4 +1,5 @@
-from ..models import AdminMenuMaster, EUCountries
+from backend.models import AdminMenuMaster, EUCountries
+from django.conf import settings
 
 
 def greeting():
@@ -24,3 +25,7 @@ def get_countries():
         'countries': countries
     }
     return context_data
+
+
+def session_cookie_age(request):
+    return {'session_cookie_age': settings.SESSION_COOKIE_AGE}
