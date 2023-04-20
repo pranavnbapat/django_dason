@@ -1,6 +1,6 @@
 {% extends 'backend/base/base.html' %}
 {% load static %}
-{% block title %}Users{% endblock title %}
+{% block title %}Pagination{% endblock title %}
 
 {% block extra_css %}
     <!-- DataTables -->
@@ -46,7 +46,7 @@
                                 <thead>
                                     <tr>
                                         <th>Keywords</th>
-                                        <th>Description</th>
+                                        <th>Contact Number</th>
                                         <th>Status</th>
                                         <th>Created At</th>
                                         <th>Updated At</th>
@@ -109,7 +109,7 @@
                 },
                 columns: [
                     {data: 'keywords'},
-                    {data: 'description'},
+                    {data: 'contact_no'},
                     {data: 'status'},
                     {data: 'created_at'},
                     {data: 'updated_at'}

@@ -1,1 +1,1 @@
-default_app_config = 'backend.apps.BackendLoggingConfig'
+default_app_config = 'backend.apps.BackendConfig'

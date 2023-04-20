@@ -20,9 +20,9 @@ ALLOWED_HOSTS = ['eufarmbooknew.eu', 'localhost', '127.0.0.1', '145.127.79.185',
 
 CSRF_TRUSTED_ORIGINS = ['https://eufarmbooknew.eu']
 
-# Log out user automatically after 30 minutes
-SESSION_COOKIE_AGE = 2 * 60  # 30 minutes * 60 seconds
-SESSION_EXPIRE_AT_BROWSER_CLOSE = False
+# Log out user automatically after 30 minutes of inactivity
+SESSION_COOKIE_AGE = 60 * 60  # 30 minutes * 60 seconds
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 # Application definition
 DEFAULT_APPS = [
@@ -36,7 +36,6 @@ DEFAULT_APPS = [
 ]
 LOCAL_APPS = [
     "pages",
-    # "backend",
     "backend.apps.BackendConfig",
 ]
 THIRD_PARTY_APPS = [
@@ -364,6 +363,11 @@ LOGGING = {
     },
     'loggers': {
         'backend.models': {
+            'handlers': ['file'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+        'allauth': {
             'handlers': ['file'],
             'level': 'INFO',
             'propagate': True,

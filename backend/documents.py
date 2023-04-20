@@ -6,7 +6,7 @@ from backend.models import FakerModel
 @registry.register_document
 class FakerModelDocument(Document):
     keywords = fields.TextField(attr='keywords')
-    description = fields.TextField(attr='description')
+    contact_no = fields.TextField(attr='contact_no')
 
     class Index:
         name = 'fakermodel'

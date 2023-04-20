@@ -57,13 +57,15 @@ class PaginationAPI(ListAPIView):
         es_client = connections.get_connection()
         if es_client.ping() and search_value:
             print("Using Elasticsearch")
-            # By default, elastic search performs OR operation if more than one search parameter is passed.
+            # By default, elastic search performs OR operation if more than one search parameter is passed,
+            # because the default behavior of Elasticsearch is to score the relevance of documents based on the number
+            # of matching terms in the query string.
 
             # Use Elasticsearch to perform the search in multiple columns
             # search = FakerModelDocument.search().query(
             #     'multi_match',
             #     query=search_value,
-            #     fields=['keywords', 'description']
+            #     fields=['keywords', 'contact_no']
             # )
 
             # Code below searches for records using AND operation
@@ -75,7 +77,7 @@ class PaginationAPI(ListAPIView):
                     {
                         'multi_match': {
                             'query': term,
-                            'fields': ['keywords', 'description']
+                            'fields': ['keywords', 'contact_no']
                         }
                     }
                     for term in search_terms

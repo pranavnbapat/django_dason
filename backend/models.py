@@ -128,7 +128,9 @@ class FakerModel(models.Model):
                              blank=False, null=False, verbose_name='ID')
     keywords = models.CharField(max_length=255, null=False, blank=False, db_index=True,
                                 validators=[RegexValidator(regex=r'^[\w\.-\s,_]+$', message="Invalid characters")])
-    description = models.TextField(blank=True, null=True, db_index=True)
+    description = models.TextField(blank=True, null=True)
+    contact_no = models.CharField(max_length=10, db_index=True, default='',
+                                  validators=[RegexValidator(regex=r'^[0-9- ]+$', message="Invalid phone number")])
     status = models.BooleanField(default=True)
     deleted = models.BooleanField(default=False)
     deleted_at = models.DateTimeField(null=True, blank=True)
