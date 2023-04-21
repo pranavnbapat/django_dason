@@ -138,6 +138,16 @@ class FakerModel(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
 
+class ElasticSearchStatistics(models.Model):
+    search_term = models.CharField(max_length=255, db_index=True)
+    column_name = models.CharField(max_length=255, db_index=True)
+    hits = models.IntegerField(default=0)
+
+    class Meta:
+        db_table = "es_search_stats"
+        unique_together = ('search_term', 'column_name')
+
+
 class UserActivityLog(models.Model):
     class Meta:
         db_table = 'user_activity'
