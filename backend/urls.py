@@ -10,6 +10,8 @@ from .views import (
     PaginationView,
     PaginationAPI,
     LargeFileUploadView,
+    RecordClickView,
+    ShowPaginationContactView,
 )
 
 app_name = "backend"
@@ -39,6 +41,9 @@ urlpatterns = [
     # Pagination
     path("pagination/", view=PaginationView.as_view(), name='pagination'),
     path("pagination-api/", view=PaginationAPI.as_view(), name='pagination-api'),
+    path('pagination/record-click/<str:contact_no>', view=ShowPaginationContactView.as_view(), name='record-click'),
+    path('pagination/record-click-api/', view=RecordClickView.as_view(), name='record-click-api'),
+
 
     # Large File Upload
     path("large-file-upload/", LargeFileUploadView.as_view(), name='large-file-upload'),

@@ -1,16 +1,18 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from .mixins import AdminMenuMixin, PermissionRequiredMixin
-from django.contrib.auth.mixins import UserPassesTestMixin
 from django.views.generic import TemplateView
-from backend.models import FakerModel
+from backend.models import FakerModel, ElasticSearchStatistics
 from backend.serializers import FakerModelSerializer
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from backend.documents import FakerModelDocument
 from rest_framework import pagination
 from rest_framework.generics import ListAPIView
 from rest_framework.permissions import IsAuthenticated
-from django.db.models import Q
+from django.db.models import Q, F
+from elasticsearch_dsl import Search, Q
 from elasticsearch_dsl.connections import connections
+from django.views import View
+from django.urls import reverse
 
 
 class PaginationView(PermissionRequiredMixin, UserPassesTestMixin, LoginRequiredMixin, AdminMenuMixin, TemplateView):
@@ -37,6 +39,9 @@ class CustomPagination(pagination.PageNumberPagination):
         return list(self.page)
 
     def get_paginated_response(self, data):
+        for item in data:
+            item['contact_url'] = reverse('backend:record-click', args=[item['contact_no']])
+
         return JsonResponse({
             'draw': int(self.request.GET.get('draw', 0)),
             'recordsTotal': self.page.paginator.count,
@@ -57,6 +62,36 @@ class PaginationAPI(ListAPIView):
         es_client = connections.get_connection()
         if es_client.ping() and search_value:
             print("Using Elasticsearch")
+            search_terms = search_value.split()
+
+            # NEW CODE
+            # Update hit counts
+            # for term in search_terms:
+            #     for field in ['keywords', 'contact_no']:
+            #         hit, created = ElasticSearchStatistics.objects.get_or_create(search_term=term, column_name=field)
+            #         hit.hits = F('hits') + 1
+            #         hit.save()
+
+            # Prepare hit-based priority weights
+            hit_weights = []
+            for term in search_terms:
+                for field in ['keywords', 'contact_no']:
+                    hit = ElasticSearchStatistics.objects.filter(search_term=term, column_name=field).first()
+                    if hit:
+                        hit_weights.append((term, field, hit.hits))
+
+            # Prepare search query with weights
+            search = Search(index=FakerModelDocument._index._name)
+            query = Q()
+
+            for term, field, weight in hit_weights:
+                query |= Q('nested', path=field,
+                           query=Q('match', **{f"{field}.search_term": {"query": term, "boost": weight}}))
+
+            search = search.query('function_score', query=query, score_mode='sum')
+
+            # NEW CODE
+
             # By default, elastic search performs OR operation if more than one search parameter is passed,
             # because the default behavior of Elasticsearch is to score the relevance of documents based on the number
             # of matching terms in the query string.
@@ -70,19 +105,19 @@ class PaginationAPI(ListAPIView):
 
             # Code below searches for records using AND operation
             # Split the search_value into individual terms
-            search_terms = search_value.split()
-            search = FakerModelDocument.search().query(
-                'bool',
-                must=[
-                    {
-                        'multi_match': {
-                            'query': term,
-                            'fields': ['keywords', 'contact_no']
-                        }
-                    }
-                    for term in search_terms
-                ]
-            )
+
+            # search = FakerModelDocument.search().query(
+            #     'bool',
+            #     must=[
+            #         {
+            #             'multi_match': {
+            #                 'query': term,
+            #                 'fields': ['keywords', 'contact_no']
+            #             }
+            #         }
+            #         for term in search_terms
+            #     ]
+            # )
             # To retrieve more records, append this to the search above
             # .extra(size=1000)  # Increase the size to get more results
             # By default, it gives only 10 results
@@ -116,3 +151,32 @@ class PaginationAPI(ListAPIView):
                 queryset = FakerModel.objects.all()
 
         return queryset
+
+
+class RecordClickView(View):
+    def get(self, request, *args, **kwargs):
+        result_id = request.GET.get('result_id')
+        search_term = request.GET.get('search_term')
+        column_name = request.GET.get('column_name')
+
+        search_terms = search_term.split()
+        for term in search_terms:
+            hit, created = ElasticSearchStatistics.objects.get_or_create(search_term=term, column_name='keywords')
+            hit.hits = F('hits') + 1
+            hit.save()
+
+        hit, created = ElasticSearchStatistics.objects.get_or_create(search_term=result_id, column_name='contact_no')
+        hit.hits = F('hits') + 1
+        hit.save()
+
+        return HttpResponse(status=204)
+
+
+class ShowPaginationContactView(PermissionRequiredMixin, UserPassesTestMixin, LoginRequiredMixin, AdminMenuMixin, TemplateView):
+    template_name = "backend/pagination/contact_detail.html"
+    permission_required = 'backend_viewcontactdetail'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['contact_no'] = self.kwargs['contact_no']
+        return context

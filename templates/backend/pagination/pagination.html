@@ -109,7 +109,12 @@
                 },
                 columns: [
                     {data: 'keywords'},
-                    {data: 'contact_no'},
+                    {
+                        data: 'contact_no_link',
+                        render: function(data, type, row) {
+                            return '<a href="' + row.contact_url + '">' + data + '</a>';
+                        }
+                    },
                     {data: 'status'},
                     {data: 'created_at'},
                     {data: 'updated_at'}
@@ -119,6 +124,63 @@
             }).buttons().container().appendTo("#datatable-buttons_wrapper .col-md-6:eq(0)");
 
             $(".dataTables_length select").addClass("form-select form-select-sm");
+
+            // Add click event listener to contact_no links
+            $("#pagination_table tbody").on("click", "a.contact_no_link", function (event) {
+                event.preventDefault();
+                let contact_no = $(this).data("contact_no");
+                let searchInput = $("#pagination_table_filter input[type='search']"); // Locate the DataTables search input field
+                let search_term = searchInput.val();
+
+                $.ajax({
+                    {#url: `/backend/pagination/record-click/${contact_no}`,#}
+                    url: "{% url 'backend:record-click-api' %}",
+                    {#url: "{% url 'backend:record-click' 'contact_no_placeholder' %}".replace('contact_no_placeholder', contact_no),#}
+                    method: "GET",
+                    data: {
+                        "result_id": contact_no,
+                        "search_term": search_term,
+                        "column_name": "contact_no",
+                        "csrfmiddlewaretoken": "{{ csrf_token }}"
+                    },
+                    success: function () {
+                        // Redirect to the contact_no detail page
+                        window.location.href = "/backend/pagination/record-click/" + contact_no;
+                    },
+                    error: function (xhr, status, error) {
+                        console.log("Error: " + error);
+                    }
+                });
+            });
         });
+
+        function recordClick(result_id, search_term, column_name) {
+            // Set the URL for the 'record_click' endpoint
+            const url = '/record_click/';
+
+            // Create FormData to send POST data
+            let formData = new FormData();
+            formData.append('result_id', result_id);
+            formData.append('search_term', search_term);
+            formData.append('column_name', column_name);
+
+            // Send the POST request using the Fetch API
+            fetch(url, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': $('meta[name="csrf-token"]').attr('content')
+                },
+                credentials: 'same-origin'
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Error ${response.status}: ${response.statusText}`);
+                }
+            })
+            .catch(error => {
+                console.error('Error while recording click:', error);
+            });
+        }
     </script>
 {% endblock extra_js %}
