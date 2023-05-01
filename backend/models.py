@@ -179,6 +179,130 @@ class LargeFileUpload(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
 
+class ESLangMaster(models.Model):
+    class Meta:
+        db_table = "es_lang_master"
+
+    id = models.SmallAutoField(primary_key=True, db_column='id', db_index=True, editable=False, unique=True,
+                               blank=False, null=False, verbose_name='ID')
+    
+    language_name = models.CharField(max_length=100, blank=False, null=False, unique=True)
+    lang_code = models.CharField(max_length=3, blank=False, null=False, unique=True)
+
+    status = models.BooleanField(default=True)
+    deleted = models.BooleanField(default=False)
+    deleted_at = models.DateTimeField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.language_name
+
+
+class ESCountriesMaster(models.Model):
+    class Meta:
+        db_table = "es_countries_master"
+
+    id = models.SmallAutoField(primary_key=True, db_column='id', db_index=True, editable=False, unique=True,
+                               blank=False, null=False, verbose_name='ID')
+
+    country_name = models.CharField(max_length=100, blank=False, null=False, unique=True)
+    country_code = models.CharField(max_length=3, blank=False, null=False, unique=True)
+
+    status = models.BooleanField(default=True)
+    deleted = models.BooleanField(default=False)
+    deleted_at = models.DateTimeField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.country_name
+
+
+class ESCityMaster(models.Model):
+    class Meta:
+        db_table = "es_city_master"
+
+    id = models.SmallAutoField(primary_key=True, db_column='id', db_index=True, editable=False, unique=True,
+                               blank=False, null=False, verbose_name='ID')
+
+    city_name = models.CharField(max_length=100, blank=False, null=False)
+    es_countries_master_id = models.ForeignKey(ESCountriesMaster, on_delete=models.CASCADE)
+
+    status = models.BooleanField(default=True)
+    deleted = models.BooleanField(default=False)
+    deleted_at = models.DateTimeField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.city_name
+
+
+class ESContactNo(models.Model):
+    class Meta:
+        db_table = "es_contact_no"
+
+    id = models.BigAutoField(primary_key=True, db_column='id', db_index=True, editable=False, unique=True,
+                             blank=False, null=False, verbose_name='ID')
+
+    es_users_id = models.ForeignKey('ESUsers', on_delete=models.CASCADE)
+    contact_no = models.CharField(max_length=15, unique=True, blank=False, null=False)
+
+    status = models.BooleanField(default=True)
+    deleted = models.BooleanField(default=False)
+    deleted_at = models.DateTimeField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.contact_no
+
+
+class ESUsers(models.Model):
+    class Meta:
+        db_table = "es_users"
+
+    id = models.BigAutoField(primary_key=True, db_column='id', db_index=True, editable=False, unique=True,
+                             blank=False, null=False, verbose_name='ID')
+
+    fname = models.CharField(max_length=50, verbose_name='First Name', blank=False, null=False)
+    lname = models.CharField(max_length=50, verbose_name='Last Name', blank=False, null=False)
+    dob = models.DateField(verbose_name='Date of Birth', blank=False, null=False)
+    email = models.EmailField(max_length=50, unique=True, verbose_name='Email', blank=False, null=False)
+    address = models.TextField(verbose_name='Address', blank=False, null=False)
+    city = models.ForeignKey(ESCityMaster, on_delete=models.CASCADE)
+
+    status = models.BooleanField(default=True)
+    deleted = models.BooleanField(default=False)
+    deleted_at = models.DateTimeField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.fname} {self.lname}"
+
+
+class ESHobbies(models.Model):
+    class Meta:
+        db_table = "es_hobbies"
+
+    id = models.BigAutoField(primary_key=True, db_column='id', db_index=True, editable=False, unique=True,
+                             blank=False, null=False, verbose_name='ID')
+
+    hobby_name = models.CharField(max_length=100, blank=True, null=True)
+    es_users_id = models.ForeignKey(ESUsers, on_delete=models.CASCADE)
+
+    status = models.BooleanField(default=True)
+    deleted = models.BooleanField(default=False)
+    deleted_at = models.DateTimeField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.hobby_name
+
+
 class DefaultAuthUserExtend(AbstractUser):
     contact_no = models.CharField(max_length=10, null=True, db_index=True, default='', blank=True,
                                   validators=[RegexValidator(regex=r'^[0-9- ]+$', message="Invalid phone number")])

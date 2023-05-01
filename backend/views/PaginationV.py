@@ -81,12 +81,57 @@ class PaginationAPI(ListAPIView):
                         hit_weights.append((term, field, hit.hits))
 
             # Prepare search query with weights
+            '''
+            The code below constructs a function_score query based on the hit-based priority weights. 
+            It creates a query object and adds a subquery for each term, field, and weight combination. 
+            The function_score query is used to modify the score of documents returned by the subqueries, 
+            making it possible to prioritize certain documents based on the hit weights.
+            '''
+
+            # search = Search(index=FakerModelDocument._index._name)
+            # query = Q()
+            #
+            # for term, field, weight in hit_weights:
+            #     query |= Q('nested', path=field,
+            #                query=Q('match', **{f"{field}.search_term": {"query": term, "boost": weight}}))
+            #
+            # search = search.query('function_score', query=query, score_mode='sum')
+
+            '''
+            The code below constructs a simple multi_match query. It searches for the search_value across the specified 
+            fields (keywords and contact_no). This query does not consider hit-based priority weights and is a more 
+            straightforward search query.
+            '''
+            # search = FakerModelDocument.search().query(
+            #     'multi_match',
+            #     query=search_value,
+            #     fields=['keywords', 'contact_no']
+            # )
+
+            '''
+            The below code is a combination of the first and second snippets. It constructs a function_score query 
+            that uses a multi_match query inside. This approach allows you to search for the search_value across the 
+            specified fields while still considering the hit-based priority weights. However, this might return less 
+            relevant results if the hit counts are not well balanced.
+            '''
+
+            # search = Search(index=FakerModelDocument._index._name)
+            # query = Q()
+            #
+            # for term, field, weight in hit_weights:
+            #     query |= Q('nested', path=field,
+            #                query=Q('match', **{f"{field}.search_term": {"query": term, "boost": weight}}))
+            #
+            # search = search.query('function_score',
+            #                       query=Q('multi_match', query=search_value, fields=['keywords', 'contact_no']),
+            #                       score_mode='sum')
+
             search = Search(index=FakerModelDocument._index._name)
             query = Q()
 
             for term, field, weight in hit_weights:
-                query |= Q('nested', path=field,
-                           query=Q('match', **{f"{field}.search_term": {"query": term, "boost": weight}}))
+                # query |= Q('match', **{field: {"query": term, "boost": weight}})
+                query |= Q('bool', should=[Q('match', **{field: {"query": term, "boost": weight}})])
 
             search = search.query('function_score', query=query, score_mode='sum')
 
