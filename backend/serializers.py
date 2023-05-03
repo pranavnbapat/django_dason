@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import PDF2Text, FakerModel
+from backend.models import PDF2Text, FakerModel
 from django.urls import reverse
 
 

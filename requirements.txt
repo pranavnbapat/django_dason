@@ -45,3 +45,4 @@ faker
 pymysql
 pytesseract
 pdf2image
+waitress

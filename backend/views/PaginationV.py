@@ -126,14 +126,14 @@ class PaginationAPI(ListAPIView):
             #                       query=Q('multi_match', query=search_value, fields=['keywords', 'contact_no']),
             #                       score_mode='sum')
 
-            search = Search(index=FakerModelDocument._index._name)
-            query = Q()
-
-            for term, field, weight in hit_weights:
-                # query |= Q('match', **{field: {"query": term, "boost": weight}})
-                query |= Q('bool', should=[Q('match', **{field: {"query": term, "boost": weight}})])
-
-            search = search.query('function_score', query=query, score_mode='sum')
+            # search = Search(index=FakerModelDocument._index._name)
+            # query = Q()
+            #
+            # for term, field, weight in hit_weights:
+            #     # query |= Q('match', **{field: {"query": term, "boost": weight}})
+            #     query |= Q('bool', should=[Q('match', **{field: {"query": term, "boost": weight}})])
+            #
+            # search = search.query('function_score', query=query, score_mode='sum')
 
             # NEW CODE
 
@@ -167,11 +167,13 @@ class PaginationAPI(ListAPIView):
             # .extra(size=1000)  # Increase the size to get more results
             # By default, it gives only 10 results
 
+
             # Search in only one column (e.g., keywords)
             # search = FakerModelDocument.search().query(
             #     'match',
             #     keywords=search_value
             # )
+
 
             # Search with a preference for keywords, and then in description if not found in keywords:
             # search = FakerModelDocument.search().query(
@@ -182,7 +184,20 @@ class PaginationAPI(ListAPIView):
             #     ],
             #     minimum_should_match=1
             # )
+
+
+            # Search to prioritize exact matches while still allowing partial matches, you can use the bool query with
+            # a combination of should clauses, adjusting the boost parameter to give more importance to exact matches.
+            search = FakerModelDocument.search().query(
+                'multi_match',
+                query=search_value,
+                fields=['keywords^10', 'keywords'],
+                type='best_fields',
+                tie_breaker=0.3
+            )
+
             ids = [hit.meta.id for hit in search]
+            print("Elasticsearch result IDs:", ids)
             queryset = FakerModel.objects.filter(id__in=ids)
         else:
             print("Using default search method")
@@ -217,7 +232,8 @@ class RecordClickView(View):
         return HttpResponse(status=204)
 
 
-class ShowPaginationContactView(PermissionRequiredMixin, UserPassesTestMixin, LoginRequiredMixin, AdminMenuMixin, TemplateView):
+class ShowPaginationContactView(PermissionRequiredMixin, UserPassesTestMixin, LoginRequiredMixin, AdminMenuMixin,
+                                TemplateView):
     template_name = "backend/pagination/contact_detail.html"
     permission_required = 'backend_viewcontactdetail'
 

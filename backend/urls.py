@@ -12,6 +12,8 @@ from .views import (
     LargeFileUploadView,
     RecordClickView,
     ShowPaginationContactView,
+    ElasticSearchView,
+    ElasticSearchResultsView,
 )
 
 app_name = "backend"
@@ -47,4 +49,8 @@ urlpatterns = [
 
     # Large File Upload
     path("large-file-upload/", LargeFileUploadView.as_view(), name='large-file-upload'),
+
+    # ElasticSearch
+    path("elastic-search/", view=ElasticSearchView.as_view(), name='elastic-search'),
+    path("elastic-search/search", view=ElasticSearchResultsView.as_view(), name='elastic-search-search')
 ]
