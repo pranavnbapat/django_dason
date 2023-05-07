@@ -6,6 +6,9 @@ from django.urls import reverse_lazy
 from allauth.account.views import PasswordSetView, PasswordChangeView
 from django_otp.plugins.otp_totp.models import TOTPDevice
 from backend.views.mixins import AdminMenuMixin
+from django.http import HttpResponse
+from django.core.cache import cache
+import datetime
 
 
 def home(req):
@@ -37,3 +40,14 @@ class MyPasswordSetView(LoginRequiredMixin, PasswordSetView):
 
 
 settings_view = login_required(Settings.as_view())
+
+
+def test_cache(request):
+    cached_value = cache.get("test_key")
+
+    if cached_value is None:
+        now = datetime.datetime.now()
+        cached_value = f"This value was cached at {now}"
+        cache.set("test_key", cached_value, timeout=60)  # Cache the value for 1 minute
+
+    return HttpResponse(cached_value)

@@ -46,3 +46,5 @@ pymysql
 pytesseract
 pdf2image
 waitress
+django-redis
+redis

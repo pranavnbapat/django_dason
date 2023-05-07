@@ -77,25 +77,47 @@ AUTH_USER_MODEL = 'backend.DefaultAuthUserExtend'
 INSTALLED_APPS = DEFAULT_APPS + LOCAL_APPS + THIRD_PARTY_APPS
 
 MIDDLEWARE = [
+    # For Redis
+    'django.middleware.cache.UpdateCacheMiddleware',
+
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "debug_toolbar.middleware.DebugToolbarMiddleware",  # For debugging
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
+
     # Custom middlewre to track user activity
     "euf.middleware.UserActivityMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+
     # AuthenticationMiddleware.
     "django_otp.middleware.OTPMiddleware",
+
     # Reset login flow middleware. If this middleware is included, the login
     # flow is reset if another page is loaded between login and successfully
     # entering two-factor credentials.
     "allauth_2fa.middleware.AllauthTwoFactorMiddleware",
     "axes.middleware.AxesMiddleware",
     "csp.middleware.CSPMiddleware",
+
+    # For Redis
+    'django.middleware.cache.FetchFromCacheMiddleware',
 ]
+
+# Cache settings for middleware redis
+CACHE_MIDDLEWARE_SECONDS = 300
+
+'''
+If you want to customize caching behavior for specific views or exclude certain views from caching, you can use the 
+@vary_on_headers, @vary_on_cookies, and @never_cache decorators. The Django documentation provides more information on 
+these decorators: https://docs.djangoproject.com/en/3.2/topics/cache/#controlling-cache-using-other-headers
+
+Keep in mind that caching entire views might not always be the best solution, especially for views that have dynamic 
+content or require user authentication. In such cases, you can consider using template fragment caching or caching data 
+within your views using the cache API directly.
+'''
 
 # For django content security policy, additional security
 
@@ -380,3 +402,17 @@ INTERNAL_IPS = [
     # Use the local IP address (127.0.0.1) for development
     '127.0.0.1',
 ]
+
+
+# Cache
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/1",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    }
+}
+
+

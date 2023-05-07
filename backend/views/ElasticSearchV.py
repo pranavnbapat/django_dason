@@ -36,21 +36,21 @@ class ElasticSearchResultsView(PermissionRequiredMixin, UserPassesTestMixin, Log
                 {"match": {"email": {"query": search_value, "boost": 10}}},
                 {"match": {"fname": {"query": search_value, "boost": 5}}},
                 {"match": {"lname": {"query": search_value, "boost": 5}}},
-                {"nested": {
-                    "path": "contact_numbers",
-                    "query": {"match": {"contact_numbers.contact_no": search_value}}
-                }},
-                {"nested": {
-                    "path": "city",
-                    "query": {"match": {"city.city_name": search_value}}
-                }},
+                # {"nested": {
+                #     "path": "contact_numbers",
+                #     "query": {"match": {"contact_numbers.contact_no": search_value}}
+                # }},
+                # {"nested": {
+                #     "path": "city",
+                #     "query": {"match": {"city.city_name": search_value}}
+                # }},
             ]
 
-            # if is_valid_date(search_value):
-            #     should_clauses += [
-            #         {"match_phrase": {"dob": {"query": search_value, "boost": 2}}},
-            #         {"match": {"dob": search_value}},
-            #     ]
+            if is_valid_date(search_value):
+                should_clauses += [
+                    {"match_phrase": {"dob": {"query": search_value, "boost": 2}}},
+                    {"match": {"dob": search_value}},
+                ]
 
             # if is_valid_date(search_value):
             #     search_date = datetime.strptime(search_value, '%Y-%m-%d').date()
@@ -75,7 +75,7 @@ class ElasticSearchResultsView(PermissionRequiredMixin, UserPassesTestMixin, Log
                 'bool',
                 should=should_clauses,
                 minimum_should_match=1
-            )
+            ).extra(size=1000)
 
             for hit in search:
                 response_data.append({
