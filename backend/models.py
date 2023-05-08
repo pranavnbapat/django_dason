@@ -74,11 +74,11 @@ class AdminMenuMaster(models.Model):
 
     id = models.SmallAutoField(primary_key=True, db_column='id', db_index=True, editable=False, unique=True,
                                blank=False, null=False, verbose_name='ID')
-    menu_name = models.CharField(max_length=20, null=False, blank=False, unique=True,
-                                 validators=[RegexValidator(regex=r'^[a-zA-Z0-9\s]+$', message="Invalid characters")])
+    menu_name = models.CharField(max_length=30, null=False, blank=False, unique=True,
+                                 validators=[RegexValidator(regex=r'^[a-zA-Z0-9()\s]+$', message="Invalid characters")])
     menu_icon = models.CharField(max_length=10, null=False, blank=False, default='list',
                                  validators=[RegexValidator(regex=r'^[a-z-]+$', message="Invalid characters")])
-    menu_route = models.CharField(max_length=20, unique=True,
+    menu_route = models.CharField(max_length=30, unique=True,
                                   validators=[RegexValidator(regex=r'^[a-zA-Z0-9\s-]+$', message="Invalid characters")])
     menu_order = models.SmallIntegerField(null=True, blank=True,
                                           validators=[RegexValidator(regex=r'^[0-9]+$', message="Invalid characters")])

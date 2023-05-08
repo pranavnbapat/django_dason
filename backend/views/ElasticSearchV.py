@@ -2,7 +2,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from .mixins import AdminMenuMixin, PermissionRequiredMixin
 from django.views.generic import TemplateView
 from django.http import JsonResponse
-from backend.documents import ESUsersDocument, ESCityMasterDocument
+from backend.documents import ESUsersDocument, ESUsersSingleDocument
 from elasticsearch_dsl.connections import connections
 from backend.models import ESUsers
 from django.db.models import Q
@@ -108,6 +108,71 @@ class ElasticSearchResultsView(PermissionRequiredMixin, UserPassesTestMixin, Log
                     'lname': hit.lname,
                     'city': hit.city_master.city_name,
                     'contact_numbers': contact_numbers,
+                })
+
+        return JsonResponse(response_data, safe=False)
+
+
+class ElasticSearchSingleView(PermissionRequiredMixin, UserPassesTestMixin, LoginRequiredMixin, AdminMenuMixin,
+                              TemplateView):
+    template_name = 'backend/elastic_search/elastic-search-single.html'
+    permission_required = 'backend_viewelasticsearchsingle'
+
+
+class ElasticSearchSingleResultsView(PermissionRequiredMixin, UserPassesTestMixin, LoginRequiredMixin, TemplateView):
+    def get(self, request, *args, **kwargs):
+        search_value = request.GET.get('search_value', '')
+
+        # Check if Elasticsearch server is running
+        es_client = connections.get_connection()
+        response_data = []
+        if es_client.ping() and search_value:
+            print("Using Elasticsearch (Single Table)")
+
+            should_clauses = [
+                {"match": {"email": {"query": search_value, "boost": 10}}},
+                {"match": {"fname": {"query": search_value, "boost": 5}}},
+                {"match": {"lname": {"query": search_value, "boost": 5}}},
+            ]
+
+            # if is_valid_date(search_value):
+            #     should_clauses += [
+            #         {"match_phrase": {"dob": {"query": search_value, "boost": 2}}},
+            #         {"match": {"dob": search_value}},
+            #     ]
+
+            search = ESUsersSingleDocument.search().query(
+                'bool',
+                should=should_clauses,
+                minimum_should_match=1
+            ).extra(size=10)
+
+            for hit in search:
+                response_data.append({
+                    'id': hit.meta.id,
+                    'email': hit.email,
+                    'dob': hit.dob,
+                    'fname': hit.fname,
+                    'lname': hit.lname,
+                })
+        else:
+            print("Using default search method")
+            if search_value:
+                search = ESUsers.objects.filter(
+                    Q(email__icontains=search_value) |
+                    Q(fname__icontains=search_value) |
+                    Q(lname__icontains=search_value) |
+                    Q(dob__icontains=search_value)
+                )
+            else:
+                search = ESUsers.objects.all()
+            for hit in search:
+                response_data.append({
+                    'id': hit.id,
+                    'email': hit.email,
+                    'dob': hit.dob,
+                    'fname': hit.fname,
+                    'lname': hit.lname,
                 })
 
         return JsonResponse(response_data, safe=False)

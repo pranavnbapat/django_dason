@@ -12,7 +12,7 @@ class FakerModelDocument(Document):
 
     class Index:
         name = 'faker_model_index'
-        settings = {'number_of_shards': 5, 'number_of_replicas': 2}
+        settings = {'number_of_shards': 2, 'number_of_replicas': 1}
         '''
         number_of_shards
         This setting determines how many primary shards the index should have. Shards are essentially smaller 
@@ -47,12 +47,12 @@ class ESCityMasterDocument(Document):
 class ESUsersDocument(Document):
     email = fields.KeywordField(attr='email')
     dob = fields.DateField(attr='dob')
-    fname = fields.TextField(attr='fname')
-    lname = fields.TextField(attr='lname')
+    fname = fields.KeywordField(attr='fname')
+    lname = fields.KeywordField(attr='lname')
     city_id = fields.IntegerField(attr='city_id')
     city = fields.ObjectField(attr='city', properties={
         'city_id': fields.IntegerField(),
-        'city_name': fields.TextField(),
+        'city_name': fields.KeywordField(),
     })
     contact_numbers = fields.NestedField(properties={
         'contact_no': fields.LongField(),
@@ -60,7 +60,7 @@ class ESUsersDocument(Document):
 
     class Index:
         name = 'es_users_index'
-        settings = {'number_of_shards': 5, 'number_of_replicas': 2}
+        settings = {'number_of_shards': 2, 'number_of_replicas': 1}
 
     class Django:
         model = ESUsers
@@ -89,3 +89,18 @@ class ESContactNoDocument(Document):
 
     class Django:
         model = ESContactNo
+
+
+@registry.register_document
+class ESUsersSingleDocument(Document):
+    email = fields.KeywordField(attr='email')
+    dob = fields.DateField(attr='dob')
+    fname = fields.KeywordField(attr='fname')
+    lname = fields.KeywordField(attr='lname')
+
+    class Index:
+        name = 'only_es_users_index'
+        settings = {'number_of_shards': 2, 'number_of_replicas': 1}
+
+    class Django:
+        model = ESUsers

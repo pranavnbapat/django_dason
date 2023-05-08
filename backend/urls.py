@@ -14,6 +14,8 @@ from .views import (
     ShowPaginationContactView,
     ElasticSearchView,
     ElasticSearchResultsView,
+    ElasticSearchSingleView,
+    ElasticSearchSingleResultsView
 )
 
 app_name = "backend"
@@ -52,5 +54,10 @@ urlpatterns = [
 
     # ElasticSearch
     path("elastic-search/", view=ElasticSearchView.as_view(), name='elastic-search'),
-    path("elastic-search/search", view=ElasticSearchResultsView.as_view(), name='elastic-search-search')
+    path("elastic-search/search", view=ElasticSearchResultsView.as_view(), name='elastic-search-search'),
+
+    # ElasticSearch Single Table
+    path("elastic-search-single/", view=ElasticSearchSingleView.as_view(), name='elastic-search-single'),
+    path("elastic-search-single/search", view=ElasticSearchSingleResultsView.as_view(),
+         name='elastic-search-single-search'),
 ]
