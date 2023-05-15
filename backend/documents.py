@@ -12,7 +12,7 @@ class FakerModelDocument(Document):
 
     class Index:
         name = 'faker_model_index'
-        settings = {'number_of_shards': 2, 'number_of_replicas': 1}
+        settings = {'number_of_shards': 1, 'number_of_replicas': 0}
         '''
         number_of_shards
         This setting determines how many primary shards the index should have. Shards are essentially smaller 
@@ -29,66 +29,66 @@ class FakerModelDocument(Document):
 
         # This is a list of fields from the FakerModel that should also be indexed. These fields will be indexed with
         # their default Elasticsearch field types. In this case, both fields are likely datetime fields.
-        fields = ['created_at', 'updated_at']
+        # fields = ['created_at', 'updated_at']
 
 
-@registry.register_document
-class ESCityMasterDocument(Document):
-    city_name = fields.KeywordField(attr='city_name')
-
-    class Index:
-        name = 'es_city_master_index'
-
-    class Django:
-        model = ESCityMaster
-
-
-@registry.register_document
-class ESUsersDocument(Document):
-    email = fields.KeywordField(attr='email')
-    dob = fields.DateField(attr='dob')
-    fname = fields.KeywordField(attr='fname')
-    lname = fields.KeywordField(attr='lname')
-    city_id = fields.IntegerField(attr='city_id')
-    city = fields.ObjectField(attr='city', properties={
-        'city_id': fields.IntegerField(),
-        'city_name': fields.KeywordField(),
-    })
-    contact_numbers = fields.NestedField(properties={
-        'contact_no': fields.LongField(),
-    })
-
-    class Index:
-        name = 'es_users_index'
-        settings = {'number_of_shards': 2, 'number_of_replicas': 1}
-
-    class Django:
-        model = ESUsers
-
-    def prepare_city(self, instance):
-        try:
-            city = ESCityMaster.objects.get(id=instance.city_id)
-            return {
-                'city_id': city.id,
-                'city_name': city.city_name,
-            }
-        except ESCityMaster.DoesNotExist:
-            return {}
-
-    def prepare_contact_numbers(self, instance):
-        return [{'contact_no': contact.contact_no} for contact in instance.escontactno_set.all()]
+# @registry.register_document
+# class ESCityMasterDocument(Document):
+#     city_name = fields.KeywordField(attr='city_name')
+#
+#     class Index:
+#         name = 'es_city_master_index'
+#
+#     class Django:
+#         model = ESCityMaster
 
 
-@registry.register_document
-class ESContactNoDocument(Document):
-    es_users_id = fields.IntegerField(attr='es_users_id_id')
-    contact_no = fields.LongField(attr='contact_no')
+# @registry.register_document
+# class ESUsersDocument(Document):
+#     email = fields.KeywordField(attr='email')
+#     dob = fields.DateField(attr='dob')
+#     fname = fields.KeywordField(attr='fname')
+#     lname = fields.KeywordField(attr='lname')
+#     city_id = fields.IntegerField(attr='city_id')
+#     city = fields.ObjectField(attr='city', properties={
+#         'city_id': fields.IntegerField(),
+#         'city_name': fields.KeywordField(),
+#     })
+#     contact_numbers = fields.NestedField(properties={
+#         'contact_no': fields.LongField(),
+#     })
+#
+#     class Index:
+#         name = 'es_users_index'
+#         settings = {'number_of_shards': 1, 'number_of_replicas': 0}
+#
+#     class Django:
+#         model = ESUsers
+#
+#     def prepare_city(self, instance):
+#         try:
+#             city = ESCityMaster.objects.get(id=instance.city_id)
+#             return {
+#                 'city_id': city.id,
+#                 'city_name': city.city_name,
+#             }
+#         except ESCityMaster.DoesNotExist:
+#             return {}
+#
+#     def prepare_contact_numbers(self, instance):
+#         return [{'contact_no': contact.contact_no} for contact in instance.escontactno_set.all()]
 
-    class Index:
-        name = 'es_contact_no_index'
 
-    class Django:
-        model = ESContactNo
+# @registry.register_document
+# class ESContactNoDocument(Document):
+#     es_users_id = fields.IntegerField(attr='es_users_id_id')
+#     contact_no = fields.LongField(attr='contact_no')
+#
+#     class Index:
+#         name = 'es_contact_no_index'
+#
+#     class Django:
+#         model = ESContactNo
 
 
 @registry.register_document
@@ -100,7 +100,7 @@ class ESUsersSingleDocument(Document):
 
     class Index:
         name = 'only_es_users_index'
-        settings = {'number_of_shards': 2, 'number_of_replicas': 1}
+        settings = {'number_of_shards': 1, 'number_of_replicas': 0}
 
     class Django:
         model = ESUsers

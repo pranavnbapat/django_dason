@@ -13,7 +13,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv("DJANGO_SECRET")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 # ALLOWED_HOSTS = ["*"]
 ALLOWED_HOSTS = ['eufarmbooknew.eu', 'localhost', '127.0.0.1', '145.127.79.185', '192.168.0.101']

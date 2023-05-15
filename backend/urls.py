@@ -12,8 +12,8 @@ from .views import (
     LargeFileUploadView,
     RecordClickView,
     ShowPaginationContactView,
-    ElasticSearchView,
-    ElasticSearchResultsView,
+    # ElasticSearchView,
+    # ElasticSearchResultsView,
     ElasticSearchSingleView,
     ElasticSearchSingleResultsView
 )
@@ -53,8 +53,8 @@ urlpatterns = [
     path("large-file-upload/", LargeFileUploadView.as_view(), name='large-file-upload'),
 
     # ElasticSearch
-    path("elastic-search/", view=ElasticSearchView.as_view(), name='elastic-search'),
-    path("elastic-search/search", view=ElasticSearchResultsView.as_view(), name='elastic-search-search'),
+    # path("elastic-search/", view=ElasticSearchView.as_view(), name='elastic-search'),
+    # path("elastic-search/search", view=ElasticSearchResultsView.as_view(), name='elastic-search-search'),
 
     # ElasticSearch Single Table
     path("elastic-search-single/", view=ElasticSearchSingleView.as_view(), name='elastic-search-single'),
