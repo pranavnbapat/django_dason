@@ -80,6 +80,8 @@ class AdminMenuMaster(models.Model):
                                  validators=[RegexValidator(regex=r'^[a-z-]+$', message="Invalid characters")])
     menu_route = models.CharField(max_length=30, unique=True,
                                   validators=[RegexValidator(regex=r'^[a-zA-Z0-9\s-]+$', message="Invalid characters")])
+    menu_access = models.CharField(max_length=30, unique=True,
+                                   validators=[RegexValidator(regex=r'^[a-zA-Z0-9\s-]+$', message="Invalid characters")])
     menu_order = models.SmallIntegerField(null=True, blank=True,
                                           validators=[RegexValidator(regex=r'^[0-9]+$', message="Invalid characters")])
     status = models.BooleanField(default=True)

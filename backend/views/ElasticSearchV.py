@@ -117,7 +117,7 @@ def is_valid_date(date_string, date_format='%Y-%m-%d'):
 class ElasticSearchSingleView(PermissionRequiredMixin, UserPassesTestMixin, LoginRequiredMixin, AdminMenuMixin,
                               TemplateView):
     template_name = 'backend/elastic_search/elastic-search-single.html'
-    permission_required = 'backend_viewelasticsearchsingle'
+    permission_required = 'backend.view_esusers'
 
 
 class ElasticSearchSingleResultsView(PermissionRequiredMixin, UserPassesTestMixin, LoginRequiredMixin, TemplateView):
@@ -146,7 +146,7 @@ class ElasticSearchSingleResultsView(PermissionRequiredMixin, UserPassesTestMixi
                 'bool',
                 should=should_clauses,
                 minimum_should_match=1
-            ).extra(size=10)
+            ).extra(size=1000)
 
             for hit in search:
                 response_data.append({

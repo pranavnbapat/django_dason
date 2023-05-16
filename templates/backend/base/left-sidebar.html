@@ -12,7 +12,7 @@
                     <ul class="metismenu list-unstyled" id="side-menu">
                         {{ permissions }}
                         {% for am in admin_menu %}
-                            {% with 'can_view_'|add:am.menu_route|lower|remove_chars as view_permission %}
+                            {% with 'can_view_'|add:am.menu_access|lower|remove_chars as view_permission %}
                                 {% if user.is_superuser or view_permission in permissions or am.menu_route|lower == 'dashboard' %}
                                     <li>
                                         <a href="{% url 'backend:'|add:am.menu_route %}">

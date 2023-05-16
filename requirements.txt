@@ -48,3 +48,5 @@ pdf2image
 waitress
 django-redis
 redis
+rake-nltk
+BERTopic

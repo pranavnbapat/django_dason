@@ -70,15 +70,15 @@
 
                                 {% for user in all_users %}
                                     <tr>
-                                        <td>{{ user.0 }}</td>
-                                        <td>{{ user.1 }}</td>
-                                        <td>{{ user.2 }}</td>
-                                        <td>{{ user.3 }}</td>
-                                        <td>{{ user.4 }}</td>
-                                        <td>{{ user.5 }}</td>
-                                        <td>{{ user.6|capfirst }}</td>
-                                        <td>{{ user.7 }}</td>
-                                        <td>{{ user.8 }}</td>
+                                        <td>{{ user.first_name }}</td>
+                                        <td>{{ user.last_name }}</td>
+                                        <td>{{ user.username }}</td>
+                                        <td>{{ user.email }}</td>
+                                        <td>{{ user.last_login }}</td>
+                                        <td>{{ user.is_staff }}</td>
+                                        <td>{{ user.groups.first.name|capfirst }}</td>
+                                        <td>{{ user.is_active }}</td>
+                                        <td>{{ user.date_joined }}</td>
                                     </tr>
                                 {% endfor %}
                                 <tbody>
@@ -111,6 +111,7 @@
 <script src="{% static 'libs/datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js'%}"></script>
 <script src="{% static 'libs/pdfmake/build/pdfmake.min.js'%}"></script>
 <script src="{% static 'libs/pdfmake/build/vfs_fonts.js'%}"></script>
+<script src="{% static 'libs/jszip/dist/jszip.min.js'%}"></script>
 <script src="{% static 'libs/datatables.net-buttons/js/buttons.html5.min.js'%}"></script>
 <script src="{% static 'libs/datatables.net-buttons/js/buttons.print.min.js'%}"></script>
 <script src="{% static 'libs/datatables.net-buttons/js/buttons.colVis.min.js'%}"></script>

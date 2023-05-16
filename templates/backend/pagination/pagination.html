@@ -133,9 +133,7 @@
                 let search_term = searchInput.val();
 
                 $.ajax({
-                    {#url: `/backend/pagination/record-click/${contact_no}`,#}
                     url: "{% url 'backend:record-click-api' %}",
-                    {#url: "{% url 'backend:record-click' 'contact_no_placeholder' %}".replace('contact_no_placeholder', contact_no),#}
                     method: "GET",
                     data: {
                         "result_id": contact_no,
@@ -153,34 +151,5 @@
                 });
             });
         });
-
-        function recordClick(result_id, search_term, column_name) {
-            // Set the URL for the 'record_click' endpoint
-            const url = '/record_click/';
-
-            // Create FormData to send POST data
-            let formData = new FormData();
-            formData.append('result_id', result_id);
-            formData.append('search_term', search_term);
-            formData.append('column_name', column_name);
-
-            // Send the POST request using the Fetch API
-            fetch(url, {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'X-CSRFToken': $('meta[name="csrf-token"]').attr('content')
-                },
-                credentials: 'same-origin'
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`Error ${response.status}: ${response.statusText}`);
-                }
-            })
-            .catch(error => {
-                console.error('Error while recording click:', error);
-            });
-        }
     </script>
 {% endblock extra_js %}

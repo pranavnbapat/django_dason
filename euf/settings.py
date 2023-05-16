@@ -16,12 +16,13 @@ SECRET_KEY = os.getenv("DJANGO_SECRET")
 DEBUG = False
 
 # ALLOWED_HOSTS = ["*"]
-ALLOWED_HOSTS = ['eufarmbooknew.eu', 'localhost', '127.0.0.1', '145.127.79.185', '192.168.0.101']
+ALLOWED_HOSTS = ['eufarmbooknew.eu', 'localhost', '127.0.0.1', '145.127.122.92']
 
 CSRF_TRUSTED_ORIGINS = ['https://eufarmbooknew.eu']
 
 # Log out user automatically after 30 minutes of inactivity
-SESSION_COOKIE_AGE = 60 * 60  # 30 minutes * 60 seconds
+SESSION_COOKIE_AGE = 30 * 60  # 30 minutes * 60 seconds
+SESSION_SAVE_EVERY_REQUEST = True
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 # Application definition
@@ -182,6 +183,7 @@ AXES_RESET_ON_SUCCESS = True
 AXES_LOG_ACCESS_ATTEMPTS = True
 AXES_LOG_ACCESS_FAILURE_ATTEMPTS = True
 AXES_LOG_FAILURE_ATTEMPTS = True
+AXES_USE_USER_AGENT = False
 
 WSGI_APPLICATION = "euf.wsgi.application"
 
@@ -205,7 +207,8 @@ MONGO_CLIENT = MongoClient(
     username=os.getenv("MONGODB_USER"),
     password=os.getenv("MONGODB_PASS"),
     authSource=os.getenv("MONGODB_DB"),
-    authMechanism='SCRAM-SHA-1',
+    authMechanism='DEFAULT',
+    # authMechanism='SCRAM-SHA-1',
 )
 
 
@@ -230,7 +233,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = "Europe/Amsterdam"
+TIME_ZONE = "UTC"
 
 USE_I18N = True
 

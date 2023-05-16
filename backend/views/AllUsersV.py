@@ -2,7 +2,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from .mixins import AdminMenuMixin, PermissionRequiredMixin
 from django.views.generic import ListView
 from django.contrib.auth.mixins import UserPassesTestMixin
-from ..models import DefaultAuthUserExtend
+from backend.models import DefaultAuthUserExtend
+from django.urls import resolve
 
 
 class AllUsersView(PermissionRequiredMixin, UserPassesTestMixin, LoginRequiredMixin, ListView, AdminMenuMixin):
@@ -21,6 +22,6 @@ class AllUsersView(PermissionRequiredMixin, UserPassesTestMixin, LoginRequiredMi
         return queryset
 
     def get_template_names(self):
-        if self.request.path == '/backend/users-grid':
+        if resolve(self.request.path_info).url_name == 'users-grid':
             return ["backend/user/all-users-grid.html"]
         return super().get_template_names()

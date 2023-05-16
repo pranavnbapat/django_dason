@@ -9,7 +9,7 @@ from django.contrib.auth.mixins import UserPassesTestMixin
 
 class KOView(PermissionRequiredMixin, UserPassesTestMixin, TemplateView, LoginRequiredMixin, AdminMenuMixin):
     template_name = "backend/ko/knowledge_objects.html"
-    permission_required = 'backend.view_users'
+    permission_required = 'backend.view_knowledgeobjects'
 
     @staticmethod
     def get_mongodb_data():

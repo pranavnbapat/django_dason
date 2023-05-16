@@ -1,4 +1,4 @@
-from django.urls import path, include
+from django.urls import path
 from .views import (
     FormView,
     ProfileView,
@@ -60,4 +60,7 @@ urlpatterns = [
     path("elastic-search-single/", view=ElasticSearchSingleView.as_view(), name='elastic-search-single'),
     path("elastic-search-single/search", view=ElasticSearchSingleResultsView.as_view(),
          name='elastic-search-single-search'),
+
 ]
+
+handler404 = 'backend.views.handler404'

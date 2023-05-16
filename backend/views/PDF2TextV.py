@@ -14,6 +14,8 @@ from rest_framework import generics, permissions
 from backend.serializers import PDF2TextSerializer
 from rest_framework import status
 from rest_framework.response import Response
+from rake_nltk import Rake
+from bertopic import BERTopic
 
 
 def process_pdf_file(request):
@@ -30,6 +32,32 @@ def process_pdf_file(request):
                     images = convert_from_path(request.FILES['file'].temporary_file_path())
                     for image in images:
                         extracted_text += pytesseract.image_to_string(image)
+
+                    # Uses stopwords for english from NLTK, and all punctuation characters.
+                    r = Rake()
+                    # If you want to provide your own set of stop words and punctuations to
+                    # r = Rake(<list of stopwords>, <string of puntuations to ignore>)
+
+                    r.extract_keywords_from_text(extracted_text)
+                    keywords = r.get_ranked_phrases()  # To get keyword phrases ranked highest to lowest.
+                    print(keywords)
+
+                    # For the purpose of the example, we will use the 20 Newsgroups dataset
+                    # docs = fetch_20newsgroups(subset='all', remove=('headers', 'footers', 'quotes'))['data']
+                    # Create an instance of BERTopic
+                    model = BERTopic(language="english")
+                    # Fit the model to the data
+                    topics, _ = model.fit_transform([extracted_text])
+
+                    # Get the most frequent topics
+                    frequent_topics = model.get_topic_info()
+
+                    # Get individual topic
+                    individual_topic = model.get_topic(1)  # Get topic 1
+
+                    print(frequent_topics)
+                    print(individual_topic)
+
                 else:
                     # Extract text from plain text PDF
                     for page in pdf.pages:

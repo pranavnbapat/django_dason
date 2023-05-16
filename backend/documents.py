@@ -5,7 +5,7 @@ from backend.models import FakerModel, ESUsers, ESCityMaster, ESContactNo
 
 @registry.register_document
 class FakerModelDocument(Document):
-    keywords = fields.KeywordField(attr='keywords')
+    keywords = fields.TextField(attr='keywords')
     contact_no = fields.LongField(attr='contact_no')
     # keywords - This is a TextField, which means it will be indexed as a full-text searchable field.
     # The attr='keywords' part tells the document to use the keywords attribute of the FakerModel for this field.
