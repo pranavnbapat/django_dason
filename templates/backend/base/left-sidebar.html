@@ -9,21 +9,26 @@
                 <!--- Sidemenu -->
                 <div id="sidebar-menu">
                     <!-- Left Menu Start -->
+                    {% load permission_tags %}
                     <ul class="metismenu list-unstyled" id="side-menu">
-                        {{ permissions }}
+                        {% if not user.is_superuser or not user.is_staff %}
+                        <li>
+                            <a href="{% url 'backend:dashboard' %}">
+                                <i data-feather="home"></i>
+                                <span data-key="t-home">Dashboard</span>
+                            </a>
+                        </li>
+                        {% endif %}
                         {% for am in admin_menu %}
-                            {% with 'can_view_'|add:am.menu_access|lower|remove_chars as view_permission %}
-                                {% if user.is_superuser or view_permission in permissions or am.menu_route|lower == 'dashboard' %}
-                                    <li>
-                                        <a href="{% url 'backend:'|add:am.menu_route %}">
-                                            <i data-feather="{{ am.menu_icon }}"></i>
-                                            <span data-key="t-{{ am.menu_route }}">{{ am.menu_name|title }}</span>
-                                        </a>
-                                    </li>
-                                {% else %}
-
-                                {% endif %}
-                            {% endwith %}
+                            {% has_view_permission user am.menu_route as can_view %}
+                            {% if can_view %}
+                                <li>
+                                    <a href="{% url 'backend:'|add:am.menu_route %}">
+                                        <i data-feather="{{ am.menu_icon }}"></i>
+                                        <span data-key="t-{{ am.menu_route }}">{{ am.menu_name|title }}</span>
+                                    </a>
+                                </li>
+                            {% endif %}
                         {% endfor %}
                     </ul>
                 </div>

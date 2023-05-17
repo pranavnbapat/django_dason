@@ -16,6 +16,9 @@ from rest_framework import status
 from rest_framework.response import Response
 from rake_nltk import Rake
 from bertopic import BERTopic
+from sklearn.feature_extraction.text import TfidfVectorizer
+import nltk
+import pandas as pd
 
 
 def process_pdf_file(request):
@@ -24,6 +27,7 @@ def process_pdf_file(request):
     if result["status"] == "success":
         try:
             extracted_text = ""
+            keywords = ""
             with pdfplumber.open(request.FILES['file']) as pdf:
                 # Check if the first page contains text
                 page = pdf.pages[0]
@@ -33,30 +37,58 @@ def process_pdf_file(request):
                     for image in images:
                         extracted_text += pytesseract.image_to_string(image)
 
+                    print("text received")
+                    print("starting keyword extraction")
+                    # KEYWORD EXTRACTION
+                    # RAKE
                     # Uses stopwords for english from NLTK, and all punctuation characters.
                     r = Rake()
                     # If you want to provide your own set of stop words and punctuations to
-                    # r = Rake(<list of stopwords>, <string of puntuations to ignore>)
+                    # r = Rake(<list of stopwords>, <string of punctuations to ignore>)
 
                     r.extract_keywords_from_text(extracted_text)
                     keywords = r.get_ranked_phrases()  # To get keyword phrases ranked highest to lowest.
                     print(keywords)
+                    print("keywords??? should be above")
 
-                    # For the purpose of the example, we will use the 20 Newsgroups dataset
-                    # docs = fetch_20newsgroups(subset='all', remove=('headers', 'footers', 'quotes'))['data']
-                    # Create an instance of BERTopic
-                    model = BERTopic(language="english")
-                    # Fit the model to the data
-                    topics, _ = model.fit_transform([extracted_text])
+                    # BERTopic
 
-                    # Get the most frequent topics
-                    frequent_topics = model.get_topic_info()
+                    # # For the purpose of the example, we will use the 20 Newsgroups dataset
+                    # # docs = fetch_20newsgroups(subset='all', remove=('headers', 'footers', 'quotes'))['data']
+                    # # Create an instance of BERTopic
+                    # model = BERTopic(language="english")
+                    # # Fit the model to the data
+                    # topics, _ = model.fit_transform([extracted_text])
+                    #
+                    # # Get the most frequent topics
+                    # frequent_topics = model.get_topic_info()
+                    #
+                    # # Get individual topic
+                    # individual_topic = model.get_topic(1)  # Get topic 1
+                    #
+                    # print(frequent_topics)
+                    # print(individual_topic)
 
-                    # Get individual topic
-                    individual_topic = model.get_topic(1)  # Get topic 1
+                    # TFIDF
+                    nltk.download('punkt')
+                    # Tokenize the text into sentences
+                    sentences = nltk.sent_tokenize(extracted_text)
+                    # Initialize a TfidfVectorizer
+                    tfidf_vectorizer = TfidfVectorizer(use_idf=True)
 
-                    print(frequent_topics)
-                    print(individual_topic)
+                    # Fit and transform the documents
+                    tfidf_matrix = tfidf_vectorizer.fit_transform(sentences)
+
+                    # Get feature names
+                    feature_names = tfidf_vectorizer.get_feature_names_out()
+
+                    # Get tf-idf values for the first document
+                    first_document_vector = tfidf_matrix[0]
+
+                    # Print the scores
+                    df = pd.DataFrame(first_document_vector.T.todense(), index=feature_names, columns=["tfidf"])
+                    df.sort_values(by=["tfidf"], ascending=False)
+                    print(df.head(10))
 
                 else:
                     # Extract text from plain text PDF
@@ -67,6 +99,7 @@ def process_pdf_file(request):
                 old_filename=result["old_filename"],
                 new_filename=result["new_filename"],
                 application_type="application/pdf",
+                keywords=keywords,
                 file_text=extracted_text
             )
 
@@ -78,6 +111,7 @@ def process_pdf_file(request):
             file_path = os.path.join(settings.PDF2TEXT_PATH, result["new_filename"])
             if os.path.isfile(file_path):
                 os.remove(file_path)
+            print(e)
             return None, "There's an error in extracting text from the file"
 
     return None, result["message"]

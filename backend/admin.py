@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import AdminMenuMaster, MyForm, KnowledgeObjects, DefaultAuthUserExtend, PDF2Text, FakerModel
+from .models import AdminMenuMaster, MyForm, KnowledgeObjects, DefaultAuthUserExtend, PDF2Text, FakerModel, \
+    CustomPermissions, GroupCustomPermissions, PermissionMaster
 
 # Unregister the old User model from the admin site
 # admin.site.unregister(User)
@@ -35,3 +36,16 @@ class FakerModelAdmin(admin.ModelAdmin):
     list_display = ('keywords', 'description', 'status', 'created_at', 'updated_at')
 
 
+@admin.register(CustomPermissions)
+class CustomPermissionsAdmin(admin.ModelAdmin):
+    list_display = ('user', 'permission_name', 'status', 'created_at', 'updated_at')
+
+
+@admin.register(GroupCustomPermissions)
+class GroupCustomPermissionsAdmin(admin.ModelAdmin):
+    list_display = ('group', 'permission_name', 'status', 'created_at', 'updated_at')
+
+
+@admin.register(PermissionMaster)
+class PermissionMasterAdmin(admin.ModelAdmin):
+    list_display = ('menu', 'action', 'status', 'created_at', 'updated_at')

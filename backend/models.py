@@ -2,6 +2,8 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.core.validators import RegexValidator
 from django.conf import settings
+from django.contrib.auth import get_user_model
+from django.contrib.auth.models import Group
 
 
 class EUCountries(models.Model):
@@ -84,11 +86,16 @@ class AdminMenuMaster(models.Model):
                                    validators=[RegexValidator(regex=r'^[a-zA-Z0-9\s-]+$', message="Invalid characters")])
     menu_order = models.SmallIntegerField(null=True, blank=True,
                                           validators=[RegexValidator(regex=r'^[0-9]+$', message="Invalid characters")])
+
     status = models.BooleanField(default=True)
     deleted = models.BooleanField(default=False)
     deleted_at = models.DateTimeField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.menu_name} ({self.menu_route})"
+        # return self.menu_name
 
 
 class KnowledgeObjects(models.Model):
@@ -114,6 +121,7 @@ class PDF2Text(models.Model):
                                     validators=[RegexValidator(regex=r'^[\w\.-\s]+$', message="Invalid characters")])
     new_filename = models.CharField(max_length=255, null=False, blank=False)
     application_type = models.CharField(max_length=20, null=False, blank=False)
+    keywords = models.CharField(max_length=200, null=True, blank=True)
     file_text = models.TextField(blank=True, null=True)
     status = models.BooleanField(default=True)
     deleted = models.BooleanField(default=False)
@@ -291,7 +299,6 @@ class ESHobbies(models.Model):
 
     id = models.BigAutoField(primary_key=True, db_column='id', db_index=True, editable=False, unique=True,
                              blank=False, null=False, verbose_name='ID')
-
     hobby_name = models.CharField(max_length=100, blank=True, null=True)
     es_users_id = models.ForeignKey(ESUsers, on_delete=models.CASCADE)
 
@@ -308,3 +315,70 @@ class ESHobbies(models.Model):
 class DefaultAuthUserExtend(AbstractUser):
     contact_no = models.CharField(max_length=10, null=True, db_index=True, default='', blank=True,
                                   validators=[RegexValidator(regex=r'^[0-9- ]+$', message="Invalid phone number")])
+
+
+class PermissionMaster(models.Model):
+    class Meta:
+        unique_together = ('menu', 'action')
+        db_table = "permission_master"
+
+    ACTION_CHOICES = (
+        ('add', 'add'),
+        ('edit', 'edit'),
+        ('view', 'view'),
+        ('delete', 'delete'),
+    )
+    id = models.AutoField(primary_key=True, db_column='id', db_index=True, editable=False, unique=True,
+                          blank=False, null=False, verbose_name='ID')
+
+    menu = models.ForeignKey(AdminMenuMaster, on_delete=models.CASCADE)
+    action = models.CharField(max_length=20, choices=ACTION_CHOICES)
+
+    status = models.BooleanField(default=True)
+    deleted = models.BooleanField(default=False)
+    deleted_at = models.DateTimeField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.menu.menu_route}_{self.action}"
+
+
+class CustomPermissions(models.Model):
+    id = models.AutoField(primary_key=True, db_column='id', db_index=True, editable=False, unique=True,
+                             blank=False, null=False, verbose_name='ID')
+
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
+    # permission_name = models.CharField(max_length=100, blank=False, null=False, unique=True)
+    permission_name = models.ForeignKey(PermissionMaster, on_delete=models.CASCADE)
+
+    status = models.BooleanField(default=True)
+    deleted = models.BooleanField(default=False)
+    deleted_at = models.DateTimeField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = "custom_permissions"
+        unique_together = ('user', 'permission_name')
+
+    def __str__(self):
+        return str(self.permission_name)
+
+
+class GroupCustomPermissions(models.Model):
+    id = models.AutoField(primary_key=True, db_column='id', db_index=True, editable=False, unique=True,
+                          blank=False, null=False, verbose_name='ID')
+
+    group = models.ForeignKey(Group, on_delete=models.CASCADE)
+    permission_name = models.ForeignKey(CustomPermissions, on_delete=models.CASCADE)
+
+    status = models.BooleanField(default=True)
+    deleted = models.BooleanField(default=False)
+    deleted_at = models.DateTimeField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = "custom_group_permissions"
+        unique_together = ('group', 'permission_name')

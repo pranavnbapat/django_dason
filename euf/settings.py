@@ -71,6 +71,9 @@ THIRD_PARTY_APPS = [
 
     # For advanced debugging
     "debug_toolbar",
+
+    # For fine-grained permissions
+    "guardian",
 ]
 
 AUTH_USER_MODEL = 'backend.DefaultAuthUserExtend'
@@ -173,7 +176,13 @@ AUTHENTICATION_BACKENDS = [
     "django.contrib.auth.backends.ModelBackend",
     # `allauth` specific authentication methods, such as login by e-mail
     "allauth.account.auth_backends.AuthenticationBackend",
+
+    # guardian backend
+    "guardian.backends.ObjectPermissionBackend",
 ]
+
+# For django guardian
+ANONYMOUS_USER_ID = -1
 
 # AXES_FAILURE_LIMIT = 5  # Number of failed login attempts before lockout
 AXES_LOCK_OUT_BY_COMBINATION_USER_AND_IP = True  # Lockout based on the combination of user and IP address
@@ -233,13 +242,13 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = "UTC"
+TIME_ZONE = "Europe/Amsterdam"
 
 USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
+USE_TZ = False  # Remember to change this setting to True and fix the TIME_ZONE. MariaDB is giving problems on windows
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 AVATAR_PATH = MEDIA_ROOT + "/images/users"

@@ -1,4 +1,4 @@
-from .mixins import AdminMenuMixin, PermissionRequiredMixin
+from .mixins import AdminMenuMixin, PermissionRequiredMixin, CustomPermissionRequiredMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView
 from backend.forms import MyFormForm
@@ -9,9 +9,9 @@ from .data_processing import manage_avatar_upload
 from django.contrib import messages
 
 
-class FormView(PermissionRequiredMixin, LoginRequiredMixin, TemplateView, AdminMenuMixin):
+class FormView(CustomPermissionRequiredMixin, LoginRequiredMixin, TemplateView, AdminMenuMixin):
     template_name = "backend/forms/form.html"
-    permission_required = 'backend.view_myform'
+    permission_menu = 'my-form'
 
     def get(self, request, *args, **kwargs):
         form = MyFormForm()

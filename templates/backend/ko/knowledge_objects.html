@@ -49,24 +49,24 @@
                             <table id="datatable-buttons" class="table table-bordered dt-responsive nowrap w-100">
                                 <thead>
                                 <tr>
-                                    <th>Name</th>
-                                    <th>Age</th>
-                                    <th>City</th>
-                                    <th>Email</th>
-                                    <th>Hobbies</th>
+                                    <th>ID</th>
+                                    <th>Title</th>
+                                    <th>URL</th>
+                                    <th>Language</th>
+                                    <th>Eureka ID</th>
                                 </tr>
                                 </thead>
 
+                                <tbody>
                                 {% for k in ko %}
                                     <tr>
-                                        <td>{{ k.name }}</td>
-                                        <td>{{ k.age }}</td>
-                                        <td>{{ k.city }}</td>
-                                        <td>{{ k.email }}</td>
-                                        <td>{{ k.hobbies }}</td>
+                                        <td>{{ k.id }}</td>
+                                        <td>{{ k.title }}</td>
+                                        <td>{{ k.url }}</td>
+                                        <td>{{ k.inLanguage }}</td>
+                                        <td>{{ k.id_eureka }}</td>
                                     </tr>
                                 {% endfor %}
-                                <tbody>
                                 </tbody>
                             </table>
                         </div>
@@ -97,6 +97,7 @@
 <script src="{% static 'libs/pdfmake/build/pdfmake.min.js'%}"></script>
 <script src="{% static 'libs/pdfmake/build/vfs_fonts.js'%}"></script>
 <script src="{% static 'libs/datatables.net-buttons/js/buttons.html5.min.js'%}"></script>
+<script src="{% static 'libs/jszip/dist/jszip.min.js'%}"></script>
 <script src="{% static 'libs/datatables.net-buttons/js/buttons.print.min.js'%}"></script>
 <script src="{% static 'libs/datatables.net-buttons/js/buttons.colVis.min.js'%}"></script>
 

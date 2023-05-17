@@ -1,15 +1,18 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .mixins import AdminMenuMixin, PermissionRequiredMixin
+from .mixins import AdminMenuMixin, PermissionRequiredMixin, CustomPermissionRequiredMixin
 from django.views.generic import TemplateView
+from django.shortcuts import redirect
 import os
 from django.conf import settings
 from .data_processing import nested_list_to_csv
 from django.contrib.auth.mixins import UserPassesTestMixin
+from backend.models import CustomPermissions, GroupCustomPermissions, PermissionMaster, AdminMenuMaster
+from django.core.exceptions import ObjectDoesNotExist
 
 
-class KOView(PermissionRequiredMixin, UserPassesTestMixin, TemplateView, LoginRequiredMixin, AdminMenuMixin):
+class KOView(CustomPermissionRequiredMixin, UserPassesTestMixin, TemplateView, LoginRequiredMixin, AdminMenuMixin):
     template_name = "backend/ko/knowledge_objects.html"
-    permission_required = 'backend.view_knowledgeobjects'
+    permission_menu = 'knowledge-objects'
 
     @staticmethod
     def get_mongodb_data():
