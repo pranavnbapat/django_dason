@@ -3,6 +3,7 @@ from backend.models import CustomPermissions, GroupCustomPermissions, Permission
 
 register = template.Library()
 
+
 @register.simple_tag
 def has_view_permission(user, menu_route):
     if user.is_superuser or user.is_staff:
@@ -22,7 +23,7 @@ def has_view_permission(user, menu_route):
     ).exists()
 
     has_group_permission = GroupCustomPermissions.objects.filter(
-        group__in=user.groups.all(), permission_name__permission_name=permission_master
+        group__in=user.groups.all(), permission_names__in=[permission_master]
     ).exists()
 
     return has_permission or has_group_permission

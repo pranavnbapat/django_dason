@@ -8,6 +8,7 @@ from .PDF2TextV import PDF2TextCreateAPIView
 from .PaginationV import PaginationView, PaginationAPI, RecordClickView, ShowPaginationContactView
 from .LargeFileUploadV import LargeFileUploadView
 from .ElasticSearchV import ElasticSearchSingleView, ElasticSearchSingleResultsView
+from .AutocompleteBasicV import AutocompleteBasicView
 
 # ElasticSearchView, ElasticSearchResultsView,
 

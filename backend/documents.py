@@ -1,7 +1,10 @@
 from django_elasticsearch_dsl import Document, fields
 from django_elasticsearch_dsl.registries import registry
 from backend.models import FakerModel, ESUsers, ESCityMaster, ESContactNo
+from elasticsearch_dsl import analyzer
 
+
+lowercase_analyzer = analyzer('lowercase')
 
 @registry.register_document
 class FakerModelDocument(Document):
@@ -93,10 +96,11 @@ class FakerModelDocument(Document):
 
 @registry.register_document
 class ESUsersSingleDocument(Document):
-    email = fields.KeywordField(attr='email')
+    email = fields.KeywordField(attr='email', analyzer=lowercase_analyzer)
     dob = fields.DateField(attr='dob')
-    fname = fields.KeywordField(attr='fname')
-    lname = fields.KeywordField(attr='lname')
+    fname = fields.KeywordField(attr='fname', analyzer=lowercase_analyzer)
+    lname = fields.KeywordField(attr='lname', analyzer=lowercase_analyzer)
+    # email_suggest = fields.KeywordField(attr='email')  # The field we'll use for suggestions.
 
     class Index:
         name = 'only_es_users_index'

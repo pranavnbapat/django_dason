@@ -371,7 +371,7 @@ class GroupCustomPermissions(models.Model):
                           blank=False, null=False, verbose_name='ID')
 
     group = models.ForeignKey(Group, on_delete=models.CASCADE)
-    permission_name = models.ForeignKey(CustomPermissions, on_delete=models.CASCADE)
+    permission_names = models.ManyToManyField(PermissionMaster)
 
     status = models.BooleanField(default=True)
     deleted = models.BooleanField(default=False)
@@ -381,4 +381,4 @@ class GroupCustomPermissions(models.Model):
 
     class Meta:
         db_table = "custom_group_permissions"
-        unique_together = ('group', 'permission_name')
+        # unique_together = ('group', 'permission_name')

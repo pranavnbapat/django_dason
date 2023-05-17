@@ -374,6 +374,8 @@ ELASTICSEARCH_DSL = {
         'hosts': os.getenv("ELASTICSEARCH_URL"),  # or the address of your Elasticsearch instance
         'http_auth': (os.getenv("ELASTICSEARCH_USERNAME"), os.getenv("ELASTICSEARCH_PASSWORD")),
         'verify_certs': False,
+        'use_ssl': True,
+        'scheme': 'https',
     },
 }
 

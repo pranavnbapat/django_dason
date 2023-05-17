@@ -15,7 +15,8 @@ from .views import (
     # ElasticSearchView,
     # ElasticSearchResultsView,
     ElasticSearchSingleView,
-    ElasticSearchSingleResultsView
+    ElasticSearchSingleResultsView,
+    AutocompleteBasicView,
 )
 
 app_name = "backend"
@@ -60,6 +61,8 @@ urlpatterns = [
     path("elastic-search-single/", view=ElasticSearchSingleView.as_view(), name='elastic-search-single'),
     path("elastic-search-single/search", view=ElasticSearchSingleResultsView.as_view(),
          name='elastic-search-single-search'),
+
+    path("autocomplete-basic/", view=AutocompleteBasicView.as_view(), name="autocomplete-basic")
 
 ]
 

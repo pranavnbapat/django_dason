@@ -43,7 +43,12 @@ class CustomPermissionsAdmin(admin.ModelAdmin):
 
 @admin.register(GroupCustomPermissions)
 class GroupCustomPermissionsAdmin(admin.ModelAdmin):
-    list_display = ('group', 'permission_name', 'status', 'created_at', 'updated_at')
+    list_display = ('group', 'get_permission_names', 'status', 'created_at', 'updated_at')
+    filter_horizontal = ('permission_names',)
+
+    def get_permission_names(self, obj):
+        return ", ".join([p.__str__() for p in obj.permission_names.all()])
+    get_permission_names.short_description = 'Permission Names'
 
 
 @admin.register(PermissionMaster)
