@@ -1,10 +1,13 @@
 from django_elasticsearch_dsl import Document, fields
 from django_elasticsearch_dsl.registries import registry
-from backend.models import FakerModel, ESUsers, ESCityMaster, ESContactNo
-from elasticsearch_dsl import analyzer
+from backend.models import FakerModel, ESUsers, ESCityMaster, ESContactNo, ES_test
+from elasticsearch_dsl import analyzer, tokenizer
 
 
-lowercase_analyzer = analyzer('lowercase')
+# lowercase_analyzer = analyzer('lowercase')
+lowercase_analyzer = analyzer('lowercase_analyzer', tokenizer="standard", filter=["lowercase"])
+# comma_analyzer = analyzer('comma_analyzer', tokenizer=tokenizer('comma', 'pattern', pattern=',', group='-1'))
+
 
 @registry.register_document
 class FakerModelDocument(Document):
@@ -96,10 +99,10 @@ class FakerModelDocument(Document):
 
 @registry.register_document
 class ESUsersSingleDocument(Document):
-    email = fields.KeywordField(attr='email', analyzer=lowercase_analyzer)
+    email = fields.KeywordField(attr='email')
     dob = fields.DateField(attr='dob')
-    fname = fields.KeywordField(attr='fname', analyzer=lowercase_analyzer)
-    lname = fields.KeywordField(attr='lname', analyzer=lowercase_analyzer)
+    fname = fields.KeywordField(attr='fname')
+    lname = fields.KeywordField(attr='lname')
     # email_suggest = fields.KeywordField(attr='email')  # The field we'll use for suggestions.
 
     class Index:
@@ -108,3 +111,18 @@ class ESUsersSingleDocument(Document):
 
     class Django:
         model = ESUsers
+
+
+@registry.register_document
+class ESTestDocument(Document):
+    title = fields.TextField(attr='title', analyzer=lowercase_analyzer)
+    content = fields.TextField(attr='content', analyzer=lowercase_analyzer)
+    author = fields.TextField(attr='author', analyzer=lowercase_analyzer)
+    tags = fields.KeywordField(attr='get_tags_list')  # split the tags into an array
+
+    class Index:
+        name = 'es_test_index'
+        settings = {'number_of_shards': 1, 'number_of_replicas': 0}
+
+    class Django:
+        model = ES_test

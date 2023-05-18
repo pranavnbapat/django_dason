@@ -9,6 +9,7 @@ from .PaginationV import PaginationView, PaginationAPI, RecordClickView, ShowPag
 from .LargeFileUploadV import LargeFileUploadView
 from .ElasticSearchV import ElasticSearchSingleView, ElasticSearchSingleResultsView
 from .AutocompleteBasicV import AutocompleteBasicView
+from .MoreLikeThisV import MoreLikeThisView
 
 # ElasticSearchView, ElasticSearchResultsView,
 

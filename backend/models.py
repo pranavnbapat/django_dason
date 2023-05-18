@@ -382,3 +382,25 @@ class GroupCustomPermissions(models.Model):
     class Meta:
         db_table = "custom_group_permissions"
         # unique_together = ('group', 'permission_name')
+
+
+class ES_test(models.Model):
+    class Meta:
+        db_table = "es_test"
+
+    id = models.AutoField(primary_key=True, db_column='id', db_index=True, editable=False, unique=True,
+                          blank=False, null=False, verbose_name='ID')
+
+    title = models.CharField(max_length=200)
+    content = models.TextField()
+    author = models.CharField(max_length=100)
+    tags = models.CharField(max_length=200)
+
+    status = models.BooleanField(default=True)
+    deleted = models.BooleanField(default=False)
+    deleted_at = models.DateTimeField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def get_tags_list(self):
+        return self.tags.split(',')
